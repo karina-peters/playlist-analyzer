@@ -1,0 +1,24 @@
+.navbar {
+    background-color: black !important;
+    height: 80px;
+}
+
+.dropdown-menu {
+    background-color: white;
+    font-size:14px;
+}
+
+.dropdown-menu:hover {
+    background-color: white;
+    color: rgb(80, 175, 69);
+}
+
+.nav-option {
+    color: black !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+.nav-option:hover {
+    color: rgb(80, 175, 69) !important;
+}

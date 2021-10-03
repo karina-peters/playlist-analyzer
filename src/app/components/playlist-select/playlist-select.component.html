@@ -1,0 +1,11 @@
+<div class="custom-select">
+    <select [(ngModel)]="selected" (change)="selectPlaylist($event)" class="form-select" aria-label="Default select example">
+        <option class="select-item"> </option>
+        <option class="select-item" *ngFor="let playlist of playlists" [value]="playlist.id">{{playlist.name}}</option>
+    </select>
+</div>
+<div>
+    <ul class="list-group" *ngIf="selected > -1">
+        <app-track *ngFor="let track of playlists[selected].tracks" [trackData]="track"></app-track>
+    </ul>
+</div>

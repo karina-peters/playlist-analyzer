@@ -1,0 +1,29 @@
+.list-group-item {
+    background-color: rgb(15, 15, 15);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+}
+
+.list-group-item:hover {
+    background-color: rgb(31, 31, 31);
+}
+
+.detail {
+    color: rgb(163, 163, 163);
+    font-size: smaller;
+}
+
+.vcenter {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.square {
+    height: 35px;
+    width: 35px;
+    background-color: aliceblue;
+}
+
+.track-id {
+    color: rgb(163, 163, 163);
+}

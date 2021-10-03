@@ -1,0 +1,27 @@
+button {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button:hover {
+    height: 53px;
+    width: 53px;
+}
+
+.page {
+    background-color: rgb(41, 65, 171);
+    padding: 20px;
+    height: 100vh
+}
+
+.stats {
+    height: 50px;
+}
+
+.stat {
+    font-size: large;
+    color: white;
+}

@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+// * {
+//     font-family: 'Gotham';
+// }
+
+.btn-primary {
+    background-color: rgb(80, 175, 69);
+    border-width: 0px;
+}
+
+.btn-primary:hover {
+    background-color: rgb(80, 175, 69);
+    border-width: 0px;
+}
+
+.nav-link {
+    font-weight: bold;
+}
+
+.nav-link:hover {
+    color: rgb(80, 175, 69) !important;
+}
