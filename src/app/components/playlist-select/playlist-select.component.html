@@ -1,11 +1,25 @@
-<div class="custom-select">
-    <select [(ngModel)]="selected" (change)="selectPlaylist($event)" class="form-select" aria-label="Default select example">
-        <option class="select-item"> </option>
-        <option class="select-item" *ngFor="let playlist of playlists" [value]="playlist.id">{{playlist.name}}</option>
-    </select>
+<div class="custom-select container-fluid" [ngClass]="{ 'selected' : showOptions }">
+    <div class="select">
+        <div type="button" class="select-trigger row align-items-center" (click)="showOptions = !showOptions">
+            <div class="col-sm-11 selector">
+                <span>{{selectText}}</span>
+            </div>
+            <div class="col-sm-1 selector">
+                <svg *ngIf="!showOptions" class="col" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg>
+                <svg *ngIf="showOptions" class="col" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg>
+            </div>
+        </div>
+        <div class="options-wrapper">
+            <ul *ngIf="showOptions" class="select-options">
+                <li class="select-item" *ngFor="let playlist of playlists" (click)="selectPlaylist(playlist.id)">{{playlist.name}}</li>
+            </ul>
+        </div>
+    </div>
 </div>
-<div>
-    <ul class="list-group" *ngIf="selected > -1">
-        <app-track *ngFor="let track of playlists[selected].tracks" [trackData]="track"></app-track>
+<div class="track-list-wrapper" *ngIf="selected.id > -1">
+    <span class="track-count">{{selected.tracks.length}} songs</span>
+    <ul class="list-group">
+        <app-track *ngFor="let track of selected.tracks" [trackData]="track"></app-track>
     </ul>
+    <!-- <div class="bottom-fade"></div> -->
 </div>

@@ -4,7 +4,8 @@ export interface Track {
   id: number,
   name: string,
   artist: string,
-  album: string
+  album: string,
+  duration: string
 }
 
 @Component({
@@ -18,7 +19,8 @@ export class TrackComponent implements OnInit {
     id: 0,
     name: '',
     artist: '',
-    album: ''
+    album: '',
+    duration: ''
   };
 
   @Input() common: boolean = false;

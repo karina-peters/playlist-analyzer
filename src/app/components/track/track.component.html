@@ -1,21 +1,19 @@
-<li class="list-group-item container"> 
+<li class="container list-item"> 
     <div class="row">
-        <div *ngIf="!common" class="col-sm-1 track-id vcenter">
-            {{trackData.id}}
+        <div class="col-sm-1 track-id vcenter">
+            0{{trackData.id}}
         </div>
-        <div class="col-sm-2 image vcenter">
+        <div class="col-sm-1 image vcenter">
             <div class="square"></div>
         </div>
-        <div class="col">
-            <div class="row">
-                {{trackData.name}}
-            </div>
-            <div class="row detail">
-                {{trackData.artist}}
-            </div>
+        <div class="col track-name">
+            {{trackData.name}}
         </div>
-        <div class="col detail vcenter">
-            {{trackData.album}}
+        <div class="col detail">
+            {{trackData.artist}}
+        </div>
+        <div class="col-sm-1 detail vcenter">
+            {{trackData.duration}}
         </div>
     </div>
 </li>

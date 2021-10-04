@@ -16,8 +16,8 @@ export class PlaylistCompareComponent implements OnInit {
   public percentSimilar: number = 0;
 
   constructor() { 
-    this.leftPlaylist = { id: -1, tracks: [] };
-    this.rightPlaylist = { id: -1, tracks: [] };
+    this.leftPlaylist = { id: -1, name: '', tracks: [] };
+    this.rightPlaylist = { id: -1, name: '', tracks: [] };
     this.commonTracks = [];
   }
 
@@ -39,8 +39,9 @@ export class PlaylistCompareComponent implements OnInit {
         }
       }
       this.commonTracks = common;
-      this.percentSimilar = Math.floor((common.length / (leftTracks.length + rightTracks.length)) * 100);
+      this.percentSimilar = Math.floor((common.length / (leftTracks.length + rightTracks.length - common.length)) * 100);
       this.showStats = true;
+      document.getElementById("stats-wrapper")?.scrollIntoView(true);
     }
   }
 

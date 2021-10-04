@@ -1,11 +1,16 @@
-.list-group-item {
-    background-color: rgb(15, 15, 15);
-    color: rgb(255, 255, 255);
+.list-item {
+    background-color: rgb(255, 255, 255);;
+    color: rgb(15, 15, 15);
     border-radius: 5px;
+    cursor: default;
+    list-style-type: none;
+    line-height: 60px;
+    margin-top: 15px;
+    animation: 0.75s slide-up ease-out;
 }
 
-.list-group-item:hover {
-    background-color: rgb(31, 31, 31);
+.list-item:hover {
+    // background-color: rgb(31, 31, 31);
 }
 
 .detail {
@@ -27,3 +32,16 @@
 .track-id {
     color: rgb(163, 163, 163);
 }
+
+.track-name {
+    margin-left: 10px;
+}
+
+@keyframes slide-up {
+    from {
+      margin-top: 100%;
+    }
+    to {
+      margin-top: 15px;
+    }
+  }

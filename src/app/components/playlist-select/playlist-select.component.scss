@@ -7,9 +7,56 @@
 }
 
 .custom-select {
+    background-color: white;
+    position: relative;
+    border-radius: 25px;
+    height: 50px;
+    transition: height 0.25s;
+    overflow-y: hidden;
+}
+
+.custom-select.selected {
+    height: 300px;
+}
+
+.select-trigger {
+    position: relative;
+    height: 50px;
+}
+
+.options-wrapper {
+    height: 250px;
+    overflow-y: auto;
+}
+
+.select-options {
     position: relative;
 }
 
 .select-item {
-    background-color: rgb(30, 30, 30);
+    cursor: default;
+    list-style-type: none;
+    line-height: 50px;
+}
+
+.select-item:hover {
+    color: rgb(80, 175, 69);
+}
+
+.track-list-wrapper {
+    margin-top: 50px;
+    height: 325px;
+    overflow-y: auto;
+}
+
+.track-count {
+    color: white;
+}
+
+.bottom-fade {
+    position: relative;
+    bottom: 43px;
+    height: 20px;
+    width: inherit;
+    background-image: linear-gradient(to top, rgba(41, 65, 171, 1), rgba(41, 65, 171, 0));
 }

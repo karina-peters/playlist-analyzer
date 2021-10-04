@@ -1,5 +1,10 @@
+.nav-wrapper {
+    background-color: rgb(29, 47, 122) !important;
+    height: 250px;
+}
+
 .navbar {
-    background-color: black !important;
+    background-color: rgb(29, 47, 122) !important;
     height: 80px;
 }
 
@@ -21,4 +26,19 @@
 
 .nav-option:hover {
     color: rgb(80, 175, 69) !important;
+}
+
+.header {
+    padding-bottom: 50px; 
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.headline {
+    color: white;
+    font-weight: semi-bold;
+    font-size: 50px;
+    margin-bottom: 10px;
+    margin-left: 50px;
+    margin-top: 50px;
 }

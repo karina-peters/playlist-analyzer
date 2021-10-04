@@ -6,6 +6,13 @@ button {
     margin-right: auto;
 }
 
+.underline {
+    height: 8px;
+    width: 360px;
+    background-color: white;
+    margin-left: 12px;
+}
+
 button:hover {
     height: 53px;
     width: 53px;
@@ -13,15 +20,45 @@ button:hover {
 
 .page {
     background-color: rgb(41, 65, 171);
-    padding: 20px;
-    height: 100vh
+    padding: 50px;
+    height: 100%;
+    scroll-behavior: smooth;
 }
 
 .stats {
-    height: 50px;
+    height: 250px;
 }
 
 .stat {
     font-size: large;
     color: white;
+}
+
+#select-wrapper-left {
+    padding-left: 35px;
+}
+#select-wrapper-right {
+    padding-right: 35px;
+}
+
+.common-list {
+    padding-left: 50px !important;
+}
+.common-track {
+    color: white;
+    font-size: large;
+}
+
+#percent-similar {
+    font-size: 50px;
+    font-weight: bolder;
+    color: white;
+}
+
+.select-component-wrapper {
+    height: 600px;
+}
+
+#stats-wrapper {
+    height: 600px;
 }
