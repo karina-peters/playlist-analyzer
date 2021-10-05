@@ -42,11 +42,13 @@ button:hover {
 }
 
 .common-list {
-    padding-left: 50px !important;
-}
-.common-track {
+    // padding-left: 50px !important;
     color: white;
     font-size: large;
+}
+.common-list .heading {
+    font-weight: bold;
+    line-height: 50px;
 }
 
 #percent-similar {

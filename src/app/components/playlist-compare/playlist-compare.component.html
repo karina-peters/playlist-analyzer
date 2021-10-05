@@ -14,9 +14,16 @@
     </div>
     <div class="stats" id="stats-wrapper" *ngIf="showStats">
         <div class="row">
-            <div class="col-sm-6" id="common-list">
+            <div class="col-sm-6 common-list" id="common-tracks">
+                <span class="heading">COMMON TRACKS</span>
                 <ol *ngIf="commonTracks.length > 0">
                     <li class="common-track" *ngFor="let track of commonTracks">{{track.name}} - {{track.artist}}</li>
+                </ol>
+            </div>
+            <div class="col common-list" id="common-artists">
+                <span class="heading">COMMON ARTISTS</span>
+                <ol *ngIf="commonArtists.length > 0">
+                    <li class="common-artist" *ngFor="let artist of commonArtists">{{artist}}</li>
                 </ol>
             </div>
             <div class="col" id="percent-similar">
