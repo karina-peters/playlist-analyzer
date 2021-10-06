@@ -16,7 +16,7 @@
 }
 
 .custom-select.selected {
-    height: 300px;
+    height: 425px;
 }
 
 .select-trigger {
@@ -44,13 +44,15 @@
 }
 
 .track-list-wrapper {
-    margin-top: 50px;
-    height: 325px;
+    margin-top: 30px;
+    height: 350px;
     overflow-y: auto;
 }
 
 .track-count {
     color: white;
+    margin-top: 12px;
+    margin-bottom: 0px !important;
 }
 
 .bottom-fade {
