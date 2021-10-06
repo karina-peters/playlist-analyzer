@@ -18,6 +18,10 @@ button:hover {
     width: 53px;
 }
 
+.button-wrapper {
+    height: 60px;
+}
+
 .page {
     background-color: rgb(41, 65, 171);
     padding: 50px;
@@ -36,17 +40,21 @@ button:hover {
 
 #select-wrapper-left {
     padding-left: 35px;
+    padding-top: 5px;
 }
 #select-wrapper-right {
     padding-right: 35px;
+    padding-top: 5px;
 }
 
 .common-list {
-    padding-left: 50px !important;
-}
-.common-track {
+    // padding-left: 50px !important;
     color: white;
     font-size: large;
+}
+.common-list .heading {
+    font-weight: bold;
+    line-height: 50px;
 }
 
 #percent-similar {
@@ -56,7 +64,8 @@ button:hover {
 }
 
 .select-component-wrapper {
-    height: 600px;
+    height: 430px;
+    overflow: hidden;
 }
 
 #stats-wrapper {

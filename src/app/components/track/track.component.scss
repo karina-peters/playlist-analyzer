@@ -34,7 +34,16 @@
 }
 
 .track-name {
-    margin-left: 10px;
+    margin-left: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.track-artist {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 @keyframes slide-up {
