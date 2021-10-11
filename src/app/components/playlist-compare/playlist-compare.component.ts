@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Playlist } from '../playlist-select/playlist-select.component';
 import { Track } from '../track/track.component';
-import { PlaylistService } from 'src/app/services/playlist.service';
+import { SpotifyService } from 'src/app/services/spotify.service';
 
 @Component({
   selector: 'app-playlist-compare',
@@ -17,15 +17,15 @@ export class PlaylistCompareComponent implements OnInit {
   public showStats: boolean = false;
   public percentSimilar: number = 0;
 
-  constructor(private playlistService: PlaylistService) { 
-    this.leftPlaylist = { id: -1, name: '', tracks: [] };
-    this.rightPlaylist = { id: -1, name: '', tracks: [] };
+  constructor(private spotifyService: SpotifyService) { 
+    this.leftPlaylist = { id: -1, name: '', tracksLink: '', tracks: [] };
+    this.rightPlaylist = { id: -1, name: '', tracksLink: '', tracks: [] };
     this.commonTracks = [];
     this.commonArtists = [];
   }
 
   ngOnInit(): void {
-    this.playlistService.getPlaylists();
+    this.spotifyService.getPlaylists();
   }
 
   comparePlaylists(event: Event) {

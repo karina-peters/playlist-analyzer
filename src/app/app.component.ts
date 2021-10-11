@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PlaylistService } from 'src/app/services/playlist.service';
+import { SpotifyService } from 'src/app/services/spotify.service';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +10,13 @@ export class AppComponent implements OnInit {
   title = 'GettingStarted';
 
   private accessToken: string;
-  constructor(private playlistService: PlaylistService) {
+  constructor(private spotifyService: SpotifyService) {
     this.accessToken = '';
   }
 
   ngOnInit(): void {
     let params = window.location.hash.split('&');
     this.accessToken = params[0].split('=')[1];
-    this.playlistService.setToken(this.accessToken);
+    this.spotifyService.setToken(this.accessToken);
   }
 }
