@@ -5,7 +5,8 @@ export interface Track {
   name: string,
   artist: string,
   album: string,
-  duration: string
+  duration: string,
+  img: string
 }
 
 @Component({
@@ -20,7 +21,8 @@ export class TrackComponent implements OnInit {
     name: '',
     artist: '',
     album: '',
-    duration: ''
+    duration: '',
+    img: ''
   };
 
   @Input() common: boolean = false;

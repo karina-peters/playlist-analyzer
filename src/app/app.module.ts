@@ -10,6 +10,8 @@ import { PlaylistAnalysisComponent } from './components/playlist-analysis/playli
 import { NavHeaderComponent } from './components/nav-header/nav-header.component';
 import { PlaylistSelectComponent } from './components/playlist-select/playlist-select.component';
 import { TrackComponent } from './components/track/track.component';
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { TrackComponent } from './components/track/track.component';
     PlaylistAnalysisComponent,
     NavHeaderComponent,
     PlaylistSelectComponent,
-    TrackComponent
+    TrackComponent,
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

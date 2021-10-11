@@ -16,10 +16,10 @@
         </div>
     </div>
 </div>
-<div class="track-list-wrapper" *ngIf="selected.id > -1">
-    <p class="track-count">{{selected.tracks.length}} songs</p>
+<div class="track-list-wrapper" *ngIf="selectedPlaylist.id > -1">
+    <p class="track-count">{{selectedPlaylist.tracks?.length}} songs</p>
     <ul class="list-group">
-        <app-track *ngFor="let track of selected.tracks" [trackData]="track"></app-track>
+        <app-track *ngFor="let track of selectedPlaylist.tracks" [trackData]="track"></app-track>
     </ul>
     <!-- <div class="bottom-fade"></div> -->
 </div>
