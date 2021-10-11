@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PlaylistService } from 'src/app/services/playlist.service';
 
 @Component({
   selector: 'app-nav-header',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private playlistService: PlaylistService) { }
 
   ngOnInit(): void {
   }
 
+  login(): void {
+    this.playlistService.authenticate();
+  }
 }

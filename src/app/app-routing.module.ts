@@ -6,6 +6,7 @@ import { PlaylistAnalysisComponent } from './components/playlist-analysis/playli
 const routes: Routes = [
   { path: 'compare-playlists', component: PlaylistCompareComponent },
   { path: 'analyze-playlist', component: PlaylistAnalysisComponent },
+  { path: '', redirectTo: 'https://accounts.spotify.com/authorize', pathMatch: 'full' }
 ];
 
 @NgModule({

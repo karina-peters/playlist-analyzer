@@ -48,7 +48,6 @@ button:hover {
 }
 
 .common-list {
-    // padding-left: 50px !important;
     color: white;
     font-size: large;
 }
@@ -64,10 +63,11 @@ button:hover {
 }
 
 .select-component-wrapper {
-    height: 430px;
+    height: 475px;
     overflow: hidden;
 }
 
 #stats-wrapper {
-    height: 600px;
+    height: 800px;
+    padding: 200px 100px;
 }
