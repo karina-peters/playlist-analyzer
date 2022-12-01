@@ -1,44 +1,53 @@
 .nav-wrapper {
-    background-color: rgb(29, 47, 122) !important;
-    height: 200px;
+  background-color: rgb(29, 47, 122) !important;
+  height: 75px;
 }
 
 .navbar {
-    background-color: rgb(29, 47, 122) !important;
-    height: 80px;
+  background-color: rgb(29, 47, 122) !important;
+  height: 75px;
+}
+
+.navbar-brand {
+  margin-left: 10px;
+  margin-right: 100px;
+}
+
+.brand-name {
+  margin-left: 8px;
+  font-size: 1.5rem;
+}
+
+.nav-item {
+  margin-right: 30px;
+}
+
+.nav-link {
+  font-weight: lighter;
 }
 
 .dropdown-menu {
-    background-color: white;
-    font-size:14px;
+  border-radius: 0px 0px 10px 10px;
+  background-color: rgb(29, 47, 122);
+  font-size: 14px;
+  margin-top: 18px;
+  padding: 5px 0px;
+  width: 300px;
+  border-top: 3px solid rgb(80, 175, 69);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
 }
 
-.dropdown-menu:hover {
-    background-color: white;
-    color: rgb(80, 175, 69);
+.dropdown-menu-item {
+  padding: 5px 5px 5px 15px;
+  border-radius: 5px;
+}
+
+.dropdown-menu-item:hover {
+  background-color: rgb(25, 42, 107);
 }
 
 .nav-option {
-    color: black !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-}
-
-.nav-option:hover {
-    color: rgb(80, 175, 69) !important;
-}
-
-.header {
-    padding-bottom: 50px; 
-    padding-left: 20px;
-    padding-top: 20px;
-}
-
-.headline {
-    color: white;
-    font-weight: semi-bold;
-    font-size: 50px;
-    margin-bottom: 10px;
-    margin-left: 50px;
-    // margin-top: 50px;
+  color: white !important;
 }
