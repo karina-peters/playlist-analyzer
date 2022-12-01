@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Track } from '../track/track.component'
-import { SpotifyService } from 'src/app/services/spotify.service'
+import { Track } from '../track/track.component';
+import { SpotifyService } from 'src/app/services/spotify.service';
+import { catchError } from 'rxjs/operators'
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface Playlist {
   id: number,
@@ -22,6 +24,7 @@ export class PlaylistSelectComponent implements OnInit {
   public showOptions: boolean = false;
   public selectText: string = "Choose a Playlist";
   @Output() selectedEvent = new EventEmitter<Playlist>();
+  @Output() authError = new EventEmitter<HttpErrorResponse>();
 
   constructor(private spotifyService: SpotifyService) { 
 
@@ -29,16 +32,23 @@ export class PlaylistSelectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.spotifyService.getPlaylists().subscribe((response: any) => {
-      response.items.forEach((playlist: any, index: number) => {
-        this.playlists.push({
-          id: index,
-          name: playlist.name,
-          description: playlist.description,
-          tracks: [],
-          tracksLink: playlist.tracks.href
+    this.spotifyService.getPlaylists().pipe(
+        catchError((error) => {
+            throw error;
+        })
+    ).subscribe((response: any) => {
+        response.items.forEach((playlist: any, index: number) => {
+            this.playlists.push({
+                id: index,
+                name: playlist.name,
+                description: playlist.description,
+                tracks: [],
+                tracksLink: playlist.tracks.href
+            });
         });
-      });
+    },
+    (error) => {
+        this.authError.emit(error);
     });
   }
 
@@ -56,17 +66,18 @@ export class PlaylistSelectComponent implements OnInit {
 
   getTracks(): void {
     this.spotifyService.getTracks(this.selectedPlaylist.tracksLink).subscribe((response: any) => {
-      console.log(response);
-      response.items.forEach((track: any, index: number) => {
-        this.selectedPlaylist.tracks.push({
-          id: index,
-          name: track.track.name,
-          artist: track.track.artists[0].name,
-          album: track.track.album,
-          duration: this.convertTime(track.track.duration_ms),
-          img: track.track.album.images[2].url
+        this.selectedPlaylist.tracks = [];
+
+        response.items.forEach((track: any, index: number) => {
+            this.selectedPlaylist.tracks.push({
+            id: index,
+            name: track.track.name,
+            artist: track.track.artists[0].name,
+            album: track.track.album,
+            duration: this.convertTime(track.track.duration_ms),
+            img: track.track.album.images[2].url
+            });
         });
-      });
     });
   }
 

@@ -1,7 +1,7 @@
 <div class="container-fluid fill-height page">
     <div class="row select-component-wrapper">
         <div class="col select-wrapper" id="select-wrapper-left">
-            <app-playlist-select (selectedEvent)="selectLeft($event)"></app-playlist-select>
+            <app-playlist-select (selectedEvent)="selectLeft($event)" (authError)="handleAuthError($event)"></app-playlist-select>
         </div>
         <div class="col-sm-1 justify-content-center">
             <div class="row align-items-center button-wrapper">
