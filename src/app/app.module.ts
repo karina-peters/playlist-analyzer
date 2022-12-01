@@ -1,17 +1,18 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { PlaylistCompareComponent } from './components/playlist-compare/playlist-compare.component';
-import { PlaylistAnalysisComponent } from './components/playlist-analysis/playlist-analysis.component';
-import { NavHeaderComponent } from './components/nav-header/nav-header.component';
-import { PlaylistSelectComponent } from './components/playlist-select/playlist-select.component';
-import { TrackComponent } from './components/track/track.component';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { FormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
+import { PlaylistCompareComponent } from "./components/playlist-compare/playlist-compare.component";
+import { PlaylistAnalysisComponent } from "./components/playlist-analysis/playlist-analysis.component";
+import { NavHeaderComponent } from "./components/nav-header/nav-header.component";
+import { PlaylistSelectComponent } from "./components/playlist-select/playlist-select.component";
+import { TrackComponent } from "./components/track/track.component";
+import { LoginComponent } from "./components/login/login.component";
+import { HomeComponent } from "./components/home/home.component";
+import { TrackDistributeComponent } from './components/track-distribute/track-distribute.component';
 
 @NgModule({
   declarations: [
@@ -22,15 +23,11 @@ import { HomeComponent } from './components/home/home.component';
     PlaylistSelectComponent,
     TrackComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    TrackDistributeComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

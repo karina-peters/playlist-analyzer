@@ -1,73 +1,71 @@
 button {
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    margin-left: auto;
-    margin-right: auto;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .underline {
-    height: 8px;
-    width: 360px;
-    background-color: white;
-    margin-left: 12px;
+  height: 8px;
+  width: 360px;
+  background-color: white;
+  margin-left: 12px;
 }
 
 button:hover {
-    height: 53px;
-    width: 53px;
+  height: 53px;
+  width: 53px;
 }
 
 .button-wrapper {
-    height: 60px;
+  height: 60px;
 }
 
 .page {
-    background-color: rgb(41, 65, 171);
-    padding: 50px;
-    height: 100%;
-    scroll-behavior: smooth;
+  padding: 50px;
+  scroll-behavior: smooth;
 }
 
 .stats {
-    height: 250px;
+  height: 250px;
 }
 
 .stat {
-    font-size: large;
-    color: white;
+  font-size: large;
+  color: white;
 }
 
 #select-wrapper-left {
-    padding-left: 35px;
-    padding-top: 5px;
+  padding-left: 35px;
+  padding-top: 5px;
 }
 #select-wrapper-right {
-    padding-right: 35px;
-    padding-top: 5px;
+  padding-right: 35px;
+  padding-top: 5px;
 }
 
 .common-list {
-    color: white;
-    font-size: large;
+  color: white;
+  font-size: large;
 }
 .common-list .heading {
-    font-weight: bold;
-    line-height: 50px;
+  font-weight: bold;
+  line-height: 50px;
 }
 
 #percent-similar {
-    font-size: 50px;
-    font-weight: bolder;
-    color: white;
+  font-size: 50px;
+  font-weight: bolder;
+  color: white;
 }
 
 .select-component-wrapper {
-    height: 475px;
-    overflow: hidden;
+  height: 475px;
+  overflow: hidden;
 }
 
 #stats-wrapper {
-    height: 800px;
-    padding: 200px 100px;
+  height: 800px;
+  padding: 200px 100px;
 }
