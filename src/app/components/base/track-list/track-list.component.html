@@ -1,0 +1,9 @@
+<div class="track-list">
+  <p class="track-count">{{ playlist.tracks?.length }} songs</p>
+  <ul class="list-group">
+    <app-track
+      *ngFor="let track of playlist.tracks"
+      [trackData]="track"
+    ></app-track>
+  </ul>
+</div>

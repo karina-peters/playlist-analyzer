@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { PlaylistCompareComponent } from './playlist-compare.component';
+import { PlaylistCompareComponent } from "./playlist-similarity.component";
 
-describe('PlaylistCompareComponent', () => {
+describe("PlaylistCompareComponent", () => {
   let component: PlaylistCompareComponent;
   let fixture: ComponentFixture<PlaylistCompareComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PlaylistCompareComponent ]
-    })
-    .compileComponents();
+      declarations: [PlaylistCompareComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('PlaylistCompareComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -43,13 +43,24 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li class="dropdown-menu-item">
-                <a class="nav-link nav-option" routerLink="/compare-playlists"
-                  >Playlist Comparer</a
+                <a
+                  class="nav-link nav-option disabled"
+                  routerLink="/analyse-playlist-composition"
+                  >Playlist Composition</a
                 >
               </li>
               <li class="dropdown-menu-item">
-                <a class="nav-link nav-option" routerLink="/analyze-playlist"
-                  >Playlist Analyser</a
+                <a
+                  class="nav-link nav-option active"
+                  routerLink="/analyse-playlist-similarity"
+                  >Playlist Similarity</a
+                >
+              </li>
+              <li class="dropdown-menu-item">
+                <a
+                  class="nav-link nav-option disabled"
+                  routerLink="/analyse-track-distribution"
+                  >Track Distribution</a
                 >
               </li>
             </ul>
@@ -67,8 +78,10 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li class="dropdown-menu-item">
-                <a class="nav-link nav-option" routerLink="/distribute-songs"
-                  >Track Distributer</a
+                <a
+                  class="nav-link nav-option"
+                  routerLink="/design-distribute-tracks"
+                  >Track Distributor</a
                 >
               </li>
             </ul>

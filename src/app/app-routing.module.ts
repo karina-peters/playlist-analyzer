@@ -2,16 +2,21 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { LoginComponent } from "./components/login/login.component";
 import { HomeComponent } from "./components/home/home.component";
-import { PlaylistCompareComponent } from "./components/playlist-compare/playlist-compare.component";
-import { PlaylistAnalysisComponent } from "./components/playlist-analysis/playlist-analysis.component";
-import { TrackDistributeComponent } from "./components/track-distribute/track-distribute.component";
+import { PlaylistCompareComponent } from "./components/analyse/playlist-similarity/playlist-similarity.component";
+import { PlaylistAnalysisComponent } from "./components/analyse/playlist-composition/playlist-composition.component";
+import { TrackDistributeComponent } from "./components/design/distribute-tracks/distribute-tracks.component";
+import { TrackDistributionComponent } from "./components/analyse/track-distribution/track-distribution.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
   { path: "home", component: HomeComponent },
-  { path: "compare-playlists", component: PlaylistCompareComponent },
-  { path: "analyze-playlist", component: PlaylistAnalysisComponent },
-  { path: "distribute-songs", component: TrackDistributeComponent },
+  { path: "analyse-playlist-similarity", component: PlaylistCompareComponent },
+  {
+    path: "analyse-playlist-composition",
+    component: PlaylistAnalysisComponent,
+  },
+  { path: "analyse-track-distribution", component: TrackDistributionComponent },
+  { path: "design-distribute-tracks", component: TrackDistributeComponent },
 ];
 
 @NgModule({

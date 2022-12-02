@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { PlaylistAnalysisComponent } from './playlist-analysis.component';
+import { PlaylistAnalysisComponent } from "./playlist-composition.component";
 
-describe('PlaylistAnalysisComponent', () => {
+describe("PlaylistAnalysisComponent", () => {
   let component: PlaylistAnalysisComponent;
   let fixture: ComponentFixture<PlaylistAnalysisComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PlaylistAnalysisComponent ]
-    })
-    .compileComponents();
+      declarations: [PlaylistAnalysisComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('PlaylistAnalysisComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
