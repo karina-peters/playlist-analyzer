@@ -1,6 +1,10 @@
 <div
   class="custom-select container-fluid"
-  [ngClass]="{ selected: showOptions }"
+  [ngClass]="{
+    selected: showOptions,
+    'list-type': type == 'list',
+    'table-type': type == 'table'
+  }"
 >
   <div class="select">
     <div
@@ -53,6 +57,21 @@
     </div>
   </div>
 </div>
-<div class="track-list-wrapper" *ngIf="selectedPlaylist.id > -1">
-  <app-track-list [playlist]="selectedPlaylist"></app-track-list>
+<div
+  class="track-list-wrapper"
+  [ngClass]="{
+    selected: showOptions,
+    'list-type': type == 'list',
+    'table-type': type == 'table'
+  }"
+  *ngIf="selectedPlaylist.id > -1"
+>
+  <app-track-list
+    [playlist]="selectedPlaylist"
+    *ngIf="type == 'list'"
+  ></app-track-list>
+  <app-track-table
+    [playlist]="selectedPlaylist"
+    *ngIf="type == 'table'"
+  ></app-track-table>
 </div>

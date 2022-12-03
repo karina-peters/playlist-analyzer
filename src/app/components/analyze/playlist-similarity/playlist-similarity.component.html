@@ -1,0 +1,63 @@
+<div class="container-fluid fill-height page">
+  <div class="row select-component-wrapper">
+    <div class="col select-wrapper" id="select-wrapper-left">
+      <app-playlist-select
+        [type]="'list'"
+        (selectedEvent)="selectLeft($event)"
+        (authError)="handleAuthError($event)"
+      ></app-playlist-select>
+    </div>
+    <div class="col-sm-1 justify-content-center">
+      <div class="row align-items-center button-wrapper">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="comparePlaylists($event)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="rgb(41, 65, 171)"
+          >
+            <path
+              d="M7.72 21.78a.75.75 0 001.06-1.06L5.56 17.5h14.69a.75.75 0 000-1.5H5.56l3.22-3.22a.75.75 0 10-1.06-1.06l-4.5 4.5a.75.75 0 000 1.06l4.5 4.5zm8.56-9.5a.75.75 0 11-1.06-1.06L18.44 8H3.75a.75.75 0 010-1.5h14.69l-3.22-3.22a.75.75 0 011.06-1.06l4.5 4.5a.75.75 0 010 1.06l-4.5 4.5z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="col" id="select-wrapper-right">
+      <app-playlist-select
+        [type]="'list'"
+        (selectedEvent)="selectRight($event)"
+      ></app-playlist-select>
+    </div>
+  </div>
+  <div class="stats" id="stats-wrapper" *ngIf="showStats">
+    <div class="row">
+      <div class="col-sm-6 common-list" id="common-tracks">
+        <span class="heading">COMMON TRACKS</span>
+        <ol *ngIf="commonTracks.length > 0">
+          <li class="common-track" *ngFor="let track of commonTracks">
+            {{ track.name }} - {{ track.artist }}
+          </li>
+        </ol>
+      </div>
+      <div class="col common-list" id="common-artists">
+        <span class="heading">COMMON ARTISTS</span>
+        <ol *ngIf="commonArtists.length > 0">
+          <li class="common-artist" *ngFor="let artist of commonArtists">
+            {{ artist }}
+          </li>
+        </ol>
+      </div>
+      <div class="col" id="percent-similar">
+        <p>{{ percentSimilar }}%</p>
+        <p>similar</p>
+      </div>
+      <span>Common Genres</span>
+    </div>
+  </div>
+</div>

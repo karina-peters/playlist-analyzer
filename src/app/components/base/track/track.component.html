@@ -1,19 +1,46 @@
-<li class="container list-item"> 
+<div>
+  <li
+    class="container list-item"
+    [ngClass]="{ 'list-type': type == 'list', 'table-type': type == 'table' }"
+  >
     <div class="row">
-        <div class="col-sm-1 track-id vcenter">
-            0{{trackData.id}}
+      <div class="col-sm-7">
+        <div class="row">
+          <div class="col-sm-1 track-id vcenter">{{ trackData.id + 1 }}</div>
+          <div class="col-sm-2 image vcenter">
+            <img [src]="trackData.img" />
+          </div>
+          <div class="col track-name">
+            {{ trackData.name }}
+          </div>
         </div>
-        <div class="col-sm-1 image vcenter">
-            <img [src]="trackData.img">
+      </div>
+      <div class="col track-artist detail">
+        {{ trackData.artist }}
+      </div>
+      <div class="col-sm-1 detail vcenter">
+        {{ trackData.duration }}
+      </div>
+      <div class="col-sm-1 detail vcenter" *ngIf="type == 'table'">
+        # of playlists
+      </div>
+      <div class="col detail vcenter" *ngIf="type == 'table'">
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Playlist Dropdown
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
         </div>
-        <div class="col track-name">
-            {{trackData.name}}
-        </div>
-        <div class="col track-artist detail">
-            {{trackData.artist}}
-        </div>
-        <div class="col-sm-1 detail vcenter">
-            {{trackData.duration}}
-        </div>
+      </div>
     </div>
-</li>
+  </li>
+</div>

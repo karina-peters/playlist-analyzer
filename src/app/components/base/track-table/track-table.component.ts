@@ -3,11 +3,11 @@ import { Playlist } from "src/app/services/playlist.service";
 import { Track, TrackService } from "src/app/services/track.service";
 
 @Component({
-  selector: "app-track-list",
-  templateUrl: "./track-list.component.html",
-  styleUrls: ["./track-list.component.scss"],
+  selector: "app-track-table",
+  templateUrl: "./track-table.component.html",
+  styleUrls: ["./track-table.component.scss"],
 })
-export class TrackListComponent implements OnInit {
+export class TrackTableComponent implements OnInit {
   @Input() playlist: Playlist = {
     id: -1,
     name: "",

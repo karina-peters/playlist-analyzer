@@ -5,7 +5,7 @@ import { Component, OnInit } from "@angular/core";
   templateUrl: "./playlist-composition.component.html",
   styleUrls: ["./playlist-composition.component.scss"],
 })
-export class PlaylistAnalysisComponent implements OnInit {
+export class PlaylistCompositionComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}

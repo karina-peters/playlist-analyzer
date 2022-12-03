@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { Playlist } from "../../base/playlist-select/playlist-select.component";
-import { Track } from "../../base/track/track.component";
+import { Playlist } from "src/app/services/playlist.service";
+import { Track } from "src/app/services/track.service";
 import { SpotifyService } from "src/app/services/spotify.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
@@ -10,7 +10,7 @@ import { Router } from "@angular/router";
   templateUrl: "./playlist-similarity.component.html",
   styleUrls: ["./playlist-similarity.component.scss"],
 })
-export class PlaylistCompareComponent implements OnInit {
+export class PlaylistSimilarityComponent implements OnInit {
   public leftPlaylist: Playlist;
   public rightPlaylist: Playlist;
   public commonTracks: Array<Track>;
@@ -25,15 +25,7 @@ export class PlaylistCompareComponent implements OnInit {
     this.commonArtists = [];
   }
 
-  ngOnInit(): void {
-    if (!this.spotifyService.getToken()) {
-      let params = window.location.hash.split("&");
-      this.spotifyService.setToken(params[0].split("=")[1]);
-    }
-
-    this.router.navigateByUrl("/analyse-playlist-similarity");
-    this.spotifyService.getPlaylists();
-  }
+  ngOnInit(): void {}
 
   comparePlaylists(_event: Event) {
     const leftTracks = this.leftPlaylist?.tracks;
@@ -111,7 +103,6 @@ export class PlaylistCompareComponent implements OnInit {
   }
 
   handleAuthError(error: HttpErrorResponse) {
-    // alert('oops! you are not signed in');
-    this.spotifyService.authenticate("analyse-playlist-similarity");
+    // this.spotifyService.authenticateTake2("analyze-playlist-similarity");
   }
 }
