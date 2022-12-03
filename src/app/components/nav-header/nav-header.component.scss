@@ -49,5 +49,13 @@
 }
 
 .nav-option {
-  color: white !important;
+  color: white;
+}
+
+.nav-option.active {
+  color: rgb(80, 175, 69) !important;
+}
+
+.nav-option.disabled {
+  color: rgba(255, 255, 255, 0.55);
 }

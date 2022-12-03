@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Playlist } from '../playlist-select/playlist-select.component';
-import { Track } from '../track/track.component';
-import { SpotifyService } from 'src/app/services/spotify.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { Playlist } from "src/app/services/playlist.service";
+import { Track } from "src/app/services/track.service";
+import { SpotifyService } from "src/app/services/spotify.service";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-playlist-compare',
-  templateUrl: './playlist-compare.component.html',
-  styleUrls: ['./playlist-compare.component.scss']
+  selector: "app-playlist-similarity",
+  templateUrl: "./playlist-similarity.component.html",
+  styleUrls: ["./playlist-similarity.component.scss"],
 })
-export class PlaylistCompareComponent implements OnInit {
-
+export class PlaylistSimilarityComponent implements OnInit {
   public leftPlaylist: Playlist;
   public rightPlaylist: Playlist;
   public commonTracks: Array<Track>;
@@ -19,22 +18,14 @@ export class PlaylistCompareComponent implements OnInit {
   public showStats: boolean = false;
   public percentSimilar: number = 0;
 
-  constructor(private spotifyService: SpotifyService, private router: Router) { 
-    this.leftPlaylist = { id: -1, name: '', tracksLink: '', tracks: [] };
-    this.rightPlaylist = { id: -1, name: '', tracksLink: '', tracks: [] };
+  constructor(private spotifyService: SpotifyService, private router: Router) {
+    this.leftPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
+    this.rightPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
     this.commonTracks = [];
     this.commonArtists = [];
   }
 
-  ngOnInit(): void {
-    if (!this.spotifyService.getToken()) {
-      let params = window.location.hash.split('&');
-      this.spotifyService.setToken(params[0].split('=')[1]);
-    }
-
-    this.router.navigateByUrl('/compare-playlists');
-    this.spotifyService.getPlaylists();
-  }
+  ngOnInit(): void {}
 
   comparePlaylists(_event: Event) {
     const leftTracks = this.leftPlaylist?.tracks;
@@ -58,7 +49,10 @@ export class PlaylistCompareComponent implements OnInit {
           if (this.trackMatch(ltrack, rtrack)) {
             commonTracks.push(ltrack);
           }
-          if (this.artistMatch(ltrack, rtrack) && !commonArtists.includes(ltrack.artist)) {
+          if (
+            this.artistMatch(ltrack, rtrack) &&
+            !commonArtists.includes(ltrack.artist)
+          ) {
             commonArtists.push(ltrack.artist);
           }
         }
@@ -66,10 +60,16 @@ export class PlaylistCompareComponent implements OnInit {
       this.commonTracks = commonTracks;
       this.commonArtists = commonArtists;
 
-      const unionTracks = leftTracks.length + rightTracks.length - commonTracks.length;
-      const unionArtists = leftArtists.length + rightArtists.length - commonArtists.length;
+      const unionTracks =
+        leftTracks.length + rightTracks.length - commonTracks.length;
+      const unionArtists =
+        leftArtists.length + rightArtists.length - commonArtists.length;
 
-      this.percentSimilar = Math.floor((commonTracks.length + commonArtists.length) / (unionTracks + unionArtists) * 100);
+      this.percentSimilar = Math.floor(
+        ((commonTracks.length + commonArtists.length) /
+          (unionTracks + unionArtists)) *
+          100
+      );
       this.showStats = true;
     }
   }
@@ -103,7 +103,6 @@ export class PlaylistCompareComponent implements OnInit {
   }
 
   handleAuthError(error: HttpErrorResponse) {
-    // alert('oops! you are not signed in');
-    this.spotifyService.authenticate('compare-playlists');
+    // this.spotifyService.authenticateTake2("analyze-playlist-similarity");
   }
 }

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TrackDistributeComponent } from './track-distribute.component';
+import { TrackTableComponent } from './track-table.component';
 
-describe('TrackDistributeComponent', () => {
-  let component: TrackDistributeComponent;
-  let fixture: ComponentFixture<TrackDistributeComponent>;
+describe('TrackTableComponent', () => {
+  let component: TrackTableComponent;
+  let fixture: ComponentFixture<TrackTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TrackDistributeComponent ]
+      declarations: [ TrackTableComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TrackDistributeComponent);
+    fixture = TestBed.createComponent(TrackTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

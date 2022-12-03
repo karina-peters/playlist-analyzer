@@ -1,0 +1,8 @@
+<div class="container-fluid fill-height page">
+  <div class="row select-component-wrapper">
+    <app-playlist-select
+      [type]="'table'"
+      (selectedEvent)="selectPlaylist($event)"
+      (authError)="handleAuthError($event)"></app-playlist-select>
+  </div>
+</div>

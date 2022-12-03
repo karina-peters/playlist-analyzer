@@ -5,26 +5,32 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
-import { PlaylistCompareComponent } from "./components/playlist-compare/playlist-compare.component";
-import { PlaylistAnalysisComponent } from "./components/playlist-analysis/playlist-analysis.component";
+import { PlaylistSimilarityComponent } from "./components/analyze/playlist-similarity/playlist-similarity.component";
+import { PlaylistCompositionComponent } from "./components/analyze/playlist-composition/playlist-composition.component";
 import { NavHeaderComponent } from "./components/nav-header/nav-header.component";
-import { PlaylistSelectComponent } from "./components/playlist-select/playlist-select.component";
-import { TrackComponent } from "./components/track/track.component";
+import { PlaylistSelectComponent } from "./components/base/playlist-select/playlist-select.component";
+import { TrackComponent } from "./components/base/track/track.component";
 import { LoginComponent } from "./components/login/login.component";
 import { HomeComponent } from "./components/home/home.component";
-import { TrackDistributeComponent } from './components/track-distribute/track-distribute.component';
+import { TrackDistributeComponent } from "./components/design/distribute-tracks/distribute-tracks.component";
+import { TrackDistributionComponent } from "./components/analyze/track-distribution/track-distribution.component";
+import { TrackListComponent } from "./components/base/track-list/track-list.component";
+import { TrackTableComponent } from "./components/base/track-table/track-table.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    PlaylistCompareComponent,
-    PlaylistAnalysisComponent,
+    PlaylistSimilarityComponent,
+    PlaylistCompositionComponent,
     NavHeaderComponent,
     PlaylistSelectComponent,
     TrackComponent,
     LoginComponent,
     HomeComponent,
     TrackDistributeComponent,
+    TrackDistributionComponent,
+    TrackListComponent,
+    TrackTableComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],
