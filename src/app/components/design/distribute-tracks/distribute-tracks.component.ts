@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Playlist } from "src/app/services/playlist.service";
-import { SpotifyService } from "src/app/services/spotify.service";
+import { PlaylistService } from "src/app/services/playlist.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 
@@ -10,13 +10,21 @@ import { Router } from "@angular/router";
   styleUrls: ["./distribute-tracks.component.scss"],
 })
 export class TrackDistributeComponent implements OnInit {
+  public playlists: Array<Playlist> = [];
   public playlist: Playlist;
 
-  constructor(private spotifyService: SpotifyService, private router: Router) {
+  constructor(
+    private playlistService: PlaylistService,
+    private router: Router
+  ) {
     this.playlist = { id: -1, name: "", tracksLink: "", tracks: [] };
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.playlistService
+      .getPlaylists()
+      .subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
+  }
 
   selectPlaylist(playlist: Playlist) {
     this.playlist = playlist;

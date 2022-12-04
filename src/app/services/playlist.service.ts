@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { forkJoin, Observable, of } from "rxjs";
-import { catchError, map, mergeMap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Track, TrackService } from "./track.service";
 
@@ -16,15 +16,25 @@ export interface Playlist {
   providedIn: "root",
 })
 export class PlaylistService {
+  private playlistCache: Array<Playlist> = [];
+
   constructor(
     private spotifyService: SpotifyService,
     private trackService: TrackService
   ) {}
 
-  public getPlaylists(track?: Track): Observable<Array<Playlist>> {
+  /**
+   * Retrieves the playlists for the current user.
+   * @returns An Observable containing an Array of Playlist objects
+   */
+  public getPlaylists(): Observable<Array<Playlist>> {
+    if (this.playlistCache.length > 0) {
+      return of(this.playlistCache);
+    }
+
     return this.spotifyService.getPlaylists().pipe(
-      map((playlists) =>
-        playlists.map((playlist, index) => {
+      map((playlists) => {
+        const ret = playlists.map((playlist, index) => {
           return {
             id: index,
             name: playlist.name,
@@ -32,31 +42,22 @@ export class PlaylistService {
             tracks: [],
             tracksLink: playlist.tracks.href,
           };
-        })
-      ),
-      mergeMap((playlists: Array<Playlist>) =>
-        forkJoin(
-          playlists.map((playlist: Playlist) =>
-            this.trackService.getTracks(playlist.tracksLink).pipe(
-              map((tracks: Array<Track>) => {
-                playlist.tracks = tracks;
-                return playlist;
-              })
-            )
-          )
-        )
-      ),
-      map((playlists: Array<Playlist>) =>
-        playlists.filter(
-          (playlist: Playlist) => !track || this.containsTrack(playlist, track)
-        )
-      ),
+        });
+
+        this.playlistCache = ret;
+        return ret;
+      }),
       catchError((error) => {
         throw error;
       })
     );
   }
 
+  /**
+   * Determines whether or not the provided playlist contains a track.
+   * @param {Playlist} playlist - A playlist to search
+   * @param {Track} trackFind - The track to find
+   */
   public containsTrack(playlist: Playlist, trackFind: Track): boolean {
     if (!playlist || !trackFind) {
       return false;
@@ -64,8 +65,26 @@ export class PlaylistService {
 
     return (
       playlist.tracks.filter((track: Track) =>
-        this.trackService.tracksEqual(track, trackFind)
+        this.trackService.equal(track, trackFind)
       ).length > 0
     );
   }
 }
+
+// mergeMap((playlists: Array<Playlist>) =>
+//         forkJoin(
+//           playlists.map((playlist: Playlist) =>
+//             this.trackService.getTracks(playlist.tracksLink).pipe(
+//               map((tracks: Array<Track>) => {
+//                 playlist.tracks = tracks;
+//                 return playlist;
+//               })
+//             )
+//           )
+//         )
+//       ),
+//       map((playlists: Array<Playlist>) =>
+//         playlists.filter(
+//           (playlist: Playlist) => !track || this.containsTrack(playlist, track)
+//         )
+//       ),

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 import { Playlist } from "src/app/services/playlist.service";
 import { Track, TrackService } from "src/app/services/track.service";
 
@@ -7,7 +7,7 @@ import { Track, TrackService } from "src/app/services/track.service";
   templateUrl: "./track-list.component.html",
   styleUrls: ["./track-list.component.scss"],
 })
-export class TrackListComponent implements OnInit {
+export class TrackListComponent implements OnChanges {
   @Input() playlist: Playlist = {
     id: -1,
     name: "",
@@ -17,7 +17,11 @@ export class TrackListComponent implements OnInit {
 
   constructor(private trackService: TrackService) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    if (this.playlist.tracks.length > 0) {
+      return;
+    }
+
     this.trackService
       .getTracks(this.playlist.tracksLink)
       .subscribe((tracks: Array<Track>) => (this.playlist.tracks = tracks));

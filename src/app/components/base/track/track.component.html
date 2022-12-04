@@ -1,8 +1,7 @@
 <div>
   <li
     class="container list-item"
-    [ngClass]="{ 'list-type': type == 'list', 'table-type': type == 'table' }"
-  >
+    [ngClass]="{ 'list-type': type == 'list', 'table-type': type == 'table' }">
     <div class="row">
       <div class="col-sm-7">
         <div class="row">
@@ -16,7 +15,7 @@
         </div>
       </div>
       <div class="col track-artist detail">
-        {{ trackData.artist }}
+        {{ trackData.artist.name }}
       </div>
       <div class="col-sm-1 detail vcenter">
         {{ trackData.duration }}
@@ -30,8 +29,7 @@
             class="btn btn-secondary dropdown-toggle"
             type="button"
             data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+            aria-expanded="false">
             Playlist Dropdown
           </button>
           <ul class="dropdown-menu">

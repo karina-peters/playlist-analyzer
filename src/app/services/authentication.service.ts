@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { catchError, map } from "rxjs/operators";
+import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -9,6 +8,10 @@ import { environment } from "src/environments/environment";
 export class AuthenticationService {
   constructor(private http: HttpClient) {}
 
+  /**
+   * Routes to a uri containing an access code.
+   * @param {boolean} showDialog - Whether or not the Spotify account access dialog should be shown
+   */
   public requestAccess(showDialog?: boolean) {
     const SCOPES = "user-read-private%20user-read-email";
     const SHOW_DIALOG = showDialog ? showDialog : false;
@@ -19,6 +22,10 @@ export class AuthenticationService {
       `&scope=${SCOPES}&show_dialog=${SHOW_DIALOG}&response_type=code&state=123`;
   }
 
+  /**
+   * Requests a new authorization token and updates the access_token and refresh_token in local storage.
+   * @param {string} queryString - A string containing the access code
+   */
   public requestToken(queryString: string) {
     const code = this.getCode(queryString);
 
@@ -33,6 +40,9 @@ export class AuthenticationService {
       });
   }
 
+  /**
+   * Requests a new authorization token and updates the access_token in local storage.
+   */
   public refreshToken() {
     const refresh_token = localStorage.getItem("refresh_token");
 
@@ -43,11 +53,10 @@ export class AuthenticationService {
       .post("https://accounts.spotify.com/api/token", body, { headers })
       .subscribe((response: any) => {
         localStorage.setItem("access_token", response?.access_token);
-        localStorage.setItem("refresh_token", response?.refresh_token);
       });
   }
 
-  public getHeaders() {
+  private getHeaders() {
     return {
       "Content-Type": "application/x-www-form-urlencoded",
       "Authorization":
@@ -56,7 +65,7 @@ export class AuthenticationService {
     };
   }
 
-  public getCode(queryString: string): string {
+  private getCode(queryString: string): string {
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get("code");
 

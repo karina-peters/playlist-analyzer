@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
-import { Playlist, PlaylistService } from "src/app/services/playlist.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { Playlist } from "src/app/services/playlist.service";
 
 @Component({
   selector: "app-playlist-select",
@@ -8,30 +8,31 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./playlist-select.component.scss"],
 })
 export class PlaylistSelectComponent implements OnInit {
-  public playlists: Array<Playlist>;
-  public selectedPlaylist: Playlist = {
-    id: -1,
-    name: "",
-    tracksLink: "",
-    tracks: [],
-  };
+  public selectedPlaylist: Playlist;
   public showOptions: boolean = false;
   public selectText: string = "Choose a Playlist";
+
   @Input() type = "";
+  @Input() playlists: Array<Playlist> = [];
   @Output() selectedEvent = new EventEmitter<Playlist>();
   @Output() authError = new EventEmitter<HttpErrorResponse>();
 
-  constructor(private playlistService: PlaylistService) {
-    this.playlists = [];
+  constructor() {
+    this.selectedPlaylist = {
+      id: -1,
+      name: "",
+      tracksLink: "",
+      tracks: [],
+    };
   }
 
-  ngOnInit(): void {
-    this.playlistService
-      .getPlaylists()
-      .subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
-  }
+  ngOnInit(): void {}
 
-  selectPlaylist(id: number) {
+  /**
+   * Updates the selector text and emits the selected playlist id.
+   * @param id - The id of the selected playlist
+   */
+  public selectPlaylist(id: number): void {
     this.selectText = this.playlists[id].name;
     this.selectedPlaylist = this.playlists[id];
 

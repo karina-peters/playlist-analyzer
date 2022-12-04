@@ -9,7 +9,7 @@ export class TrackComponent implements OnInit {
   @Input() trackData = {
     id: 0,
     name: "",
-    artist: "",
+    artist: { link: "", name: "", img: "" },
     album: "",
     duration: "",
     img: "",

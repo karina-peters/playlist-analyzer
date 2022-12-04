@@ -4,14 +4,12 @@
     selected: showOptions,
     'list-type': type == 'list',
     'table-type': type == 'table'
-  }"
->
+  }">
   <div class="select">
     <div
       type="button"
       class="select-trigger row align-items-center"
-      (click)="showOptions = !showOptions"
-    >
+      (click)="showOptions = !showOptions">
       <div class="col-sm-11 selector">
         <span>{{ selectText }}</span>
       </div>
@@ -22,12 +20,10 @@
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="24"
-          height="24"
-        >
+          height="24">
           <path
             fill-rule="evenodd"
-            d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"
-          ></path>
+            d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path>
         </svg>
         <svg
           *ngIf="showOptions"
@@ -35,12 +31,10 @@
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           width="24"
-          height="24"
-        >
+          height="24">
           <path
             fill-rule="evenodd"
-            d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"
-          ></path>
+            d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path>
         </svg>
       </div>
     </div>
@@ -49,8 +43,7 @@
         <li
           class="select-item"
           *ngFor="let playlist of playlists"
-          (click)="selectPlaylist(playlist.id)"
-        >
+          (click)="selectPlaylist(playlist.id)">
           {{ playlist.name }}
         </li>
       </ul>
@@ -64,14 +57,11 @@
     'list-type': type == 'list',
     'table-type': type == 'table'
   }"
-  *ngIf="selectedPlaylist.id > -1"
->
+  *ngIf="selectedPlaylist.id > -1">
   <app-track-list
     [playlist]="selectedPlaylist"
-    *ngIf="type == 'list'"
-  ></app-track-list>
+    *ngIf="type == 'list'"></app-track-list>
   <app-track-table
     [playlist]="selectedPlaylist"
-    *ngIf="type == 'table'"
-  ></app-track-table>
+    *ngIf="type == 'table'"></app-track-table>
 </div>

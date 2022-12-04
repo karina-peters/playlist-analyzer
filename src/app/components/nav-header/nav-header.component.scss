@@ -23,7 +23,8 @@
 }
 
 .nav-link {
-  font-weight: lighter;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .dropdown-menu {
@@ -48,14 +49,10 @@
   background-color: rgb(25, 42, 107);
 }
 
-.nav-option {
-  color: white;
-}
-
 .nav-option.active {
-  color: rgb(80, 175, 69) !important;
+  color: white !important;
 }
 
 .nav-option.disabled {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.35) !important;
 }

@@ -56,11 +56,28 @@ button:hover {
 }
 
 .select-component-wrapper {
-  height: 475px;
+  height: 600px;
   overflow: hidden;
 }
 
 #stats-wrapper {
   height: 800px;
   padding: 200px 100px;
+}
+
+.image {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+img {
+  height: 100px;
+  width: 100px;
+}
+
+.vcenter {
+  margin-top: auto;
+  margin-bottom: auto;
 }

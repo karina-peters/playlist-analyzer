@@ -1,9 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { Playlist } from "src/app/services/playlist.service";
-import { Track } from "src/app/services/track.service";
-import { SpotifyService } from "src/app/services/spotify.service";
+import { Track, TrackService } from "src/app/services/track.service";
+import { Artist, ArtistService } from "src/app/services/artist.service";
+import { PlaylistService } from "src/app/services/playlist.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
+import { forkJoin, Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
 @Component({
   selector: "app-playlist-similarity",
@@ -13,96 +16,130 @@ import { Router } from "@angular/router";
 export class PlaylistSimilarityComponent implements OnInit {
   public leftPlaylist: Playlist;
   public rightPlaylist: Playlist;
-  public commonTracks: Array<Track>;
-  public commonArtists: Array<string>;
+  public playlists: Array<Playlist> = [];
+  public commonTracks: Array<Track> = [];
+  public commonArtists: Array<Artist> = [];
   public showStats: boolean = false;
   public percentSimilar: number = 0;
 
-  constructor(private spotifyService: SpotifyService, private router: Router) {
+  constructor(
+    private artistService: ArtistService,
+    private playlistService: PlaylistService,
+    private trackService: TrackService,
+    private router: Router
+  ) {
     this.leftPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
     this.rightPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
-    this.commonTracks = [];
-    this.commonArtists = [];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.playlistService
+      .getPlaylists()
+      .subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
+  }
 
-  comparePlaylists(_event: Event) {
-    const leftTracks = this.leftPlaylist?.tracks;
-    const rightTracks = this.rightPlaylist?.tracks;
-
-    if (leftTracks?.length && rightTracks?.length) {
-      let commonTracks = [];
-      let commonArtists: Array<string> = [];
-      let leftArtists: Array<string> = [];
-      let rightArtists: Array<string> = [];
-
-      for (let ltrack of leftTracks) {
-        if (!leftArtists.includes(ltrack.artist)) {
-          leftArtists.push(ltrack.artist);
-        }
-
-        for (let rtrack of rightTracks) {
-          if (!rightArtists.includes(rtrack.artist)) {
-            rightArtists.push(rtrack.artist);
-          }
-          if (this.trackMatch(ltrack, rtrack)) {
-            commonTracks.push(ltrack);
-          }
-          if (
-            this.artistMatch(ltrack, rtrack) &&
-            !commonArtists.includes(ltrack.artist)
-          ) {
-            commonArtists.push(ltrack.artist);
-          }
-        }
-      }
-      this.commonTracks = commonTracks;
-      this.commonArtists = commonArtists;
-
-      const unionTracks =
-        leftTracks.length + rightTracks.length - commonTracks.length;
-      const unionArtists =
-        leftArtists.length + rightArtists.length - commonArtists.length;
-
-      this.percentSimilar = Math.floor(
-        ((commonTracks.length + commonArtists.length) /
-          (unionTracks + unionArtists)) *
-          100
-      );
-      this.showStats = true;
+  public comparePlaylists(_event: Event) {
+    if (!this.leftPlaylist?.tracks || !this.rightPlaylist?.tracks) {
+      // TODO: alert error
+      return;
     }
+
+    let commonTracks: Array<Track> = [];
+    let commonArtists: Array<Artist> = [];
+
+    let artists: [Array<Artist>, Array<Artist>] = [[], []];
+
+    this.leftPlaylist.tracks.forEach((ltrack) => {
+      if (!this.artistService.contains(artists[0], ltrack.artist)) {
+        artists[0].push(ltrack.artist);
+      }
+
+      this.rightPlaylist.tracks.forEach((rtrack) => {
+        if (!this.artistService.contains(artists[1], rtrack.artist)) {
+          artists[1].push(rtrack.artist);
+        }
+
+        if (
+          this.trackService.equal(ltrack, rtrack) &&
+          !this.trackService.contains(commonTracks, ltrack)
+        ) {
+          commonTracks.push(ltrack);
+        }
+
+        if (
+          this.artistService.equal(ltrack.artist, rtrack.artist) &&
+          !this.artistService.contains(commonArtists, ltrack.artist)
+        ) {
+          commonArtists.push(ltrack.artist);
+        }
+      });
+    });
+
+    this.commonTracks = commonTracks;
+    this.commonArtists = commonArtists;
+
+    this.generateStats(artists[0].length, artists[1].length);
   }
 
-  selectLeft(playlist: Playlist) {
+  public selectLeft(playlist: Playlist) {
     this.leftPlaylist = playlist;
     this.showStats = false;
-    console.log("left id", playlist.id);
   }
 
-  selectRight(playlist: Playlist) {
+  public selectRight(playlist: Playlist) {
     this.rightPlaylist = playlist;
     this.showStats = false;
-    console.log("right id", playlist.id);
   }
 
-  trackMatch(t1: Track, t2: Track) {
-    if (t1 && t2) {
-      return t1.name == t2.name && t1.artist == t2.artist;
-    }
+  private generateStats(aArtistCount: number, bArtistCount: number): void {
+    this.percentSimilar = this.calculateSimilarity(
+      this.leftPlaylist.tracks.length,
+      this.rightPlaylist.tracks.length,
+      this.commonTracks.length,
+      aArtistCount,
+      bArtistCount,
+      this.commonArtists.length
+    );
 
-    return false;
+    this.getCommonArtists().subscribe(() => {
+      this.showStats = true;
+    });
   }
 
-  artistMatch(t1: Track, t2: Track) {
-    if (t1 && t2) {
-      return t1.artist == t2.artist;
+  private getCommonArtists(): Observable<any> {
+    let observables: Array<Observable<Artist>> = [];
+    for (const artist of this.commonArtists) {
+      observables.push(this.artistService.getArtist(artist.link));
     }
 
-    return false;
+    return forkJoin(observables).pipe(
+      map((artists) => {
+        for (const index in this.commonArtists) {
+          this.commonArtists[index] = artists[index];
+        }
+      })
+    );
+  }
+
+  private calculateSimilarity(
+    aTrackCount: number,
+    bTrackCount: number,
+    commonTrackCount: number,
+    aArtistCount: number,
+    bArtistCount: number,
+    commonArtistCount: number
+  ): number {
+    const unionTracks = aTrackCount + bTrackCount - commonTrackCount;
+    const unionArtists = aArtistCount + bArtistCount - commonArtistCount;
+
+    return Math.floor(
+      ((commonTrackCount + commonArtistCount) / (unionTracks + unionArtists)) *
+        100
+    );
   }
 
   handleAuthError(error: HttpErrorResponse) {
+    console.log("auth error", error);
     // this.spotifyService.authenticateTake2("analyze-playlist-similarity");
   }
 }
