@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { SpotifyService } from './spotify.service';
+import { SpotifyService } from "./spotify.service";
 
-describe('PlaylistService', () => {
+describe("PlaylistService", () => {
   let service: SpotifyService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('PlaylistService', () => {
     service = TestBed.inject(SpotifyService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

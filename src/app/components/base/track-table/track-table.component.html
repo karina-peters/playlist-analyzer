@@ -1,9 +1,5 @@
 <div class="track-list">
   <ul class="list-group">
-    <app-track
-      *ngFor="let track of playlist.tracks"
-      [trackData]="track"
-      [type]="'table'"
-    ></app-track>
+    <app-track *ngFor="let track of playlist.tracks" [trackData]="track" [type]="'table'"></app-track>
   </ul>
 </div>

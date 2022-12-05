@@ -22,20 +22,13 @@ export class PlaylistSimilarityComponent implements OnInit {
   public showStats: boolean = false;
   public percentSimilar: number = 0;
 
-  constructor(
-    private artistService: ArtistService,
-    private playlistService: PlaylistService,
-    private trackService: TrackService,
-    private router: Router
-  ) {
+  constructor(private artistService: ArtistService, private playlistService: PlaylistService, private trackService: TrackService, private router: Router) {
     this.leftPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
     this.rightPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
   }
 
   ngOnInit(): void {
-    this.playlistService
-      .getPlaylists()
-      .subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
+    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
   }
 
   public comparePlaylists(_event: Event) {
@@ -59,17 +52,11 @@ export class PlaylistSimilarityComponent implements OnInit {
           artists[1].push(rtrack.artist);
         }
 
-        if (
-          this.trackService.equal(ltrack, rtrack) &&
-          !this.trackService.contains(commonTracks, ltrack)
-        ) {
+        if (this.trackService.equal(ltrack, rtrack) && !this.trackService.contains(commonTracks, ltrack)) {
           commonTracks.push(ltrack);
         }
 
-        if (
-          this.artistService.equal(ltrack.artist, rtrack.artist) &&
-          !this.artistService.contains(commonArtists, ltrack.artist)
-        ) {
+        if (this.artistService.equal(ltrack.artist, rtrack.artist) && !this.artistService.contains(commonArtists, ltrack.artist)) {
           commonArtists.push(ltrack.artist);
         }
       });
@@ -132,10 +119,7 @@ export class PlaylistSimilarityComponent implements OnInit {
     const unionTracks = aTrackCount + bTrackCount - commonTrackCount;
     const unionArtists = aArtistCount + bArtistCount - commonArtistCount;
 
-    return Math.floor(
-      ((commonTrackCount + commonArtistCount) / (unionTracks + unionArtists)) *
-        100
-    );
+    return Math.floor(((commonTrackCount + commonArtistCount) / (unionTracks + unionArtists)) * 100);
   }
 
   handleAuthError(error: HttpErrorResponse) {
