@@ -2,11 +2,13 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
+import { IArtistDTO } from "src/app/models/spotify-response.models";
 
 export interface Artist {
   link: string;
   name: string;
   img: string;
+  genres: Array<string>;
 }
 
 @Injectable({
@@ -24,11 +26,12 @@ export class ArtistService {
    */
   public getArtist(artistLink: string): Observable<Artist> {
     return this.spotifyService.getArtist(artistLink).pipe(
-      map((artist) => {
+      map((artist: IArtistDTO) => {
         const ret = {
           link: artist.href,
           name: artist.name,
           img: artist.images[0].url,
+          genres: artist.genres,
         };
 
         this.artistsCache[artistLink] = ret;
