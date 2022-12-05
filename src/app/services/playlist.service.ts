@@ -3,6 +3,7 @@ import { Observable, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Track, TrackService } from "./track.service";
+import { IPlaylistsDTO } from "src/app/models/spotify-response.models";
 
 export interface Playlist {
   id: number;
@@ -18,10 +19,7 @@ export interface Playlist {
 export class PlaylistService {
   private playlistCache: Array<Playlist> = [];
 
-  constructor(
-    private spotifyService: SpotifyService,
-    private trackService: TrackService
-  ) {}
+  constructor(private spotifyService: SpotifyService, private trackService: TrackService) {}
 
   /**
    * Retrieves the playlists for the current user.
@@ -33,7 +31,7 @@ export class PlaylistService {
     }
 
     return this.spotifyService.getPlaylists().pipe(
-      map((playlists) => {
+      map((playlists: Array<IPlaylistsDTO>) => {
         const ret = playlists.map((playlist, index) => {
           return {
             id: index,
@@ -63,11 +61,7 @@ export class PlaylistService {
       return false;
     }
 
-    return (
-      playlist.tracks.filter((track: Track) =>
-        this.trackService.equal(track, trackFind)
-      ).length > 0
-    );
+    return playlist.tracks.filter((track: Track) => this.trackService.equal(track, trackFind)).length > 0;
   }
 }
 

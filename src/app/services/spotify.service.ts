@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
+import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO } from "../models/spotify-response.models";
 
 @Injectable({
   providedIn: "root",
@@ -13,12 +14,11 @@ export class SpotifyService {
    * Retrieves playlist data for the current user from Spotify.
    * @returns An Observable containing a list of playlists from the Spotify playlists endpoint
    */
-  public getPlaylists(): Observable<Array<any>> {
+  public getPlaylists(): Observable<Array<IPlaylistsDTO>> {
     return this.http
       .get("https://api.spotify.com/v1/me/playlists", {
         headers: {
-          Authorization:
-            "Bearer " + window.localStorage.getItem("access_token"),
+          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
         },
         params: {
           limit: 50,
@@ -26,7 +26,7 @@ export class SpotifyService {
       })
       .pipe(
         map((response: any) => response?.items),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           throw error;
         })
       );
@@ -37,12 +37,11 @@ export class SpotifyService {
    * @param uri - The uri of the tracks to retrieve
    * @returns An Observable containing the response from the Spotify tracks endpoint
    */
-  public getTracks(uri: string): Observable<Array<any>> {
+  public getTracks(uri: string): Observable<Array<IPlaylistTracksDTO>> {
     return this.http
       .get(uri, {
         headers: {
-          Authorization:
-            "Bearer " + window.localStorage.getItem("access_token"),
+          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
         },
       })
       .pipe(
@@ -58,15 +57,15 @@ export class SpotifyService {
    * @param uri - The uri of the artist to retrieve
    * @returns An Observable containing the response from the Spotify artists endpoint
    */
-  public getArtist(uri: string): Observable<any> {
+  public getArtist(uri: string): Observable<IArtistDTO> {
     return this.http
       .get(uri, {
         headers: {
-          Authorization:
-            "Bearer " + window.localStorage.getItem("access_token"),
+          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
         },
       })
       .pipe(
+        map((response: any) => response),
         catchError((error) => {
           throw error;
         })

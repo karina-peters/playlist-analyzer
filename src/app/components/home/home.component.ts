@@ -8,14 +8,11 @@ import { AuthenticationService } from "src/app/services/authentication.service";
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  constructor(
-    private authService: AuthenticationService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit(): void {
     if (window.location.search) {
-      this.authService.requestToken(window.location.search);
+      this.authService.requestToken(window.location.search).subscribe();
       this.router.navigateByUrl("/home");
     }
   }
