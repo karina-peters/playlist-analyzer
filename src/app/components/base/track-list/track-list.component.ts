@@ -22,8 +22,6 @@ export class TrackListComponent implements OnChanges {
       return;
     }
 
-    this.trackService
-      .getTracks(this.playlist.tracksLink)
-      .subscribe((tracks: Array<Track>) => (this.playlist.tracks = tracks));
+    this.trackService.getTracks(this.playlist.tracksLink).subscribe((tracks: Array<Track>) => (this.playlist.tracks = tracks));
   }
 }

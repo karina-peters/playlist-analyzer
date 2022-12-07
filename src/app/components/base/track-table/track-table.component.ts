@@ -18,8 +18,6 @@ export class TrackTableComponent implements OnInit {
   constructor(private trackService: TrackService) {}
 
   ngOnInit(): void {
-    this.trackService
-      .getTracks(this.playlist.tracksLink)
-      .subscribe((tracks: Array<Track>) => (this.playlist.tracks = tracks));
+    this.trackService.getTracks(this.playlist.tracksLink).subscribe((tracks: Array<Track>) => (this.playlist.tracks = tracks));
   }
 }
