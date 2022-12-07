@@ -1,0 +1,47 @@
+.alert {
+  position: absolute;
+  width: 500px;
+  top: 20px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 1;
+  border-color: white;
+  background-color: rgb(240, 240, 240);
+}
+
+.btn-close {
+  float: right;
+}
+
+.alert-success {
+  color: rgb(6, 65, 0) !important;
+}
+
+.alert-warning {
+  color: rgb(95, 0, 32) !important;
+}
+
+.alert-info {
+  color: rgb(0, 70, 128) !important;
+}
+
+.alert-warning {
+  color: rgb(105, 81, 0) !important;
+}
+
+.alert-success .bi-check-circle-fill {
+  display: block !important;
+}
+
+.alert-danger .bi-exclamation-octagon-fill {
+  display: block !important;
+}
+
+.alert-info .bi-info-circle-fill {
+  display: block !important;
+}
+
+.alert-warning .bi-exclamation-triangle-fill {
+  display: block !important;
+}

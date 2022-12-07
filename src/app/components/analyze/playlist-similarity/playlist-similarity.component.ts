@@ -3,10 +3,9 @@ import { Playlist } from "src/app/services/playlist.service";
 import { Track, TrackService } from "src/app/services/track.service";
 import { Artist, ArtistService } from "src/app/services/artist.service";
 import { PlaylistService } from "src/app/services/playlist.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Router } from "@angular/router";
 import { forkJoin, Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
+import { AlertService } from "src/app/services/alert.service";
 
 @Component({
   selector: "app-playlist-similarity",
@@ -17,30 +16,32 @@ export class PlaylistSimilarityComponent implements OnInit {
   public leftPlaylist: Playlist;
   public rightPlaylist: Playlist;
   public playlists: Array<Playlist> = [];
+
   public commonTracks: Array<Track> = [];
   public commonArtists: Array<Artist> = [];
+  public commonGenres: Array<string> = [];
+
   public showStats: boolean = false;
   public percentSimilar: number = 0;
 
   constructor(
+    private alertService: AlertService,
     private artistService: ArtistService,
     private playlistService: PlaylistService,
-    private trackService: TrackService,
-    private router: Router
+    private trackService: TrackService
   ) {
     this.leftPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
     this.rightPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
   }
 
   ngOnInit(): void {
-    this.playlistService
-      .getPlaylists()
-      .subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
+    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
   }
 
   public comparePlaylists(_event: Event) {
     if (!this.leftPlaylist?.tracks || !this.rightPlaylist?.tracks) {
-      // TODO: alert error
+      // TODO: maybe subscribe to alert and close it when a new playlist is selected?
+      this.alertService.error("Error: one or more of the selected playlists has no tracks!");
       return;
     }
 
@@ -59,22 +60,17 @@ export class PlaylistSimilarityComponent implements OnInit {
           artists[1].push(rtrack.artist);
         }
 
-        if (
-          this.trackService.equal(ltrack, rtrack) &&
-          !this.trackService.contains(commonTracks, ltrack)
-        ) {
+        if (this.trackService.equal(ltrack, rtrack) && !this.trackService.contains(commonTracks, ltrack)) {
           commonTracks.push(ltrack);
         }
 
-        if (
-          this.artistService.equal(ltrack.artist, rtrack.artist) &&
-          !this.artistService.contains(commonArtists, ltrack.artist)
-        ) {
+        if (this.artistService.equal(ltrack.artist, rtrack.artist) && !this.artistService.contains(commonArtists, ltrack.artist)) {
           commonArtists.push(ltrack.artist);
         }
       });
     });
 
+    // TODO: add commonGenres
     this.commonTracks = commonTracks;
     this.commonArtists = commonArtists;
 
@@ -103,6 +99,11 @@ export class PlaylistSimilarityComponent implements OnInit {
 
     this.getCommonArtists().subscribe(() => {
       this.showStats = true;
+
+      let element = document.getElementById("playlist-similarity");
+      if (element) {
+        element.scrollTop = element.scrollHeight - element.clientHeight;
+      }
     });
   }
 
@@ -132,14 +133,6 @@ export class PlaylistSimilarityComponent implements OnInit {
     const unionTracks = aTrackCount + bTrackCount - commonTrackCount;
     const unionArtists = aArtistCount + bArtistCount - commonArtistCount;
 
-    return Math.floor(
-      ((commonTrackCount + commonArtistCount) / (unionTracks + unionArtists)) *
-        100
-    );
-  }
-
-  handleAuthError(error: HttpErrorResponse) {
-    console.log("auth error", error);
-    // this.spotifyService.authenticateTake2("analyze-playlist-similarity");
+    return Math.floor(((commonTrackCount + commonArtistCount) / (unionTracks + unionArtists)) * 100);
   }
 }
