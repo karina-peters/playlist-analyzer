@@ -5,6 +5,7 @@ import { SpotifyService } from "./spotify.service";
 import { IArtistDTO } from "src/app/models/spotify-response.models";
 
 export interface Artist {
+  id: string;
   link: string;
   name: string;
   img: string;
@@ -28,6 +29,7 @@ export class ArtistService {
     return this.spotifyService.getArtist(artistLink).pipe(
       map((artist: IArtistDTO) => {
         const ret = {
+          id: artist.id,
           link: artist.href,
           name: artist.name,
           img: artist.images[0].url,
