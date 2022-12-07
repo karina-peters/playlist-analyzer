@@ -6,7 +6,8 @@ import { Artist, ArtistService } from "./artist.service";
 import { IPlaylistTracksDTO } from "src/app/models/spotify-response.models";
 
 export interface Track {
-  id: number;
+  index: number;
+  id: string;
   name: string;
   artist: Artist;
   album: string;
@@ -36,9 +37,11 @@ export class TrackService {
       map((tracks: Array<IPlaylistTracksDTO>) => {
         const ret = tracks.map((track, index) => {
           return {
-            id: index,
+            index: index,
+            id: track.track?.id,
             name: track.track?.name,
             artist: {
+              id: track.track?.artists[0].id,
               link: track.track?.artists[0].href,
               name: track.track?.artists[0].name,
               img: "",

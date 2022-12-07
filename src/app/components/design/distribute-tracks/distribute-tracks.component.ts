@@ -14,7 +14,7 @@ export class TrackDistributeComponent implements OnInit {
   public playlist: Playlist;
 
   constructor(private playlistService: PlaylistService, private router: Router) {
-    this.playlist = { id: -1, name: "", tracksLink: "", tracks: [] };
+    this.playlist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
   }
 
   ngOnInit(): void {

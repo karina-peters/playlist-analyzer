@@ -30,8 +30,8 @@ export class PlaylistSimilarityComponent implements OnInit {
     private playlistService: PlaylistService,
     private trackService: TrackService
   ) {
-    this.leftPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
-    this.rightPlaylist = { id: -1, name: "", tracksLink: "", tracks: [] };
+    this.leftPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
+    this.rightPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
   }
 
   ngOnInit(): void {

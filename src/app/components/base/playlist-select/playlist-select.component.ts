@@ -19,7 +19,8 @@ export class PlaylistSelectComponent implements OnInit {
 
   constructor() {
     this.selectedPlaylist = {
-      id: -1,
+      index: -1,
+      id: "",
       name: "",
       tracksLink: "",
       tracks: [],
@@ -30,13 +31,13 @@ export class PlaylistSelectComponent implements OnInit {
 
   /**
    * Updates the selector text and emits the selected playlist id.
-   * @param id - The id of the selected playlist
+   * @param index - The index of the selected playlist
    */
-  public selectPlaylist(id: number): void {
-    this.selectText = this.playlists[id].name;
-    this.selectedPlaylist = this.playlists[id];
+  public selectPlaylist(index: number): void {
+    this.selectText = this.playlists[index].name;
+    this.selectedPlaylist = this.playlists[index];
 
-    this.selectedEvent.emit(this.playlists[id]);
+    this.selectedEvent.emit(this.playlists[index]);
     this.showOptions = false;
   }
 }

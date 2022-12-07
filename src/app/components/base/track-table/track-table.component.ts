@@ -9,7 +9,8 @@ import { Track, TrackService } from "src/app/services/track.service";
 })
 export class TrackTableComponent implements OnInit {
   @Input() playlist: Playlist = {
-    id: -1,
+    index: -1,
+    id: "",
     name: "",
     tracksLink: "",
     tracks: [],

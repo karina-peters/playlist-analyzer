@@ -25,7 +25,7 @@
     </div>
     <div class="options-wrapper">
       <ul *ngIf="showOptions" class="select-options">
-        <li class="select-item" *ngFor="let playlist of playlists" (click)="selectPlaylist(playlist.id)">
+        <li class="select-item" *ngFor="let playlist of playlists" (click)="selectPlaylist(playlist.index)">
           {{ playlist.name }}
         </li>
       </ul>
@@ -39,7 +39,7 @@
     'list-type': type == 'list',
     'table-type': type == 'table'
   }"
-  *ngIf="selectedPlaylist.id > -1">
+  *ngIf="selectedPlaylist.index > -1">
   <app-track-list [playlist]="selectedPlaylist" *ngIf="type == 'list'"></app-track-list>
   <app-track-table [playlist]="selectedPlaylist" *ngIf="type == 'table'"></app-track-table>
 </div>

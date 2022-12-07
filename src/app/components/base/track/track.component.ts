@@ -7,7 +7,8 @@ import { Component, OnInit, Input } from "@angular/core";
 })
 export class TrackComponent implements OnInit {
   @Input() trackData = {
-    id: 0,
+    index: -1,
+    id: "",
     name: "",
     artist: { link: "", name: "", img: "" },
     album: "",
