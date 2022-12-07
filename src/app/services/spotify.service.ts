@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { EMPTY, Observable } from "rxjs";
+import { catchError, expand, map, reduce } from "rxjs/operators";
 import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO } from "../models/spotify-response.models";
 
 @Injectable({
@@ -11,25 +11,19 @@ export class SpotifyService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Retrieves playlist data for the current user from Spotify.
+   * Retrieves all playlists for the current user from Spotify.
+   * @param {number} limit - The number of playlists per page
    * @returns An Observable containing a list of playlists from the Spotify playlists endpoint
    */
   public getPlaylists(): Observable<Array<IPlaylistsDTO>> {
-    return this.http
-      .get("https://api.spotify.com/v1/me/playlists", {
-        headers: {
-          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
-        },
-        params: {
-          limit: 50,
-        },
+    return this.getNext("https://api.spotify.com/v1/me/playlists").pipe(
+      expand((response: any) => (response?.next ? this.getNext(response.next) : EMPTY)),
+      map((response: any) => response.items),
+      reduce((accumulator, value) => accumulator.concat(value)),
+      catchError((error: HttpErrorResponse) => {
+        throw error;
       })
-      .pipe(
-        map((response: any) => response?.items),
-        catchError((error: HttpErrorResponse) => {
-          throw error;
-        })
-      );
+    );
   }
 
   /**
@@ -38,18 +32,14 @@ export class SpotifyService {
    * @returns An Observable containing the response from the Spotify tracks endpoint
    */
   public getTracks(uri: string): Observable<Array<IPlaylistTracksDTO>> {
-    return this.http
-      .get(uri, {
-        headers: {
-          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
-        },
+    return this.getNext(uri).pipe(
+      expand((response: any) => (response?.next ? this.getNext(response.next) : EMPTY)),
+      map((response: any) => response.items),
+      reduce((accumulator, value) => accumulator.concat(value)),
+      catchError((error: HttpErrorResponse) => {
+        throw error;
       })
-      .pipe(
-        map((response: any) => response?.items),
-        catchError((error) => {
-          throw error;
-        })
-      );
+    );
   }
 
   /**
@@ -96,5 +86,16 @@ export class SpotifyService {
           throw error;
         })
       );
+  }
+
+  private getNext(link: string): Observable<any> {
+    return this.http.get(link, {
+      headers: {
+        Authorization: "Bearer " + window.localStorage.getItem("access_token"),
+      },
+      params: {
+        limit: 50,
+      },
+    });
   }
 }
