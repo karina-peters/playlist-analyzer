@@ -48,7 +48,7 @@ export interface ISearchResultsDTO {
 
 export interface IAlbum {
   album_type: string;
-  artists: Array<IArtistReference>;
+  artists: Array<IReference>;
   available_markets: Array<string>;
   external_urls: Object;
   href: string;
@@ -64,7 +64,7 @@ export interface IAlbum {
 
 export interface ITrack {
   album: IAlbum;
-  artists: Array<IArtistReference>;
+  artists: Array<IArtistDTO>;
   available_markets: Array<string>;
   disc_number: number;
   duration_ms: number;
@@ -92,28 +92,6 @@ export interface IReference {
   offset: number;
   previous: string;
   total: number;
-}
-
-export interface IArtistReference {
-  album: IAlbum;
-  artists: Array<IArtistReference>;
-  available_markets: Array<string>;
-  disc_number: number;
-  duration_ms: number;
-  episode: boolean;
-  explicit: boolean;
-  external_ids: Object;
-  external_urls: Object;
-  href: string;
-  id: string;
-  is_local: boolean;
-  name: string;
-  popularity: number;
-  preview_url: string;
-  track: boolean;
-  track_number: number;
-  type: string;
-  uri: string;
 }
 
 export interface IUserReference {
