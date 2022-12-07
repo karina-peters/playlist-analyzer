@@ -11,7 +11,7 @@ export interface IPlaylistsDTO {
   primary_color: any;
   public: boolean;
   snapshot_id: string;
-  tracks: ITracksReference;
+  tracks: IReference;
   type: string;
 }
 
@@ -34,6 +34,16 @@ export interface IArtistDTO {
   popularity: number;
   type: string;
   uri: string;
+}
+
+export interface ISearchResultsDTO {
+  tracks: IReference;
+  artists: IReference;
+  albums: IReference;
+  playlists: IReference;
+  shows: IReference;
+  episodes: IReference;
+  audiobooks: IReference;
 }
 
 export interface IAlbum {
@@ -74,7 +84,7 @@ export interface ITrack {
   uri: string;
 }
 
-export interface ITracksReference {
+export interface IReference {
   href: string;
   items: Array<any>;
   limit: number;

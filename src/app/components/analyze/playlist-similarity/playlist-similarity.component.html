@@ -1,11 +1,7 @@
-<div class="container-fluid fill-height page">
+<div class="container-fluid fill-height page" id="playlist-similarity">
   <div class="row select-component-wrapper">
     <div class="col select-wrapper" id="select-wrapper-left">
-      <app-playlist-select
-        [playlists]="playlists"
-        [type]="'list'"
-        (selectedEvent)="selectLeft($event)"
-        (authError)="handleAuthError($event)"></app-playlist-select>
+      <app-playlist-select [playlists]="playlists" [type]="'list'" (selectedEvent)="selectLeft($event)"></app-playlist-select>
     </div>
     <div class="col-sm-1 justify-content-center">
       <div class="row align-items-center button-wrapper">
@@ -27,10 +23,21 @@
   <div class="stats" id="stats-wrapper" *ngIf="showStats">
     <div class="row">
       <div class="col-sm-6 common-list" id="common-tracks">
-        <span class="heading">COMMON TRACKS</span>
-        <ol *ngIf="commonTracks.length > 0">
-          <li class="common-track" *ngFor="let track of commonTracks">{{ track.name }} - {{ track.artist.name }}</li>
-        </ol>
+        <div class="row">
+          <span class="heading">COMMON TRACKS</span>
+          <ol *ngIf="commonTracks.length > 0">
+            <li class="common-track" *ngFor="let track of commonTracks">{{ track.name }} - {{ track.artist.name }}</li>
+          </ol>
+        </div>
+
+        <div class="row">
+          <span class="heading">COMMON GENRES</span>
+          <ol *ngIf="commonGenres.length > 0">
+            <li class="common-genre" *ngFor="let genre of commonGenres">
+              {{ genre }}
+            </li>
+          </ol>
+        </div>
       </div>
       <div class="col common-list" id="common-artists">
         <span class="heading">COMMON ARTISTS</span>
@@ -47,7 +54,6 @@
         <p>{{ percentSimilar }}%</p>
         <p>similar</p>
       </div>
-      <span>Common Genres</span>
     </div>
   </div>
 </div>

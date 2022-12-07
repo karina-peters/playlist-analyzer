@@ -3,11 +3,12 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, of, throwError } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
+import { AlertService } from "./services/alert.service";
 import { AuthenticationService } from "./services/authentication.service";
 
 @Injectable()
 export class MonitorInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(private alertService: AlertService, private authService: AuthenticationService, private router: Router) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     return next.handle(request).pipe(
@@ -20,7 +21,7 @@ export class MonitorInterceptor implements HttpInterceptor {
   private handleResponseError(error: HttpErrorResponse, request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     // Business error
     if (error.status === 400) {
-      // Show message
+      this.alertService.error(`${error.status}: Bad Request`);
     }
 
     // Invalid token error
@@ -46,13 +47,12 @@ export class MonitorInterceptor implements HttpInterceptor {
 
     // Server error
     else if (error.status === 500) {
-      // Show message
+      this.alertService.error(`${error.status}: Internal Server Error`);
     }
 
     // Maintenance error
     else if (error.status === 503) {
-      // Show message
-      // Redirect to the maintenance page
+      this.alertService.error(`${error.status}: Server Unavailable`);
     }
 
     return throwError(error);
