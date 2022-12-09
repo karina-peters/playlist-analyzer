@@ -1,0 +1,88 @@
+.custom-select {
+  background-color: white;
+  position: relative;
+  border-radius: 25px;
+  height: 50px;
+  min-height: 50px;
+  max-height: 305px;
+  transition: height 0.25s;
+  min-width: 400px;
+  max-width: 575px;
+  overflow-y: hidden;
+  padding: 10px 0px 0px 0px;
+}
+
+input {
+  margin-left: 20px;
+  width: 100%;
+  border: none;
+  outline: none !important;
+  line-height: 28px;
+}
+
+input:read-only {
+  cursor: pointer;
+}
+
+.select-trigger {
+  .selector-arrow {
+    margin-right: 15px;
+
+    > svg {
+      transform: rotate(0deg);
+      transition: transform 0.25s;
+      float: right;
+    }
+  }
+
+  .selector-arrow.expanded {
+    > svg {
+      transform: rotate(-180deg);
+    }
+  }
+}
+
+.options-wrapper {
+  max-height: 255px;
+  margin-top: 10px;
+  overflow-y: scroll;
+
+  > .select-options {
+    padding: 0px;
+    margin-bottom: 0px;
+
+    > .option {
+      cursor: pointer;
+      list-style-type: none;
+      line-height: 50px;
+      padding: 0px 25px;
+
+      > .name {
+        color: rgb(50, 50, 50);
+      }
+    }
+
+    > .option.highlighted {
+      background-color: rgb(240, 240, 240);
+    }
+
+    > .option.selected {
+      > .name {
+        color: rgb(80, 175, 69);
+      }
+    }
+
+    > .option:hover {
+      > .name {
+        color: rgb(150, 150, 150);
+      }
+    }
+
+    > .message-option {
+      cursor: default;
+      list-style-type: none;
+      line-height: 50px;
+      padding: 0px 25px;
+    }
+  }
+}

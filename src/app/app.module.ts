@@ -16,7 +16,8 @@ import { TrackDistributionComponent } from "./components/analyze/track-distribut
 import { TrackListComponent } from "./components/base/track-list/track-list.component";
 import { TrackTableComponent } from "./components/base/track-table/track-table.component";
 import { MonitorInterceptor } from "./monitor.interceptor";
-import { AlertComponent } from './components/base/alert/alert.component';
+import { AlertComponent } from "./components/base/alert/alert.component";
+import { SelectorComponent } from "./components/base/selector/selector.component";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { AlertComponent } from './components/base/alert/alert.component';
     TrackListComponent,
     TrackTableComponent,
     AlertComponent,
+    SelectorComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [
