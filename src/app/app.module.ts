@@ -7,7 +7,6 @@ import { AppComponent } from "./app.component";
 import { PlaylistSimilarityComponent } from "./components/analyze/playlist-similarity/playlist-similarity.component";
 import { PlaylistCompositionComponent } from "./components/analyze/playlist-composition/playlist-composition.component";
 import { NavHeaderComponent } from "./components/nav-header/nav-header.component";
-import { PlaylistSelectComponent } from "./components/base/playlist-select/playlist-select.component";
 import { TrackComponent } from "./components/base/track/track.component";
 import { LoginComponent } from "./components/login/login.component";
 import { HomeComponent } from "./components/home/home.component";
@@ -18,6 +17,7 @@ import { TrackTableComponent } from "./components/base/track-table/track-table.c
 import { MonitorInterceptor } from "./monitor.interceptor";
 import { AlertComponent } from "./components/base/alert/alert.component";
 import { SelectorComponent } from "./components/base/selector/selector.component";
+import { ImageScrollComponent } from './components/base/image-scroll/image-scroll.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,6 @@ import { SelectorComponent } from "./components/base/selector/selector.component
     PlaylistSimilarityComponent,
     PlaylistCompositionComponent,
     NavHeaderComponent,
-    PlaylistSelectComponent,
     TrackComponent,
     LoginComponent,
     HomeComponent,
@@ -35,6 +34,7 @@ import { SelectorComponent } from "./components/base/selector/selector.component
     TrackTableComponent,
     AlertComponent,
     SelectorComponent,
+    ImageScrollComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [

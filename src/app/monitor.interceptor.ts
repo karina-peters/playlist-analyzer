@@ -55,6 +55,11 @@ export class MonitorInterceptor implements HttpInterceptor {
       this.alertService.error(`${error.status}: Server Unavailable`);
     }
 
+    // Unknown error
+    else {
+      this.alertService.error(`${error.status}: Unknown Error`);
+    }
+
     return throwError(error);
   }
 

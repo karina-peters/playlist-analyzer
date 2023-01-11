@@ -1,28 +1,22 @@
-import { Component, Input, OnChanges } from "@angular/core";
-import { Playlist } from "src/app/services/playlist.service";
-import { Track, TrackService } from "src/app/services/track.service";
+import { Component, Input, OnInit } from "@angular/core";
+import { Subject } from "rxjs";
+import { Track } from "src/app/services/track.service";
 
 @Component({
   selector: "app-track-list",
   templateUrl: "./track-list.component.html",
   styleUrls: ["./track-list.component.scss"],
 })
-export class TrackListComponent implements OnChanges {
-  @Input() playlist: Playlist = {
-    index: -1,
-    id: "",
-    name: "",
-    tracksLink: "",
-    tracks: [],
-  };
+export class TrackListComponent implements OnInit {
+  @Input() tracks$: Subject<Array<Track>> = new Subject<Array<Track>>();
 
-  constructor(private trackService: TrackService) {}
+  public tracks: Array<Track> = [];
 
-  ngOnChanges(): void {
-    if (this.playlist.tracks.length > 0) {
-      return;
-    }
+  constructor() {}
 
-    this.trackService.getTracks(this.playlist.tracksLink).subscribe((tracks: Array<Track>) => (this.playlist.tracks = tracks));
+  ngOnInit(): void {
+    this.tracks$.subscribe((tracks: Array<Track>) => {
+      this.tracks = tracks;
+    });
   }
 }

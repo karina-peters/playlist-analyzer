@@ -1,10 +1,15 @@
 <div class="container-fluid fill-height page">
   Move all tracks to single playlist option
   <div class="row select-component-wrapper">
-    <app-playlist-select
+    <app-selector
+      class="row"
+      [options$]="selectorOptions$"
+      [config]="selectorConfig"
+      (selectedEvent)="selectPlaylist($event)"></app-selector>
+    <!-- <app-playlist-select
       [playlists]="playlists"
       [type]="'table'"
       (selectedEvent)="selectPlaylist($event)"
-      (authError)="handleAuthError($event)"></app-playlist-select>
+      (authError)="handleAuthError($event)"></app-playlist-select> -->
   </div>
 </div>

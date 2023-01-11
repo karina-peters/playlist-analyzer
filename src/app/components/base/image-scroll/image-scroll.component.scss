@@ -1,0 +1,60 @@
+.container-fluid {
+  position: relative;
+  padding-right: 0px;
+  padding-left: 0px;
+
+  .page-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+
+    .col {
+      flex: 0 0 auto;
+    }
+
+    .item {
+      margin: 0px 15px;
+
+      img {
+        height: 200px;
+        width: 200px;
+      }
+
+      .item-name {
+        line-height: 40px;
+        color: white;
+      }
+    }
+  }
+
+  .page-wrapper::-webkit-scrollbar {
+    width: 0 !important;
+  }
+
+  .arrow {
+    color: rgb(189, 201, 243);
+    position: absolute;
+    height: 200px;
+    width: 75px;
+    background-color: rgb(41, 65, 171);
+    top: 0;
+
+    svg {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+    }
+  }
+
+  .arrow:hover {
+    color: white;
+  }
+
+  #left-arrow {
+    left: -60px;
+  }
+
+  #right-arrow {
+    right: -50px;
+  }
+}

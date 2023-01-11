@@ -1,18 +1,28 @@
 import { Component, OnInit } from "@angular/core";
+import { BehaviorSubject, forkJoin, Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Playlist } from "src/app/services/playlist.service";
 import { Track, TrackService } from "src/app/services/track.service";
 import { Artist, ArtistService } from "src/app/services/artist.service";
 import { PlaylistService } from "src/app/services/playlist.service";
-import { forkJoin, Observable } from "rxjs";
-import { map } from "rxjs/operators";
 import { AlertService } from "src/app/services/alert.service";
+import { DataType, SelectorConfig } from "src/app/components/base/selector/selector.component";
 
+export interface Page {
+  index: number;
+  items: Array<any>;
+}
 @Component({
   selector: "app-playlist-similarity",
   templateUrl: "./playlist-similarity.component.html",
   styleUrls: ["./playlist-similarity.component.scss"],
 })
 export class PlaylistSimilarityComponent implements OnInit {
+  public selectorConfig: SelectorConfig;
+  public selectorOptions$: BehaviorSubject<Array<Playlist>> = new BehaviorSubject<Array<Playlist>>([]);
+  public leftTracks$: BehaviorSubject<Array<Track>> = new BehaviorSubject<Array<Track>>([]);
+  public rightTracks$: BehaviorSubject<Array<Track>> = new BehaviorSubject<Array<Track>>([]);
+
   public leftPlaylist: Playlist;
   public rightPlaylist: Playlist;
   public playlists: Array<Playlist> = [];
@@ -32,13 +42,26 @@ export class PlaylistSimilarityComponent implements OnInit {
   ) {
     this.leftPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
     this.rightPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
+
+    this.selectorConfig = {
+      type: DataType.Playlist,
+      allowSearch: true,
+    };
   }
 
   ngOnInit(): void {
-    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
+    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => {
+      this.selectorOptions$.next(playlists);
+    });
   }
 
   public comparePlaylists(_event: Event) {
+    if (!this.leftPlaylist?.id || !this.rightPlaylist?.id) {
+      // TODO: maybe subscribe to alert and close it when a new playlist is selected?
+      this.alertService.warn("Please select two playlists to compare!");
+      return;
+    }
+
     if (!this.leftPlaylist?.tracks || !this.rightPlaylist?.tracks) {
       // TODO: maybe subscribe to alert and close it when a new playlist is selected?
       this.alertService.error("Error: one or more of the selected playlists has no tracks!");
@@ -79,11 +102,21 @@ export class PlaylistSimilarityComponent implements OnInit {
 
   public selectLeft(playlist: Playlist) {
     this.leftPlaylist = playlist;
+    this.trackService.getTracks(playlist.tracksLink).subscribe((tracks) => {
+      this.leftPlaylist.tracks = tracks;
+      this.leftTracks$.next(tracks);
+    });
+
     this.showStats = false;
   }
 
   public selectRight(playlist: Playlist) {
     this.rightPlaylist = playlist;
+    this.trackService.getTracks(playlist.tracksLink).subscribe((tracks) => {
+      this.rightPlaylist.tracks = tracks;
+      this.rightTracks$.next(tracks);
+    });
+
     this.showStats = false;
   }
 
@@ -97,17 +130,15 @@ export class PlaylistSimilarityComponent implements OnInit {
       this.commonArtists.length
     );
 
-    this.getCommonArtists().subscribe(() => {
+    this.getArtistDetail().subscribe(() => {
       this.showStats = true;
 
-      let element = document.getElementById("playlist-similarity");
-      if (element) {
-        element.scrollTop = element.scrollHeight - element.clientHeight;
-      }
+      let stats = document.querySelectorAll(`.stats-wrapper`)[0];
+      stats && stats.scrollIntoView({ block: "center" });
     });
   }
 
-  private getCommonArtists(): Observable<any> {
+  private getArtistDetail(): Observable<any> {
     let observables: Array<Observable<Artist>> = [];
     for (const artist of this.commonArtists) {
       observables.push(this.artistService.getArtist(artist.link));

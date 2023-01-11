@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <div class="row page-wrapper">
+    <div class="col scroll-page" *ngFor="let page of pages">
+      <div class="row">
+        <div class="col-sm-2 item" *ngFor="let item of page.items">
+          <img [src]="item.img" [ngStyle]="{ 'width': imageSize, 'height': imageSize }" />
+          <span class="item-name">{{ item.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow" id="left-arrow" role="button" *ngIf="currentPage > 0" (click)="onNextPage('left')">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+      <path
+        fill-rule="evenodd"
+        d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+    </svg>
+  </div>
+  <div class="arrow" id="right-arrow" role="button" *ngIf="currentPage < pages.length - 1" (click)="onNextPage('right')">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+      <path
+        fill-rule="evenodd"
+        d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+    </svg>
+  </div>
+</div>

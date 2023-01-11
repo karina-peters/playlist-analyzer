@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlaylistSelectComponent } from './playlist-select.component';
+import { ImageScrollComponent } from './image-scroll.component';
 
-describe('PlaylistSelectComponent', () => {
-  let component: PlaylistSelectComponent;
-  let fixture: ComponentFixture<PlaylistSelectComponent>;
+describe('ImageScrollComponent', () => {
+  let component: ImageScrollComponent;
+  let fixture: ComponentFixture<ImageScrollComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PlaylistSelectComponent ]
+      declarations: [ ImageScrollComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PlaylistSelectComponent);
+    fixture = TestBed.createComponent(ImageScrollComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

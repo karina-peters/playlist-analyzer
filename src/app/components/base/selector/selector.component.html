@@ -1,6 +1,6 @@
-<div class="custom-select" [attr.id]="selectorId" (focusout)="onSelectFocusout($event)">
+<div class="container custom-select" [attr.id]="selectorId" (focusout)="onSelectFocusout($event)">
   <div type="button" class="select-trigger row align-items-center justify-content-between">
-    <div class="col-10 selector-text" (click)="config.allowSearch ? toggleShowOptions(true) : toggleShowOptions()">
+    <div class="col-10 selector-text" (click)="!config.allowSearch && toggleShowOptions()">
       <input
         type="text"
         [readonly]="!config.allowSearch"

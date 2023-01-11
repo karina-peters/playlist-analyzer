@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 import { Playlist } from "src/app/services/playlist.service";
 import { PlaylistService } from "src/app/services/playlist.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Router } from "@angular/router";
+import { DataType, SelectorConfig } from "src/app/components/base/selector/selector.component";
+import { TrackService, Track } from "src/app/services/track.service";
 
 @Component({
   selector: "app-distribute-tracks",
@@ -10,22 +11,32 @@ import { Router } from "@angular/router";
   styleUrls: ["./distribute-tracks.component.scss"],
 })
 export class TrackDistributeComponent implements OnInit {
-  public playlists: Array<Playlist> = [];
+  public selectorConfig: SelectorConfig;
+  public selectorOptions$: BehaviorSubject<Array<Playlist>> = new BehaviorSubject<Array<Playlist>>([]);
+  public tracks$: BehaviorSubject<Array<Track>> = new BehaviorSubject<Array<Track>>([]);
+
   public playlist: Playlist;
 
-  constructor(private playlistService: PlaylistService, private router: Router) {
+  constructor(private playlistService: PlaylistService, private trackService: TrackService) {
     this.playlist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
+
+    this.selectorConfig = {
+      type: DataType.Playlist,
+      allowSearch: true,
+    };
   }
 
   ngOnInit(): void {
-    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => (this.playlists = playlists));
+    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => {
+      this.selectorOptions$.next(playlists);
+    });
   }
 
-  selectPlaylist(playlist: Playlist) {
+  public selectPlaylist(playlist: Playlist) {
     this.playlist = playlist;
-  }
-
-  handleAuthError(error: HttpErrorResponse) {
-    // this.spotifyService.authenticateTake2("design-distribute-tracks");
+    this.trackService.getTracks(playlist.tracksLink).subscribe((tracks) => {
+      this.playlist.tracks = tracks;
+      this.tracks$.next(tracks);
+    });
   }
 }

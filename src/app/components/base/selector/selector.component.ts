@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { UniqueIdService } from "src/app/services/unique-id.service";
 
 export interface SelectorConfig {
   type: DataType;
-  placeholder: string;
   allowSearch: boolean;
+  placeholder?: string;
 }
 
 export enum DataType {
@@ -22,7 +22,7 @@ export enum DataType {
   styleUrls: ["./selector.component.scss"],
 })
 export class SelectorComponent implements OnInit, OnDestroy {
-  @Input() options$: Subject<Array<any>> = new Subject<Array<any>>();
+  @Input() options$: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>([]);
   @Input() config: SelectorConfig = {
     type: DataType.Other,
     placeholder: "Select",
@@ -48,6 +48,11 @@ export class SelectorComponent implements OnInit, OnDestroy {
     this.filteredOptions = this.options;
 
     this.options$.subscribe((opts) => {
+      this.config.placeholder = this.config.placeholder
+        ? this.config.placeholder
+        : this.config.type == DataType.Playlist
+        ? "Choose a Playlist"
+        : "Select";
       this.options.push(...opts);
       this.filteredOptions = this.options.filter((opt) => this.match(this.searchModel, opt.name));
     });
@@ -87,8 +92,12 @@ export class SelectorComponent implements OnInit, OnDestroy {
   }
 
   public onInputClick(_$event: FocusEvent): void {
-    if (this.config.allowSearch && this.searchModel != "") {
-      this.clearSearch();
+    if (this.config.allowSearch) {
+      if (this.searchModel != "") {
+        this.clearSearch();
+      }
+
+      this.toggleShowOptions(true);
     }
   }
 
@@ -98,9 +107,9 @@ export class SelectorComponent implements OnInit, OnDestroy {
       this.hightlightNextOption($event.key);
     } else if ($event.key == "Enter") {
       // Select current option if available, clear search and hide options otherwise
-      let index = this.getHighlightedIndex();
+      let index = this.getSelectedId();
       if (index != -1) {
-        this.filteredOptions[index] && this.selectOption(this.filteredOptions[index].index);
+        this.options[index] && this.selectOption(this.options[index].index);
       } else {
         this.selectOption(index);
       }
@@ -159,9 +168,14 @@ export class SelectorComponent implements OnInit, OnDestroy {
     this.resetOptions();
   }
 
-  private getHighlightedIndex(): number {
+  private getSelectedId(): number {
     let highlightedOption: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} .option.highlighted`)[0];
     return highlightedOption?.id ? parseInt(highlightedOption.id) : -1;
+  }
+
+  private getHighlightedIndex(): number {
+    let highlightedOption: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} .option.highlighted`)[0];
+    return this.filteredOptions.findIndex((opt) => opt.index == parseInt(highlightedOption?.id));
   }
 
   private removeHightlight() {
