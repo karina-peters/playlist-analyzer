@@ -1,23 +1,15 @@
-.list-type.list-item {
-  background-color: rgb(255, 255, 255);
-  color: rgb(15, 15, 15);
-  border-radius: 5px;
+@use "src/colors";
+
+.list-item {
+  background-color: colors.$background-grey;
+  color: white;
   cursor: default;
   list-style-type: none;
-  line-height: 60px;
-  margin-bottom: 15px;
-  padding-left: 15px;
-  padding-right: 20px;
-  animation: 0.75s slide-up ease-out;
+  padding: 10px 25px;
 }
 
-.list-type .list-item:hover {
-  background-color: rgb(245, 245, 245);
-}
-
-.detail {
-  color: rgb(163, 163, 163);
-  font-size: smaller;
+.list-item:hover {
+  background-color: colors.$highlight-grey;
 }
 
 .vcenter {
@@ -26,31 +18,14 @@
 }
 
 img {
-  height: 42px;
-  width: 42px;
+  height: 55px;
+  width: 55px;
 }
 
-.list-type .track-id {
-  color: rgb(163, 163, 163);
-}
-
-.track-name {
+.track-text {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}
-
-.track-artist {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-@keyframes slide-up {
-  from {
-    margin-top: 100%;
-  }
-  to {
-    margin-top: 15px;
-  }
+  margin-bottom: 0px;
+  max-width: 330px;
 }

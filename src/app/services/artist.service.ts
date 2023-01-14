@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { IArtistDTO } from "src/app/models/spotify-response.models";
@@ -26,6 +26,10 @@ export class ArtistService {
    * @returns An Observable containing an Artist object
    */
   public getArtist(artistLink: string): Observable<Artist> {
+    if (this.artistsCache[artistLink] != undefined) {
+      return of(this.artistsCache[artistLink]);
+    }
+
     return this.spotifyService.getArtist(artistLink).pipe(
       map((artist: IArtistDTO) => {
         const ret = {

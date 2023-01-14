@@ -12,6 +12,7 @@ export interface Playlist {
   tracksLink: string;
   tracks: Array<Track>;
   description?: string;
+  img?: string;
 }
 
 @Injectable({
@@ -41,6 +42,7 @@ export class PlaylistService {
             description: playlist.description,
             tracks: [],
             tracksLink: playlist.tracks.href,
+            img: playlist.images[0].url,
           };
         });
 

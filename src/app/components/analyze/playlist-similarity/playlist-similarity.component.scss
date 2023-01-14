@@ -1,94 +1,60 @@
+@use "src/colors";
+
 .select-component-wrapper {
+  padding: 40px 60px;
+
   .button-wrapper {
     > button {
       border-radius: 50%;
       height: 50px;
       width: 50px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: auto;
+      margin-top: 5px;
     }
 
     > button:hover {
-      height: 53px;
-      width: 53px;
+      margin-top: 4px;
+      height: 52px;
+      width: 52px;
     }
   }
 }
 
 .stats-wrapper {
-  height: 850px;
-  padding: 200px 100px;
+  padding: 10px 60px;
 
-  .heading {
-    font-weight: lighter;
+  .stat-title {
     color: white;
-    font-size: x-large;
-    line-height: 70px;
-  }
+    font-size: larger;
+    font-weight: 400;
+    margin-bottom: 10px;
 
-  #artist-list {
-    position: relative;
-
-    .common-artists {
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-
-      .col {
-        flex: 0 0 auto;
-      }
-
-      .artist {
-        margin: 0px 15px;
-
-        img {
-          height: 200px;
-          width: 200px;
-        }
-
-        .artist-name {
-          line-height: 40px;
-          color: white;
-        }
-      }
-    }
-
-    .common-artists::-webkit-scrollbar {
-      width: 0 !important;
-    }
-
-    .arrow {
-      color: rgb(189, 201, 243);
-      position: absolute;
-    }
-
-    .arrow:hover {
-      color: white;
-    }
-
-    #left-arrow {
-      left: -40px;
-      top: 150px;
-    }
-
-    #right-arrow {
-      right: -40px;
-      top: 150px;
+    .badge {
+      margin-left: 10px;
+      font-weight: 200;
     }
   }
 
-  .common-list {
+  .similarity-score {
+    margin-bottom: 40px;
     color: white;
-    font-size: large;
-    height: 350px;
-    overflow-y: scroll;
-    margin-top: 20px;
 
-    .image-wrapper {
-      img {
-        height: 100px;
-        width: 100px;
-      }
+    .bg-green {
+      background-color: colors.$spotify-green;
+      font-weight: 500;
+      font-size: 3rem;
+    }
+  }
+
+  .track-list-wrapper {
+    background-color: colors.$background-grey;
+    border-radius: 15px;
+    padding: 15px 0px;
+
+    .track-list {
+      position: relative;
+      min-width: 400px;
+      max-width: 580px;
     }
   }
 }

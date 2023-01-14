@@ -1,0 +1,15 @@
+@use "src/colors";
+
+.tag {
+  background-color: colors.$background-grey;
+  color: white;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  font-weight: 100;
+  white-space: nowrap;
+}
+
+.tag:hover {
+  background-color: colors.$highlight-grey;
+}

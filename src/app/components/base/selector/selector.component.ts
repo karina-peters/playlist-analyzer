@@ -36,6 +36,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
   public searchModel: string = "";
   public searching: boolean = false;
   public showOptions: boolean = false;
+  public clearing: boolean = false;
 
   public selectedIndex: number = -1;
   public selected$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -62,12 +63,14 @@ export class SelectorComponent implements OnInit, OnDestroy {
 
   public onSelectFocusout(_$event: FocusEvent): void {
     this.selected$.subscribe((selected) => {
-      if (selected != -1) {
+      if (selected != -1 && !this.clearing) {
         // Ensure search text matches current selection
         let currentSelected = this.options[selected];
         this.searchModel = currentSelected.name;
       } else {
-        this.clearSearch();
+        this.searchModel = "";
+        this.clearing = false;
+        this.resetOptions();
       }
     });
 
@@ -82,6 +85,8 @@ export class SelectorComponent implements OnInit, OnDestroy {
     if (this.config.allowSearch) {
       this.searching = true;
     }
+
+    this.toggleShowOptions(true);
   }
 
   public onInputBlur(_$event: FocusEvent): void {
@@ -93,10 +98,6 @@ export class SelectorComponent implements OnInit, OnDestroy {
 
   public onInputClick(_$event: FocusEvent): void {
     if (this.config.allowSearch) {
-      if (this.searchModel != "") {
-        this.clearSearch();
-      }
-
       this.toggleShowOptions(true);
     }
   }
@@ -137,6 +138,17 @@ export class SelectorComponent implements OnInit, OnDestroy {
     this.adjustSelectorHeight();
   }
 
+  public clearSearch() {
+    this.clearing = true;
+    this.searchModel = "";
+    let search: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} input`)[0];
+
+    // Calling setTimeout is required to trigger onFocus event
+    setTimeout(() => {
+      search.focus();
+    });
+  }
+
   private setSelected(index: number) {
     if (index != -1) {
       this.selectedEvent.emit(this.options[index]);
@@ -161,11 +173,6 @@ export class SelectorComponent implements OnInit, OnDestroy {
   private match(substr: string, optionName: string): boolean {
     // TODO: disregard non-alphanumeric characters
     return optionName.toLowerCase().includes(substr.toLowerCase());
-  }
-
-  private clearSearch() {
-    this.searchModel = "";
-    this.resetOptions();
   }
 
   private getSelectedId(): number {

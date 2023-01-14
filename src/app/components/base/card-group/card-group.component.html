@@ -1,0 +1,11 @@
+<div class="row justify-content-center g-2">
+  <div class="col-sm-6 item" *ngFor="let item of items">
+    <div class="card text-bg-dark shadow">
+      <img [src]="item.img" class="card-img" alt="..." />
+      <div class="card-img-overlay flex-column-reverse">
+        <div class="underline"></div>
+        <h5 class="card-title">{{ item.name }}</h5>
+      </div>
+    </div>
+  </div>
+</div>
