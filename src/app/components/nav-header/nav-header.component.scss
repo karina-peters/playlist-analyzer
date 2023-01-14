@@ -1,3 +1,5 @@
+@use "src/colors";
+
 .nav-wrapper {
   background-color: rgb(29, 47, 122) !important;
   height: 75px;
@@ -34,7 +36,7 @@
   margin-top: 18px;
   padding: 5px 0px;
   width: 300px;
-  border-top: 3px solid rgb(80, 175, 69);
+  border-top: 3px solid colors.$spotify-green;
   border-left: none;
   border-right: none;
   border-bottom: none;

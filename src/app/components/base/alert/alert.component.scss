@@ -8,6 +8,7 @@
   z-index: 1;
   border-color: white;
   background-color: rgb(240, 240, 240);
+  animation: 0.5s slide-up ease-out;
 }
 
 .btn-close {
@@ -44,4 +45,13 @@
 
 .alert-warning .bi-exclamation-triangle-fill {
   display: block !important;
+}
+
+@keyframes slide-up {
+  from {
+    top: 0px;
+  }
+  to {
+    top: 20px;
+  }
 }

@@ -2,6 +2,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { PlaylistSimilarityComponent } from "./components/analyze/playlist-similarity/playlist-similarity.component";
@@ -17,7 +18,10 @@ import { TrackTableComponent } from "./components/base/track-table/track-table.c
 import { MonitorInterceptor } from "./monitor.interceptor";
 import { AlertComponent } from "./components/base/alert/alert.component";
 import { SelectorComponent } from "./components/base/selector/selector.component";
-import { ImageScrollComponent } from './components/base/image-scroll/image-scroll.component';
+import { ImageScrollComponent } from "./components/base/image-scroll/image-scroll.component";
+import { CardComponent } from "./components/base/card/card.component";
+import { TagCloudComponent } from "./components/base/tag-cloud/tag-cloud.component";
+import { CardGroupComponent } from "./components/base/card-group/card-group.component";
 
 @NgModule({
   declarations: [
@@ -35,8 +39,11 @@ import { ImageScrollComponent } from './components/base/image-scroll/image-scrol
     AlertComponent,
     SelectorComponent,
     ImageScrollComponent,
+    CardComponent,
+    TagCloudComponent,
+    CardGroupComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [AppRoutingModule, BrowserModule, BrowserAnimationsModule, FormsModule, HttpClientModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

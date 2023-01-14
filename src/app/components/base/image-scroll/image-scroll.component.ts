@@ -13,6 +13,7 @@ export interface Page {
 export class ImageScrollComponent implements OnInit {
   @Input() items: Array<any> = [];
   @Input() itemsPerPage: number = 5;
+  @Input() rows: number = 1;
 
   public currentPage = 0;
   public pages: Array<Page> = [];

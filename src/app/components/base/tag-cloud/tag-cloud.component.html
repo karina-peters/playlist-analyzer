@@ -1,0 +1,8 @@
+<div class="row">
+  <div
+    class="col tag text-center shadow-sm"
+    [ngStyle]="{ 'max-width.px': math.max(75, tag.length * 6.75 + 45), 'min-width.px': math.max(75, tag.length * 6.75 + 35) }"
+    *ngFor="let tag of tags">
+    <small>{{ tag }}</small>
+  </div>
+</div>

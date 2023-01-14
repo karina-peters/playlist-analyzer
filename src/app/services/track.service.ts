@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { forkJoin, Observable, of } from "rxjs";
+import { catchError, map, mergeMap } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Artist, ArtistService } from "./artist.service";
 import { IPlaylistTracksDTO } from "src/app/models/spotify-response.models";
@@ -35,7 +35,7 @@ export class TrackService {
 
     return this.spotifyService.getTracks(tracksLink).pipe(
       map((tracks: Array<IPlaylistTracksDTO>) => {
-        const ret = tracks.map((track, index) => {
+        return tracks.map((track, index) => {
           return {
             index: index,
             id: track.track?.id,
@@ -52,9 +52,23 @@ export class TrackService {
             img: track.track?.album.images[2].url,
           };
         });
-
-        this.tracksCache[tracksLink] = ret;
-        return ret;
+      }),
+      // Get detailed artist info
+      mergeMap((tracks: Array<Track>) =>
+        forkJoin(
+          tracks.map((track: Track) =>
+            this.artistService.getArtist(track.artist.link).pipe(
+              map((artist: Artist) => {
+                track.artist = artist;
+                return track;
+              })
+            )
+          )
+        )
+      ),
+      map((tracks: Array<Track>) => {
+        this.tracksCache[tracksLink] = tracks;
+        return tracks;
       }),
       catchError((error) => {
         throw error;

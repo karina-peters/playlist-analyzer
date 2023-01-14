@@ -16,9 +16,6 @@ export class TrackComponent implements OnInit {
     img: "",
   };
 
-  @Input() common: boolean = false;
-  @Input() type: string = "";
-
   constructor() {}
 
   ngOnInit(): void {}

@@ -1,8 +1,7 @@
-<div class="container track-list" *ngIf="tracks.length > 0">
-  <p class="track-count">{{ tracks?.length }} songs</p>
-  <ul class="list-group">
-    <app-track *ngFor="let track of tracks" [trackData]="track" [type]="'list'"></app-track>
-    <li class="list-padding" style="height: 30px"></li>
-  </ul>
-  <div class="track-fade"></div>
-</div>
+<!-- <div class="track-list-wrapper">
+  <div class="track-list" *ngIf="track.length > 0">
+    <ul class="list-group">
+      <app-track *ngFor="let track of commonTracks" [trackData]="track"></app-track>
+    </ul>
+  </div>
+</div> -->
