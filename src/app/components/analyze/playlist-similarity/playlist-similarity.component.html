@@ -42,11 +42,23 @@
     <div class="col-3">
       <div class="position-sticky" style="top: 40px">
         <div class="row similarity-score">
-          <span class="stat-title">Similarity Score: </span>
-          <h1 class="score">
-            <span class="badge bg-green shadow-sm">{{ totalSimilarity }}</span>
-          </h1>
-          <p>Add score breakdown (Tracks [{{ trackSimilarity }}%], Artist [{{ artistSimilarity }}%], Genre [{{ genreSimilarity }}%])</p>
+          <span class="stat-title"
+            >Similarity Score
+            <svg
+              type="button"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-info-circle-fill"
+              viewBox="0 0 16 16">
+              <path
+                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </svg>
+          </span>
+          <div class="similarity-wrapper text-center shadow">
+            <span>{{ totalSimilarity }}</span>
+          </div>
         </div>
         <div class="row">
           <span class="stat-title">
@@ -61,11 +73,14 @@
         <span class="stat-title">
           Common Tracks<span class="badge text-bg-dark">{{ commonTracks.length }}</span>
         </span>
-        <div class="track-list-wrapper shadow" *ngIf="commonTracks.length > 0">
+        <div class="track-list-wrapper shadow">
           <div class="track-list" *ngIf="commonTracks.length > 0">
             <ul class="list-group">
               <app-track *ngFor="let track of commonTracks" [trackData]="track"></app-track>
             </ul>
+          </div>
+          <div *ngIf="commonTracks.length == 0">
+            <p>No tracks</p>
           </div>
         </div>
       </div>
