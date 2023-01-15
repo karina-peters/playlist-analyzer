@@ -39,10 +39,18 @@
     margin-bottom: 40px;
     color: white;
 
-    .bg-green {
-      background-color: colors.$spotify-green;
+    svg {
+      margin-left: 3px;
+    }
+
+    .similarity-wrapper {
+      border-radius: 10px;
+      background-color: colors.$background-indigo;
       font-weight: 500;
-      font-size: 3rem;
+      font-size: 4rem;
+      line-height: 105px;
+      width: 170px;
+      margin-left: 5px;
     }
   }
 
@@ -55,6 +63,12 @@
       position: relative;
       min-width: 400px;
       max-width: 580px;
+    }
+
+    p {
+      color: white;
+      margin-bottom: 0;
+      padding: 10px 30px;
     }
   }
 }

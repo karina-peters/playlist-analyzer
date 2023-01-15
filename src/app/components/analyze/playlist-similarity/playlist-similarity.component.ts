@@ -13,11 +13,6 @@ export interface Page {
   items: Array<any>;
 }
 
-// TODOs
-// - Fix janky animation (maybe make selector options go over everything instead of pushing it down?)
-// - Round similarities instead of Floor
-// - Style similiarity scores
-
 @Component({
   selector: "app-playlist-similarity",
   templateUrl: "./playlist-similarity.component.html",
@@ -25,8 +20,8 @@ export interface Page {
   animations: [
     trigger("slideInOut", [
       transition(":enter", [
-        style({ opacity: 0, transform: "translateY(300px)" }),
-        animate("300ms", style({ opacity: 1, transform: "translateY(0)" })),
+        style({ opacity: 0, transform: "translateY(100px)" }),
+        animate("400ms", style({ opacity: 1, transform: "translateY(0)" })),
       ]),
       transition(":leave", [animate("100ms", style({ opacity: 0, transform: "translateY(300px)" }))]),
     ]),
@@ -175,10 +170,10 @@ export class PlaylistSimilarityComponent implements OnInit {
     let gSimilarity = this.cosineSimilarity(genres[0], genres[1]);
     let totalSimilarity = T_WEIGHT * tSimilarity + A_WEIGHT * aSimilarity + G_WEIGHT * gSimilarity;
 
-    this.totalSimilarity = Math.floor(totalSimilarity * 100);
-    this.trackSimilarity = Math.floor(tSimilarity * 100);
-    this.artistSimilarity = Math.floor(aSimilarity * 100);
-    this.genreSimilarity = Math.floor(gSimilarity * 100);
+    this.totalSimilarity = Math.round(totalSimilarity * 100);
+    this.trackSimilarity = Math.round(tSimilarity * 100);
+    this.artistSimilarity = Math.round(aSimilarity * 100);
+    this.genreSimilarity = Math.round(gSimilarity * 100);
 
     this.showStats = true;
   }
