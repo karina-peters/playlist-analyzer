@@ -53,22 +53,4 @@
       margin-left: 5px;
     }
   }
-
-  .track-list-wrapper {
-    background-color: colors.$background-grey;
-    border-radius: 15px;
-    padding: 15px 0px;
-
-    .track-list {
-      position: relative;
-      min-width: 400px;
-      max-width: 580px;
-    }
-
-    p {
-      color: white;
-      margin-bottom: 0;
-      padding: 10px 30px;
-    }
-  }
 }

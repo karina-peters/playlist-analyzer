@@ -30,8 +30,6 @@ export interface Page {
 export class PlaylistSimilarityComponent implements OnInit {
   public selectorConfig: SelectorConfig;
   public selectorOptions$: BehaviorSubject<Array<Playlist>> = new BehaviorSubject<Array<Playlist>>([]);
-  public leftTracks$: BehaviorSubject<Array<Track>> = new BehaviorSubject<Array<Track>>([]);
-  public rightTracks$: BehaviorSubject<Array<Track>> = new BehaviorSubject<Array<Track>>([]);
 
   public leftPlaylist: Playlist;
   public rightPlaylist: Playlist;
@@ -131,7 +129,6 @@ export class PlaylistSimilarityComponent implements OnInit {
     this.leftPlaylist = playlist;
     this.trackService.getTracks(playlist.tracksLink).subscribe((tracks) => {
       this.leftPlaylist.tracks = tracks;
-      this.leftTracks$.next(tracks);
     });
 
     this.clear();
@@ -141,7 +138,6 @@ export class PlaylistSimilarityComponent implements OnInit {
     this.rightPlaylist = playlist;
     this.trackService.getTracks(playlist.tracksLink).subscribe((tracks) => {
       this.rightPlaylist.tracks = tracks;
-      this.rightTracks$.next(tracks);
     });
 
     this.clear();

@@ -2,7 +2,11 @@
   <div
     class="col tag text-center shadow-sm"
     [ngStyle]="{ 'max-width.px': math.max(75, tag.length * 6.75 + 45), 'min-width.px': math.max(75, tag.length * 6.75 + 35) }"
-    *ngFor="let tag of tags">
+    *ngFor="let tag of visibleTags">
     <small>{{ tag }}</small>
+  </div>
+  <div class="col-12 tag all-button text-center shadow-sm" role="button" *ngIf="tags.length > 15" (click)="toggleShow()">
+    <small *ngIf="!allVisible">All Genres</small>
+    <small *ngIf="allVisible">Show Less</small>
   </div>
 </div>

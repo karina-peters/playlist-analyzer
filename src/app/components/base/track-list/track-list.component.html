@@ -1,7 +1,10 @@
-<!-- <div class="track-list-wrapper">
-  <div class="track-list" *ngIf="track.length > 0">
+<div class="track-list-wrapper shadow">
+  <div class="track-list" *ngIf="tracks.length > 0">
     <ul class="list-group">
-      <app-track *ngFor="let track of commonTracks" [trackData]="track"></app-track>
+      <app-track *ngFor="let track of tracks" [trackData]="track"></app-track>
     </ul>
   </div>
-</div> -->
+  <div *ngIf="tracks.length == 0">
+    <p>No tracks</p>
+  </div>
+</div>

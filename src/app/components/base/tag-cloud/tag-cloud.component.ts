@@ -8,9 +8,27 @@ import { Component, OnInit, Input } from "@angular/core";
 export class TagCloudComponent implements OnInit {
   @Input() tags: Array<string> = [];
 
+  public visibleTags: Array<string> = [];
+  public allVisible: boolean = true;
+
   math = Math;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.tags.length > 15) {
+      this.visibleTags = this.tags.slice(0, 15);
+      this.allVisible = false;
+    }
+  }
+
+  public toggleShow() {
+    if (!this.allVisible) {
+      this.visibleTags = this.tags;
+      this.allVisible = true;
+    } else {
+      this.visibleTags = this.tags.slice(0, 15);
+      this.allVisible = false;
+    }
+  }
 }

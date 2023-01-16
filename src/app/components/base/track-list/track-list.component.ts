@@ -8,15 +8,9 @@ import { Track } from "src/app/services/track.service";
   styleUrls: ["./track-list.component.scss"],
 })
 export class TrackListComponent implements OnInit {
-  @Input() tracks$: Subject<Array<Track>> = new Subject<Array<Track>>();
-
-  public tracks: Array<Track> = [];
+  @Input() public tracks: Array<Track> = [];
 
   constructor() {}
 
-  ngOnInit(): void {
-    this.tracks$.subscribe((tracks: Array<Track>) => {
-      this.tracks = tracks;
-    });
-  }
+  ngOnInit(): void {}
 }

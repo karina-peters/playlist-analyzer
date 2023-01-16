@@ -73,16 +73,7 @@
         <span class="stat-title">
           Common Tracks<span class="badge text-bg-dark">{{ commonTracks.length }}</span>
         </span>
-        <div class="track-list-wrapper shadow">
-          <div class="track-list" *ngIf="commonTracks.length > 0">
-            <ul class="list-group">
-              <app-track *ngFor="let track of commonTracks" [trackData]="track"></app-track>
-            </ul>
-          </div>
-          <div *ngIf="commonTracks.length == 0">
-            <p>No tracks</p>
-          </div>
-        </div>
+        <app-track-list [tracks]="commonTracks"></app-track-list>
       </div>
     </div>
     <div class="artists-wrapper col-4">

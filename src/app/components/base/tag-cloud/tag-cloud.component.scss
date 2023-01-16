@@ -8,8 +8,18 @@
   border-radius: 10px;
   font-weight: 100;
   white-space: nowrap;
+  cursor: default;
 }
 
 .tag:hover {
   background-color: colors.$highlight-grey;
+}
+
+.all-button {
+  background-color: colors.$background-grey-4;
+  cursor: pointer;
+}
+
+.all-button:hover {
+  background-color: colors.$highlight-grey-4;
 }
