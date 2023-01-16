@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { EMPTY, Observable } from "rxjs";
 import { catchError, expand, map, reduce } from "rxjs/operators";
-import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO } from "../models/spotify-response.models";
+import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO, IUserDTO } from "../models/spotify-response.models";
 
 @Injectable({
   providedIn: "root",
@@ -11,9 +11,21 @@ export class SpotifyService {
   constructor(private http: HttpClient) {}
 
   /**
+   * Retrieves current user data from Spotify.
+   * @returns An Observable containing user data the Spotify me endpoint
+   */
+  public getCurrentUser(): Observable<IUserDTO> {
+    return this.getNext("https://api.spotify.com/v1/me").pipe(
+      map((response: any) => response),
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
    * Retrieves all playlists for the current user from Spotify.
-   * @param {number} limit - The number of playlists per page
-   * @returns An Observable containing a list of playlists from the Spotify playlists endpoint
+   * @returns An Observable containing a list of playlists from the Spotify me/playlists endpoint
    */
   public getPlaylists(): Observable<Array<IPlaylistsDTO>> {
     return this.getNext("https://api.spotify.com/v1/me/playlists").pipe(

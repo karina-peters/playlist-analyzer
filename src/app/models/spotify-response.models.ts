@@ -46,6 +46,21 @@ export interface ISearchResultsDTO {
   audiobooks: IReference;
 }
 
+export interface IUserDTO {
+  country: string;
+  display_name: string;
+  email: string;
+  explicit_content: Object;
+  external_urls: Object;
+  followers: IFollowers;
+  href: string;
+  id: string;
+  images: Array<IImage>;
+  product: string;
+  type: string;
+  uri: string;
+}
+
 export interface IAlbum {
   album_type: string;
   artists: Array<IReference>;

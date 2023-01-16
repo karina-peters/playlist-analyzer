@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { UserService, User } from "src/app/services/user.service";
 
 @Component({
   selector: "app-nav-header",
@@ -6,7 +7,17 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./nav-header.component.scss"],
 })
 export class NavHeaderComponent implements OnInit {
-  constructor() {}
+  public user: User = {
+    id: "",
+    name: "",
+    img: "",
+  };
 
-  ngOnInit(): void {}
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.userService.getCurrentUser().subscribe((user) => {
+      this.user = user;
+    });
+  }
 }

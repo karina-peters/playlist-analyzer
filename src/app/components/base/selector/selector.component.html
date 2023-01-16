@@ -3,63 +3,65 @@
   [ngClass]="{ 'show-options': showOptions }"
   [attr.id]="selectorId"
   (focusout)="onSelectFocusout($event)">
-  <div type="button" class="select-trigger row align-items-center justify-content-between">
-    <div class="col-10 selector-text" (click)="!config.allowSearch && toggleShowOptions()">
-      <input
-        type="text"
-        [readonly]="!config.allowSearch"
-        [placeholder]="config.placeholder"
-        [(ngModel)]="searchModel"
-        (keyup)="onInput($event)"
-        (focus)="onInputFocus($event)"
-        (blur)="onInputBlur($event)"
-        (click)="onInputClick($event)" />
+  <div class="show-options-wrapper">
+    <div type="button" class="select-trigger row align-items-center justify-content-between">
+      <div class="col-10 selector-text" (click)="!config.allowSearch && toggleShowOptions()">
+        <input
+          type="text"
+          [readonly]="!config.allowSearch"
+          [placeholder]="config.placeholder"
+          [(ngModel)]="searchModel"
+          (keyup)="onInput($event)"
+          (focus)="onInputFocus($event)"
+          (blur)="onInputBlur($event)"
+          (click)="onInputClick($event)" />
+      </div>
+      <div class="col" *ngIf="searching && searchModel.length > 0" (mousedown)="clearSearch()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+        </svg>
+      </div>
+      <div class="col selector-arrow" [ngClass]="{ 'expanded': showOptions }" (click)="toggleShowOptions()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+          <path
+            fill-rule="evenodd"
+            d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+        </svg>
+      </div>
     </div>
-    <div class="col" *ngIf="searching && searchModel.length > 0" (mousedown)="clearSearch()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-        <path
-          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-      </svg>
+    <div class="options-wrapper">
+      <ul *ngIf="showOptions" class="select-options">
+        <li
+          class="option"
+          *ngFor="let option of filteredOptions; let i = index"
+          [id]="option.index"
+          [ngClass]="{ 'highlighted': searching && i == 0, 'selected': selectedIndex == option.index }"
+          (mousedown)="selectOption(option.index)">
+          <div class="highlight" style="float: left"></div>
+          <div class="option-title">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-music-note-list"
+              viewBox="0 0 16 16">
+              <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
+              <path fill-rule="evenodd" d="M12 3v10h-1V3h1z" />
+              <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z" />
+              <path
+                fill-rule="evenodd"
+                d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
+            </svg>
+            <span class="name">
+              {{ option.name }}
+            </span>
+          </div>
+        </li>
+        <li class="message-option" *ngIf="options.length == 0">This list is empty</li>
+        <li class="message-option" *ngIf="options.length != 0 && filteredOptions.length == 0">No results match "{{ searchModel }}"</li>
+      </ul>
     </div>
-    <div class="col selector-arrow" [ngClass]="{ 'expanded': showOptions }" (click)="toggleShowOptions()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-        <path
-          fill-rule="evenodd"
-          d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-      </svg>
-    </div>
-  </div>
-  <div class="options-wrapper">
-    <ul *ngIf="showOptions" class="select-options">
-      <li
-        class="option"
-        *ngFor="let option of filteredOptions; let i = index"
-        [id]="option.index"
-        [ngClass]="{ 'highlighted': searching && i == 0, 'selected': selectedIndex == option.index }"
-        (mousedown)="selectOption(option.index)">
-        <div class="highlight" style="float: left"></div>
-        <div class="option-title">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-music-note-list"
-            viewBox="0 0 16 16">
-            <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z" />
-            <path fill-rule="evenodd" d="M12 3v10h-1V3h1z" />
-            <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z" />
-            <path
-              fill-rule="evenodd"
-              d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z" />
-          </svg>
-          <span class="name">
-            {{ option.name }}
-          </span>
-        </div>
-      </li>
-      <li class="message-option" *ngIf="options.length == 0">This list is empty</li>
-      <li class="message-option" *ngIf="options.length != 0 && filteredOptions.length == 0">No results match "{{ searchModel }}"</li>
-    </ul>
   </div>
 </div>

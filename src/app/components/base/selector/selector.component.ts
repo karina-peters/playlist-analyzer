@@ -234,7 +234,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
       height = 325;
     }
 
-    let customSelect: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId}.custom-select`)[0];
+    let customSelect: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId}.custom-select .show-options-wrapper`)[0];
     if (customSelect) {
       customSelect.style.height = `${height}px`;
     }

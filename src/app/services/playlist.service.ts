@@ -68,21 +68,3 @@ export class PlaylistService {
     return playlist.tracks.filter((track: Track) => this.trackService.equal(track, trackFind)).length > 0;
   }
 }
-
-// mergeMap((playlists: Array<Playlist>) =>
-//         forkJoin(
-//           playlists.map((playlist: Playlist) =>
-//             this.trackService.getTracks(playlist.tracksLink).pipe(
-//               map((tracks: Array<Track>) => {
-//                 playlist.tracks = tracks;
-//                 return playlist;
-//               })
-//             )
-//           )
-//         )
-//       ),
-//       map((playlists: Array<Playlist>) =>
-//         playlists.filter(
-//           (playlist: Playlist) => !track || this.containsTrack(playlist, track)
-//         )
-//       ),
