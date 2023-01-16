@@ -19,6 +19,8 @@ export class TagCloudComponent implements OnInit {
     if (this.tags.length > 15) {
       this.visibleTags = this.tags.slice(0, 15);
       this.allVisible = false;
+    } else {
+      this.visibleTags = this.tags;
     }
   }
 
