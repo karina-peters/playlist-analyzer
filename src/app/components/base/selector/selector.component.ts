@@ -103,7 +103,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
   }
 
   public onInput($event: KeyboardEvent): void {
-    if ($event.key == "ArrowDown" || $event.key == "ArrowUp") {
+    if ($event.key == "ArrowDown" || $event.key == "ArrowUp" || $event.key == "PageDown" || $event.key == "PageUp") {
       // Set hightlight to next option
       this.hightlightNextOption($event.key);
     } else if ($event.key == "Enter") {
@@ -171,7 +171,6 @@ export class SelectorComponent implements OnInit, OnDestroy {
   }
 
   private match(substr: string, optionName: string): boolean {
-    // TODO: disregard non-alphanumeric characters
     return optionName.toLowerCase().includes(substr.toLowerCase());
   }
 
@@ -207,8 +206,10 @@ export class SelectorComponent implements OnInit, OnDestroy {
       nextIndex = (currentIndex + 1) % numOptions;
     } else if (key == "ArrowUp") {
       nextIndex = currentIndex - 1 == -1 ? lastIndex : currentIndex - 1;
-    } else {
-      // TODO: handle page up/down
+    } else if (key == "PageDown") {
+      nextIndex = (currentIndex + 5) % numOptions;
+    } else if (key == "PageUp") {
+      nextIndex = currentIndex - 5 < 0 ? lastIndex : currentIndex - 5;
     }
 
     this.setHightlight(nextIndex);
@@ -224,11 +225,13 @@ export class SelectorComponent implements OnInit, OnDestroy {
 
     if (this.showOptions) {
       numOptions = this.filteredOptions.length == 0 ? 1 : this.filteredOptions.length;
+      height = 75 + 50 * numOptions;
+    } else {
+      height = 50;
     }
 
-    height = 50 + 50 * numOptions;
-    if (height > 315) {
-      height = 315;
+    if (height > 325) {
+      height = 325;
     }
 
     let customSelect: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId}.custom-select`)[0];
