@@ -39,6 +39,12 @@ input:read-only {
 .select-trigger {
   height: 50px;
 
+  .clear-x {
+    > svg {
+      float: right;
+    }
+  }
+
   .selector-arrow {
     margin-right: 15px;
 
@@ -54,11 +60,20 @@ input:read-only {
       transform: rotate(-180deg);
     }
   }
+
+  .magnifier {
+    margin-right: 20px;
+
+    > svg {
+      float: right;
+    }
+  }
 }
 
 .options-wrapper {
   max-height: 250px;
   overflow-y: scroll;
+  overflow-x: hidden;
 
   > .select-options {
     padding: 0px;
@@ -73,6 +88,10 @@ input:read-only {
       > .option-title {
         padding: 0px 25px;
         color: colors.$background-grey;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 425px;
 
         > .name {
           margin-left: 5px;

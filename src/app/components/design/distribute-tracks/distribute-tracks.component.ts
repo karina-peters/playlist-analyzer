@@ -27,7 +27,7 @@ export class TrackDistributeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => {
+    this.playlistService.getUserPlaylists().subscribe((playlists: Array<Playlist>) => {
       this.selectorOptions$.next(playlists);
     });
   }

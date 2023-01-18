@@ -1,1 +1,12 @@
-<p>track-distribution works!</p>
+<div class="fill-height">
+  <div class="row gx-5 select-component-wrapper">
+    <div class="col-5 select-wrapper" id="select-wrapper-left">
+      <app-selector class="row" [options$]="selectorOptions$" [config]="selectorConfig" (selectedEvent)="select($event)"></app-selector>
+    </div>
+  </div>
+  <div class="row">
+    <ul>
+      <li *ngFor="let playlist of trackPlaylists">{{ playlist.name }}</li>
+    </ul>
+  </div>
+</div>

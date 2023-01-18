@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { forkJoin, Observable, of } from "rxjs";
+import { catchError, map, mergeMap } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Track, TrackService } from "./track.service";
 import { IPlaylistsDTO } from "src/app/models/spotify-response.models";
@@ -20,6 +20,7 @@ export interface Playlist {
 })
 export class PlaylistService {
   private playlistCache: Array<Playlist> = [];
+  private playlistTracksCache: Array<Playlist> = [];
 
   constructor(private spotifyService: SpotifyService, private trackService: TrackService) {}
 
@@ -27,7 +28,7 @@ export class PlaylistService {
    * Retrieves the playlists for the current user.
    * @returns An Observable containing an Array of Playlist objects
    */
-  public getPlaylists(): Observable<Array<Playlist>> {
+  public getUserPlaylists(): Observable<Array<Playlist>> {
     if (this.playlistCache.length > 0) {
       return of(this.playlistCache);
     }
@@ -48,6 +49,34 @@ export class PlaylistService {
 
         this.playlistCache = ret;
         return ret;
+      }),
+      catchError((error) => {
+        throw error;
+      })
+    );
+  }
+
+  public getUserPlaylistsTracks(): Observable<Array<Playlist>> {
+    if (this.playlistTracksCache.length > 0) {
+      return of(this.playlistTracksCache);
+    }
+
+    return this.getUserPlaylists().pipe(
+      mergeMap((playlists: Array<Playlist>) =>
+        forkJoin(
+          playlists.map((playlist: Playlist) =>
+            this.trackService.getTracks(playlist.tracksLink).pipe(
+              map((tracks: Array<Track>) => {
+                playlist.tracks = tracks;
+                return playlist;
+              })
+            )
+          )
+        )
+      ),
+      map((playlists: Array<Playlist>) => {
+        this.playlistCache = playlists;
+        return playlists;
       }),
       catchError((error) => {
         throw error;

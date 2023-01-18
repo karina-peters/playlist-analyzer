@@ -89,7 +89,7 @@ export class SpotifyService {
         params: {
           q: query,
           type: type,
-          limit: 5,
+          limit: 10,
         },
       })
       .pipe(
