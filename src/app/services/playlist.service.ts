@@ -11,6 +11,7 @@ export interface Playlist {
   name: string;
   tracksLink: string;
   tracks: Array<Track>;
+  tracksCount: number;
   description?: string;
   img?: string;
 }
@@ -43,7 +44,8 @@ export class PlaylistService {
             description: playlist.description,
             tracks: [],
             tracksLink: playlist.tracks.href,
-            img: playlist.images[0].url,
+            tracksCount: playlist.tracks.total,
+            img: playlist.images[0]?.url,
           };
         });
 

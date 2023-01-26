@@ -18,7 +18,7 @@ export class TrackDistributeComponent implements OnInit {
   public playlist: Playlist;
 
   constructor(private playlistService: PlaylistService, private trackService: TrackService) {
-    this.playlist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
+    this.playlist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0 };
 
     this.selectorConfig = {
       type: DataType.Playlist,

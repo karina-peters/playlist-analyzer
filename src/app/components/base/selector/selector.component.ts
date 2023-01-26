@@ -81,6 +81,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
         let currentSelected = this.options[selected];
         this.searchModel = currentSelected.name;
       } else {
+        // If an option hasn't been selected, clear search and reset options
         this.searchModel = "";
         this.clearing = false;
         this.resetOptions();
@@ -99,7 +100,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
       this.searching = true;
 
       if (this.config.searchFirst) {
-        // Reset the search on focus to prevent weirdness
+        // Re-populate options with search results from the API
         if (this.searchModel.length == 0) return;
         this.apiSearch();
       } else {
@@ -147,11 +148,12 @@ export class SelectorComponent implements OnInit, OnDestroy {
     } else if (this.isAcceptedKey($event.key)) {
       if (this.config.searchFirst) {
         if (this.searchModel == "") {
-          // Hide options when user deletes search string
+          // Hide options when the user clears the search
           this.toggleShowOptions(false);
           return;
         }
 
+        // Populate options with search results from the API
         this.apiSearch();
       } else {
         // Filter options list
@@ -178,7 +180,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
     this.searchModel = "";
     let search: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} input`)[0];
 
-    // Calling setTimeout is required to trigger onFocus event
+    // Call setTimeout to trigger onFocus event
     setTimeout(() => {
       search.focus();
     });

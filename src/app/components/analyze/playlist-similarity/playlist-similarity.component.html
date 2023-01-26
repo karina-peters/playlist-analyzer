@@ -7,7 +7,7 @@
         [image]="leftPlaylist.img"
         [title]="leftPlaylist.name"
         [description]="leftPlaylist.description ? leftPlaylist.description : ''"
-        [footer]="(leftPlaylist.tracks?.length?.toString() ? leftPlaylist.tracks.length.toString() : '0') + ' tracks'"
+        [footer]="(leftPlaylist.tracksCount?.toString() ? leftPlaylist.tracksCount.toString() : '0') + ' tracks'"
         @slideInOut></app-card>
     </div>
     <div class="col-sm-1 justify-content-center">
@@ -34,7 +34,7 @@
         [image]="rightPlaylist.img"
         [title]="rightPlaylist.name"
         [description]="rightPlaylist.description ? rightPlaylist.description : ''"
-        [footer]="(rightPlaylist.tracks?.length?.toString() ? rightPlaylist.tracks.length.toString() : '0') + ' tracks'"
+        [footer]="(rightPlaylist.tracksCount?.toString() ? rightPlaylist.tracksCount.toString() : '0') + ' tracks'"
         @slideInOut></app-card>
     </div>
   </div>

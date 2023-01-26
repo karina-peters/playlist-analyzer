@@ -36,7 +36,7 @@ export class ArtistService {
           id: artist.id,
           link: artist.href,
           name: artist.name,
-          img: artist.images[0].url,
+          img: artist.images[0]?.url,
           genres: artist.genres,
         };
 

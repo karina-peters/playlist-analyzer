@@ -1,12 +1,18 @@
-<div class="fill-height">
-  <div class="row gx-5 select-component-wrapper">
+<div class="fill-height track-distribution">
+  <div class="row gx-4 select-component-wrapper justify-content-center">
     <div class="col-5 select-wrapper" id="select-wrapper-left">
       <app-selector class="row" [options$]="selectorOptions$" [config]="selectorConfig" (selectedEvent)="select($event)"></app-selector>
     </div>
   </div>
-  <div class="row">
-    <ul>
-      <li *ngFor="let playlist of trackPlaylists">{{ playlist.name }}</li>
-    </ul>
+  <div class="row gx-4 playlist-wrapper">
+    <div class="col-4" *ngFor="let playlist of trackPlaylists">
+      <app-card
+        *ngIf="playlist.id"
+        [image]="playlist.img"
+        [title]="playlist.name"
+        [description]="playlist.description ? playlist.description : ''"
+        [footer]="(playlist.tracks?.length?.toString() ? playlist.tracks.length.toString() : '0') + ' tracks'"
+        @slideInOut></app-card>
+    </div>
   </div>
 </div>
