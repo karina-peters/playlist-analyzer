@@ -48,8 +48,8 @@ export class PlaylistSimilarityComponent implements OnInit {
   private artistMap: { [key: string]: Artist } = {};
 
   constructor(private alertService: AlertService, private playlistService: PlaylistService, private trackService: TrackService) {
-    this.leftPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
-    this.rightPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [] };
+    this.leftPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0 };
+    this.rightPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0 };
 
     this.selectorConfig = {
       type: DataType.Playlist,
@@ -58,7 +58,7 @@ export class PlaylistSimilarityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.playlistService.getPlaylists().subscribe((playlists: Array<Playlist>) => {
+    this.playlistService.getUserPlaylists().subscribe((playlists: Array<Playlist>) => {
       this.selectorOptions$.next(playlists);
     });
   }
@@ -127,7 +127,7 @@ export class PlaylistSimilarityComponent implements OnInit {
 
   public selectLeft(playlist: Playlist) {
     this.leftPlaylist = playlist;
-    this.trackService.getTracks(playlist.tracksLink).subscribe((tracks) => {
+    this.trackService.getTracksArtists(playlist.tracksLink).subscribe((tracks) => {
       this.leftPlaylist.tracks = tracks;
     });
 
@@ -136,7 +136,7 @@ export class PlaylistSimilarityComponent implements OnInit {
 
   public selectRight(playlist: Playlist) {
     this.rightPlaylist = playlist;
-    this.trackService.getTracks(playlist.tracksLink).subscribe((tracks) => {
+    this.trackService.getTracksArtists(playlist.tracksLink).subscribe((tracks) => {
       this.rightPlaylist.tracks = tracks;
     });
 

@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+import { TrackService } from "src/app/services/track.service";
 import { UniqueIdService } from "src/app/services/unique-id.service";
 
 export interface SelectorConfig {
   type: DataType;
   allowSearch: boolean;
+  searchFirst?: boolean;
   placeholder?: string;
 }
 
@@ -42,19 +44,30 @@ export class SelectorComponent implements OnInit, OnDestroy {
   public selected$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   @Output() selectedEvent = new EventEmitter<any>();
 
-  constructor(private idService: UniqueIdService) {}
+  constructor(private idService: UniqueIdService, private trackService: TrackService) {}
 
   ngOnInit(): void {
     this.selectorId = this.idService.getUniqueId("selector-");
     this.filteredOptions = this.options;
 
+    if (!this.config.placeholder) {
+      if (this.config.type == DataType.Playlist) {
+        this.config.placeholder = "Select a Playlist";
+      } else if (this.config.type == DataType.Track) {
+        this.config.placeholder = "Select a Track";
+      } else {
+        this.config.placeholder = "Select";
+      }
+    }
+
     this.options$.subscribe((opts) => {
-      this.config.placeholder = this.config.placeholder
-        ? this.config.placeholder
-        : this.config.type == DataType.Playlist
-        ? "Choose a Playlist"
-        : "Select";
-      this.options.push(...opts);
+      // If we're getting search results from the API, replace, else append
+      if (this.config.searchFirst) {
+        this.options = opts;
+      } else {
+        this.options.push(...opts);
+      }
+
       this.filteredOptions = this.options.filter((opt) => this.match(this.searchModel, opt.name));
     });
 
@@ -68,6 +81,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
         let currentSelected = this.options[selected];
         this.searchModel = currentSelected.name;
       } else {
+        // If an option hasn't been selected, clear search and reset options
         this.searchModel = "";
         this.clearing = false;
         this.resetOptions();
@@ -84,20 +98,32 @@ export class SelectorComponent implements OnInit, OnDestroy {
   public onInputFocus(_$event: FocusEvent): void {
     if (this.config.allowSearch) {
       this.searching = true;
-    }
 
-    this.toggleShowOptions(true);
+      if (this.config.searchFirst) {
+        // Re-populate options with search results from the API
+        if (this.searchModel.length == 0) return;
+        this.apiSearch();
+      } else {
+        this.toggleShowOptions(true);
+      }
+    }
   }
 
   public onInputBlur(_$event: FocusEvent): void {
     if (this.config.allowSearch) {
       this.searching = false;
+
+      if (this.config.searchFirst) {
+        // Clear API search results on blur
+        this.options = [];
+      }
+
       this.removeHightlight();
     }
   }
 
   public onInputClick(_$event: FocusEvent): void {
-    if (this.config.allowSearch) {
+    if (this.config.allowSearch && !this.config.searchFirst) {
       this.toggleShowOptions(true);
     }
   }
@@ -120,11 +146,22 @@ export class SelectorComponent implements OnInit, OnDestroy {
         $event.target.blur();
       }
     } else if (this.isAcceptedKey($event.key)) {
-      // Filter options list
-      this.showOptions = true;
-      this.filteredOptions = this.options.filter((opt) => this.match(this.searchModel, opt.name));
+      if (this.config.searchFirst) {
+        if (this.searchModel == "") {
+          // Hide options when the user clears the search
+          this.toggleShowOptions(false);
+          return;
+        }
 
-      this.adjustSelectorHeight();
+        // Populate options with search results from the API
+        this.apiSearch();
+      } else {
+        // Filter options list
+        this.showOptions = true;
+        this.filteredOptions = this.options.filter((opt) => this.match(this.searchModel, opt.name));
+
+        this.adjustSelectorHeight();
+      }
     }
   }
 
@@ -143,9 +180,19 @@ export class SelectorComponent implements OnInit, OnDestroy {
     this.searchModel = "";
     let search: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} input`)[0];
 
-    // Calling setTimeout is required to trigger onFocus event
+    // Call setTimeout to trigger onFocus event
     setTimeout(() => {
       search.focus();
+    });
+  }
+
+  private apiSearch() {
+    let type = this.config.type == DataType.Track ? "track" : "";
+    this.trackService.searchTracks(this.searchModel, type).subscribe((results) => {
+      this.options$.next(results);
+      this.selectedIndex = -1; // Reset selected index on new search
+
+      this.toggleShowOptions(true);
     });
   }
 

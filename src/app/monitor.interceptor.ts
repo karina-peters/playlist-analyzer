@@ -45,6 +45,11 @@ export class MonitorInterceptor implements HttpInterceptor {
       this.logout();
     }
 
+    // Rate limit error
+    else if (error.status === 429) {
+      // TODO
+    }
+
     // Server error
     else if (error.status === 500) {
       this.alertService.error(`${error.status}: Internal Server Error`);

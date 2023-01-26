@@ -3,7 +3,7 @@ import { forkJoin, Observable, of } from "rxjs";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Artist, ArtistService } from "./artist.service";
-import { IPlaylistTracksDTO } from "src/app/models/spotify-response.models";
+import { IPlaylistTracksDTO, ISearchResultsDTO } from "src/app/models/spotify-response.models";
 
 export interface Track {
   index: number;
@@ -20,6 +20,8 @@ export interface Track {
 })
 export class TrackService {
   private tracksCache: { [key: string]: Array<Track> } = {};
+  private tracksArtistsCache: { [key: string]: Array<Track> } = {};
+  private searchCache: { [key: string]: Array<Track> } = {};
 
   constructor(private spotifyService: SpotifyService, private artistService: ArtistService) {}
 
@@ -35,7 +37,7 @@ export class TrackService {
 
     return this.spotifyService.getTracks(tracksLink).pipe(
       map((tracks: Array<IPlaylistTracksDTO>) => {
-        return tracks.map((track, index) => {
+        const ret = tracks.map((track, index) => {
           return {
             index: index,
             id: track.track?.id,
@@ -52,7 +54,27 @@ export class TrackService {
             img: track.track?.album.images[2].url,
           };
         });
+
+        this.tracksCache[tracksLink] = ret;
+        return ret;
       }),
+      catchError((error) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Retrieves a list of tracks and their artist details for the provided tracks uri.
+   * @param {string} tracksLink - The uri of the tracks to retrieve
+   * @returns An Observable containing an array of Track objects
+   */
+  public getTracksArtists(tracksLink: string): Observable<Array<Track>> {
+    if (this.tracksArtistsCache[tracksLink] != undefined) {
+      return of(this.tracksArtistsCache[tracksLink]);
+    }
+
+    return this.getTracks(tracksLink).pipe(
       // Get detailed artist info
       mergeMap((tracks: Array<Track>) =>
         forkJoin(
@@ -67,8 +89,48 @@ export class TrackService {
         )
       ),
       map((tracks: Array<Track>) => {
-        this.tracksCache[tracksLink] = tracks;
+        this.tracksArtistsCache[tracksLink] = tracks;
         return tracks;
+      }),
+      catchError((error) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Retrieves a list of tracks that match the given search query.
+   * @param {string} query - The search query from the user
+   * @param {string} type - A comma-separated list of item types to search across
+   * @returns An Observable containing an array of Track objects
+   */
+  public searchTracks(query: string, type: string): Observable<Array<Track>> {
+    if (this.searchCache[query] != undefined) {
+      return of(this.searchCache[query]);
+    }
+
+    return this.spotifyService.getSearchResults(query, type).pipe(
+      map((results: ISearchResultsDTO) => {
+        const ret = results.tracks?.items.map((track, index) => {
+          return {
+            index: index,
+            id: track.id,
+            name: track.name,
+            artist: {
+              id: track.artists[0].id,
+              link: track.artists[0].href,
+              name: track.artists[0].name,
+              img: "",
+              genres: [],
+            },
+            album: track.album.name,
+            duration: this.convertTime(track.duration_ms),
+            img: track.album.images[2].url,
+          };
+        });
+
+        this.searchCache[query] = ret;
+        return ret;
       }),
       catchError((error) => {
         throw error;
