@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { EMPTY, Observable } from "rxjs";
-import { catchError, expand, map, reduce } from "rxjs/operators";
+import { catchError, expand, map, mergeMap, reduce } from "rxjs/operators";
 import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO, IUserDTO } from "../models/spotify-response.models";
 
 @Injectable({
@@ -52,6 +52,29 @@ export class SpotifyService {
         throw error;
       })
     );
+  }
+
+  /**
+   * Retrieves the saved status of the given track(s) from Spotify.
+   * @param {string} idString - A comma-separated list of track ids
+   * @returns A list of booleans
+   */
+  public checkSavedTracks(idString: string): Observable<Array<boolean>> {
+    return this.http
+      .get("https://api.spotify.com/v1/me/tracks/contains", {
+        headers: {
+          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
+        },
+        params: {
+          ids: idString,
+        },
+      })
+      .pipe(
+        map((response: any) => response),
+        catchError((error: HttpErrorResponse) => {
+          throw error;
+        })
+      );
   }
 
   /**

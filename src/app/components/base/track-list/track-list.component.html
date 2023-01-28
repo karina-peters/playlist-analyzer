@@ -1,7 +1,12 @@
 <div class="track-list-wrapper shadow">
-  <div class="track-list" *ngIf="tracks.length > 0">
+  <div class="track-list" *ngIf="tracks.length > 0" [ngClass]="{ 'medium': config.size == 1 }">
     <ul class="list-group">
-      <app-track *ngFor="let track of tracks" [trackData]="track"></app-track>
+      <app-track
+        *ngFor="let track of tracks"
+        [config]="config"
+        [trackData]="track"
+        [selectedIndex$]="selectedIndex$"
+        (selectedEvent)="setSelected($event)"></app-track>
     </ul>
   </div>
   <div *ngIf="tracks.length == 0">

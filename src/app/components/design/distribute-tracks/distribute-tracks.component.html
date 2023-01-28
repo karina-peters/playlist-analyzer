@@ -1,15 +1,37 @@
 <div class="container-fluid fill-height page">
-  Move all tracks to single playlist option
   <div class="row select-component-wrapper">
-    <app-selector
-      class="row"
-      [options$]="selectorOptions$"
-      [config]="selectorConfig"
-      (selectedEvent)="selectPlaylist($event)"></app-selector>
-    <!-- <app-playlist-select
-      [playlists]="playlists"
-      [type]="'table'"
-      (selectedEvent)="selectPlaylist($event)"
-      (authError)="handleAuthError($event)"></app-playlist-select> -->
+    <div class="col-5">
+      <app-selector
+        class="row"
+        [options$]="selectorOptions$"
+        [config]="selectorConfig"
+        (selectedEvent)="selectPlaylist($event)"></app-selector>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-7 tracks-wrapper">
+      <div class="row">
+        <app-track-list
+          *ngIf="playlist.tracks.length > 0"
+          [tracks]="playlist.tracks"
+          [checkedTracks]="getKeys(this.tracksToMap)"
+          [config]="trackListConfig"
+          (selectedEvent)="selectTrack($event)"
+          @slideInOut></app-track-list>
+      </div>
+    </div>
+    <div class="col mapping-wrapper" *ngIf="track.index != -1">
+      <div class="row">
+        <app-card
+          [image]="track.img"
+          [title]="track.name"
+          [description]="''"
+          [footer]="(track.playlists?.length?.toString() ? track.playlists.length.toString() : '0') + ' playlists'"
+          @slideInOut></app-card>
+      </div>
+      <div class="row">
+        <app-playlist-list [playlists]="allPlaylists" (selectedEvent)="setMappedPlaylists($event)" @slideInOut></app-playlist-list>
+      </div>
+    </div>
   </div>
 </div>

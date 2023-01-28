@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { forkJoin, Observable, of } from "rxjs";
-import { catchError, map, mergeMap } from "rxjs/operators";
+import { catchError, map, mergeMap, reduce } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Artist, ArtistService } from "./artist.service";
 import { IPlaylistTracksDTO, ISearchResultsDTO } from "src/app/models/spotify-response.models";
@@ -13,6 +13,9 @@ export interface Track {
   album: string;
   duration: string;
   img: string;
+  playlists: Array<string>;
+  liked: boolean;
+  checked: boolean;
 }
 
 @Injectable({
@@ -51,7 +54,10 @@ export class TrackService {
             },
             album: track.track?.album.name,
             duration: this.convertTime(track.track?.duration_ms),
-            img: track.track?.album.images[2].url,
+            img: track.track?.album.images[0].url,
+            playlists: [],
+            liked: false,
+            checked: false,
           };
         });
 
@@ -125,13 +131,35 @@ export class TrackService {
             },
             album: track.album.name,
             duration: this.convertTime(track.duration_ms),
-            img: track.album.images[2].url,
+            img: track.album.images[0].url,
+            playlists: [],
+            liked: false,
+            checked: false,
           };
         });
 
         this.searchCache[query] = ret;
         return ret;
       }),
+      catchError((error) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Checks whether the given track(s) are saved to the user's library.
+   * @param {Array<string>} ids - A list of track ids
+   * @returns A list of booleans
+   */
+  public checkSavedTracks(ids: Array<string>): Observable<Array<boolean>> {
+    let idStrings: Array<string> = [];
+    for (let i = 0; i < Math.ceil(ids.length / 50); i++) {
+      idStrings.push(ids.slice(i * 50, (i + 1) * 50 - 1).join(","));
+    }
+
+    return forkJoin(idStrings.map((idString) => this.spotifyService.checkSavedTracks(idString))).pipe(
+      map((response) => ([] as boolean[]).concat(...response)),
       catchError((error) => {
         throw error;
       })

@@ -27,6 +27,9 @@ export class TrackDistributionComponent implements OnInit {
       album: "",
       duration: "",
       img: "",
+      playlists: [],
+      liked: false,
+      checked: false,
     };
 
     this.selectorConfig = {

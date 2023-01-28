@@ -12,8 +12,10 @@ export interface Playlist {
   tracksLink: string;
   tracks: Array<Track>;
   tracksCount: number;
+  owner: string;
   description?: string;
   img?: string;
+  selected?: boolean;
 }
 
 @Injectable({
@@ -46,6 +48,8 @@ export class PlaylistService {
             tracksLink: playlist.tracks.href,
             tracksCount: playlist.tracks.total,
             img: playlist.images[0]?.url,
+            owner: playlist.owner.id,
+            selected: false,
           };
         });
 
