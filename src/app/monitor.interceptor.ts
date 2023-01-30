@@ -1,7 +1,7 @@
 import { HttpRequest, HttpHandler, HttpInterceptor, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, of, throwError } from "rxjs";
+import { Observable, of, throwError, timer } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { AlertService } from "./services/alert.service";
 import { AuthenticationService } from "./services/authentication.service";
@@ -47,7 +47,14 @@ export class MonitorInterceptor implements HttpInterceptor {
 
     // Rate limit error
     else if (error.status === 429) {
-      // TODO
+      console.error("Rate limit exceeded. Retrying in 30s.");
+
+      return timer(30000).pipe(
+        switchMap(() => {
+          console.info("Retrying...");
+          return next.handle(request);
+        })
+      );
     }
 
     // Server error

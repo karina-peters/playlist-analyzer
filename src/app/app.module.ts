@@ -22,6 +22,7 @@ import { ImageScrollComponent } from "./components/base/image-scroll/image-scrol
 import { CardComponent } from "./components/base/card/card.component";
 import { TagCloudComponent } from "./components/base/tag-cloud/tag-cloud.component";
 import { CardGroupComponent } from "./components/base/card-group/card-group.component";
+import { PlaylistListComponent } from './components/base/playlist-list/playlist-list.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { CardGroupComponent } from "./components/base/card-group/card-group.comp
     CardComponent,
     TagCloudComponent,
     CardGroupComponent,
+    PlaylistListComponent,
   ],
   imports: [AppRoutingModule, BrowserModule, BrowserAnimationsModule, FormsModule, HttpClientModule],
   providers: [

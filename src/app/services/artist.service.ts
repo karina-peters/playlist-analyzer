@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { IArtistDTO } from "src/app/models/spotify-response.models";
@@ -16,8 +16,6 @@ export interface Artist {
   providedIn: "root",
 })
 export class ArtistService {
-  private artistsCache: { [key: string]: Artist } = {};
-
   constructor(private spotifyService: SpotifyService) {}
 
   /**
@@ -26,22 +24,39 @@ export class ArtistService {
    * @returns An Observable containing an Artist object
    */
   public getArtist(artistLink: string): Observable<Artist> {
-    if (this.artistsCache[artistLink] != undefined) {
-      return of(this.artistsCache[artistLink]);
-    }
-
     return this.spotifyService.getArtist(artistLink).pipe(
       map((artist: IArtistDTO) => {
-        const ret = {
+        return {
           id: artist.id,
           link: artist.href,
           name: artist.name,
           img: artist.images[0]?.url,
           genres: artist.genres,
         };
+      }),
+      catchError((error) => {
+        throw error;
+      })
+    );
+  }
 
-        this.artistsCache[artistLink] = ret;
-        return ret;
+  /**
+   * Retrieves the artists with the provided artist ids.
+   * @param {Array<string>} ids - A list of artist ids
+   * @returns A list of Artist objects
+   */
+  public getSeveralArtists(ids: Array<string>): Observable<Array<Artist>> {
+    return this.spotifyService.getSeveralArtists(ids).pipe(
+      map((artists: Array<IArtistDTO>) => {
+        return artists.map((artist) => {
+          return {
+            id: artist.id,
+            link: artist.href,
+            name: artist.name,
+            img: artist.images[0]?.url,
+            genres: artist.genres,
+          };
+        });
       }),
       catchError((error) => {
         throw error;

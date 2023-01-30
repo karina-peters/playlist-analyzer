@@ -1,6 +1,6 @@
 <div class="fill-height track-distribution">
   <div class="row gx-4 select-component-wrapper justify-content-center">
-    <div class="col-5 select-wrapper" id="select-wrapper-left">
+    <div class="col-5 select-wrapper">
       <app-selector class="row" [options$]="selectorOptions$" [config]="selectorConfig" (selectedEvent)="select($event)"></app-selector>
     </div>
   </div>
@@ -11,8 +11,7 @@
         [image]="playlist.img"
         [title]="playlist.name"
         [description]="playlist.description ? playlist.description : ''"
-        [footer]="(playlist.tracks?.length?.toString() ? playlist.tracks.length.toString() : '0') + ' tracks'"
-        @slideInOut></app-card>
+        [footer]="(playlist.tracks?.length?.toString() ? playlist.tracks.length.toString() : '0') + ' tracks'"></app-card>
     </div>
   </div>
 </div>

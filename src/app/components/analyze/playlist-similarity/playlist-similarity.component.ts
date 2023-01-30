@@ -48,8 +48,8 @@ export class PlaylistSimilarityComponent implements OnInit {
   private artistMap: { [key: string]: Artist } = {};
 
   constructor(private alertService: AlertService, private playlistService: PlaylistService, private trackService: TrackService) {
-    this.leftPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0 };
-    this.rightPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0 };
+    this.leftPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0, owner: "" };
+    this.rightPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0, owner: "" };
 
     this.selectorConfig = {
       type: DataType.Playlist,

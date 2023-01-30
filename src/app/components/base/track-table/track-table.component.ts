@@ -15,6 +15,7 @@ export class TrackTableComponent implements OnInit {
     tracksLink: "",
     tracks: [],
     tracksCount: 0,
+    owner: "",
   };
 
   constructor(private trackService: TrackService) {}

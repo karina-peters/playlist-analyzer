@@ -15,7 +15,8 @@ export class AuthenticationService {
    * @param {boolean} showDialog - Whether or not the Spotify account access dialog should be shown
    */
   public requestAccess(showDialog?: boolean) {
-    const SCOPES = "user-read-private%20user-read-email";
+    const SCOPES =
+      "user-read-private%20user-read-email%20user-library-read%20playlist-read-private%20playlist-modify-public%20playlist-modify-private";
     const SHOW_DIALOG = showDialog ? showDialog : false;
 
     document.location.href =

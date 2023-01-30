@@ -3,13 +3,21 @@
 .list-item {
   background-color: colors.$background-grey;
   color: white;
-  cursor: default;
   list-style-type: none;
+  cursor: pointer;
   padding: 10px 25px;
 }
 
 .list-item:hover {
   background-color: colors.$highlight-grey;
+}
+
+.list-item.selected {
+  background-color: colors.$highlight-grey-4 !important;
+}
+
+.list-item.readonly {
+  cursor: default;
 }
 
 .vcenter {
@@ -28,4 +36,24 @@ img {
   white-space: nowrap;
   margin-bottom: 0px;
   max-width: 315px;
+}
+
+.heart {
+  margin-right: 5px;
+}
+
+.playlist-unchecked {
+  color: colors.$spotify-green;
+
+  svg {
+    float: right;
+  }
+}
+
+.playlist-check {
+  color: colors.$spotify-green;
+
+  svg {
+    float: right;
+  }
 }

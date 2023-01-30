@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { EMPTY, Observable } from "rxjs";
+import { EMPTY, forkJoin, Observable, of } from "rxjs";
 import { catchError, expand, map, reduce } from "rxjs/operators";
-import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO, IUserDTO } from "../models/spotify-response.models";
+import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO, IUserDTO, ITrack } from "../models/spotify-response.models";
 
 @Injectable({
   providedIn: "root",
 })
 export class SpotifyService {
+  private cache: { [key: number]: any } = {};
   constructor(private http: HttpClient) {}
 
   /**
@@ -39,9 +40,25 @@ export class SpotifyService {
   }
 
   /**
+   * Retrieves all items for the provided playlist id from Spotify.
+   * @param id - The id of the playlist
+   * @returns An Observable containing the response items from the Spotify playlists/{id}/tracks endpoint
+   */
+  public getPlaylistItems(id: string): Observable<Array<IPlaylistTracksDTO>> {
+    return this.getNext(`https://api.spotify.com/v1/playlists/${id}/tracks`).pipe(
+      expand((response: any) => (response?.next ? this.getNext(response.next) : EMPTY)),
+      map((response: any) => response.items),
+      reduce((accumulator, value) => accumulator.concat(value)),
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
    * Retrieves track data from Spotify.
    * @param uri - The uri of the tracks to retrieve
-   * @returns An Observable containing the response from the Spotify tracks endpoint
+   * @returns An Observable containing the response items from the Spotify tracks endpoint
    */
   public getTracks(uri: string): Observable<Array<IPlaylistTracksDTO>> {
     return this.getNext(uri).pipe(
@@ -55,23 +72,45 @@ export class SpotifyService {
   }
 
   /**
+   * Retrieves the saved status of the given track(s) from Spotify.
+   * @param ids - An array of track ids
+   * @returns An Observable containing the response from the Spotify me/tracks/contains endpoint
+   */
+  public checkSavedTracks(ids: Array<string>): Observable<Array<boolean>> {
+    return this.getSeveral("https://api.spotify.com/v1/me/tracks/contains", ids).pipe(
+      map((response: any) => response),
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
    * Retrieves artist data from Spotify.
    * @param uri - The uri of the artist to retrieve
    * @returns An Observable containing the response from the Spotify artists endpoint
    */
   public getArtist(uri: string): Observable<IArtistDTO> {
-    return this.http
-      .get(uri, {
-        headers: {
-          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
-        },
+    return this.getOne(uri).pipe(
+      map((response: any) => response),
+      catchError((error) => {
+        throw error;
       })
-      .pipe(
-        map((response: any) => response),
-        catchError((error) => {
-          throw error;
-        })
-      );
+    );
+  }
+
+  /**
+   * Retrieves artist data from Spotify.
+   * @param ids - A list of artist ids
+   * @returns An Observable containing the response from the Spotify artists endpoint
+   */
+  public getSeveralArtists(ids: Array<string>): Observable<Array<IArtistDTO>> {
+    return this.getSeveral("https://api.spotify.com/v1/artists", ids).pipe(
+      map((response: any) => response),
+      catchError((error) => {
+        throw error;
+      })
+    );
   }
 
   /**
@@ -100,14 +139,101 @@ export class SpotifyService {
       );
   }
 
-  private getNext(link: string): Observable<any> {
-    return this.http.get(link, {
-      headers: {
-        Authorization: "Bearer " + window.localStorage.getItem("access_token"),
-      },
-      params: {
-        limit: 50,
-      },
-    });
+  private getNext(url: string): Observable<any> {
+    let key = this.hash(url);
+    if (this.cache.hasOwnProperty(key)) {
+      return of(this.cache[key]);
+    }
+
+    return this.http
+      .get(url, {
+        headers: {
+          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
+        },
+        params: {
+          limit: 50,
+        },
+      })
+      .pipe(map((response: any) => this.cacheRequest(key, response)));
+  }
+
+  private getOne(url: string): Observable<any> {
+    let key = this.hash(url);
+    if (this.cache.hasOwnProperty(key)) {
+      return of(this.cache[key]);
+    }
+
+    return this.http
+      .get(url, {
+        headers: {
+          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
+        },
+      })
+      .pipe(map((response: any) => this.cacheRequest(key, response)));
+  }
+
+  private getSeveral(url: string, ids: Array<string>): Observable<any> {
+    let key = this.hash(url + ids.join(""));
+    if (this.cache.hasOwnProperty(key)) {
+      return of(this.cache[key]);
+    }
+
+    let idStrings = this.arrayToCSV(ids);
+    return forkJoin(
+      idStrings.map((idString) =>
+        this.http.get(url, {
+          headers: {
+            Authorization: "Bearer " + window.localStorage.getItem("access_token"),
+          },
+          params: {
+            ids: idString,
+          },
+        })
+      )
+    ).pipe(
+      map((response: any) => {
+        return response.map((obj: any) => {
+          if (Array.isArray(obj)) return obj;
+          return obj[Object.keys(obj)[0]];
+        });
+      }),
+      map((response: any) => [].concat(...response)),
+      map((response: any) => this.cacheRequest(key, response))
+    );
+  }
+
+  private arrayToCSV(items: Array<string>, limit: number = 50): Array<string> {
+    let csvStrings: Array<string> = [];
+    for (let i = 0; i < Math.ceil(items.length / limit); i++) {
+      csvStrings.push(
+        items
+          .slice(i * limit, (i + 1) * limit)
+          .filter((x) => x)
+          .join(",")
+      );
+    }
+
+    return csvStrings;
+  }
+
+  private hash(key: string): number {
+    let hash = 0,
+      chr;
+
+    for (let i = 0; i < key.length; i++) {
+      chr = key.charCodeAt(i);
+      hash = (hash << 5) - hash + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+
+    return hash;
+  }
+
+  private cacheRequest(key: number, response: any) {
+    if (key && !this.cache.hasOwnProperty(key)) {
+      this.cache[key] = response;
+    }
+
+    return response;
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { forkJoin, Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Artist, ArtistService } from "./artist.service";
@@ -13,16 +13,15 @@ export interface Track {
   album: string;
   duration: string;
   img: string;
+  playlists: Array<string>;
+  liked: boolean;
+  checked: boolean;
 }
 
 @Injectable({
   providedIn: "root",
 })
 export class TrackService {
-  private tracksCache: { [key: string]: Array<Track> } = {};
-  private tracksArtistsCache: { [key: string]: Array<Track> } = {};
-  private searchCache: { [key: string]: Array<Track> } = {};
-
   constructor(private spotifyService: SpotifyService, private artistService: ArtistService) {}
 
   /**
@@ -31,13 +30,9 @@ export class TrackService {
    * @returns An Observable containing an array of Track objects
    */
   public getTracks(tracksLink: string): Observable<Array<Track>> {
-    if (this.tracksCache[tracksLink] != undefined) {
-      return of(this.tracksCache[tracksLink]);
-    }
-
     return this.spotifyService.getTracks(tracksLink).pipe(
       map((tracks: Array<IPlaylistTracksDTO>) => {
-        const ret = tracks.map((track, index) => {
+        return tracks.map((track, index) => {
           return {
             index: index,
             id: track.track?.id,
@@ -51,12 +46,12 @@ export class TrackService {
             },
             album: track.track?.album.name,
             duration: this.convertTime(track.track?.duration_ms),
-            img: track.track?.album.images[2].url,
+            img: track.track?.album.images[0].url,
+            playlists: [],
+            liked: false,
+            checked: false,
           };
         });
-
-        this.tracksCache[tracksLink] = ret;
-        return ret;
       }),
       catchError((error) => {
         throw error;
@@ -70,27 +65,22 @@ export class TrackService {
    * @returns An Observable containing an array of Track objects
    */
   public getTracksArtists(tracksLink: string): Observable<Array<Track>> {
-    if (this.tracksArtistsCache[tracksLink] != undefined) {
-      return of(this.tracksArtistsCache[tracksLink]);
-    }
-
+    let tracks: Array<Track> = [];
     return this.getTracks(tracksLink).pipe(
       // Get detailed artist info
-      mergeMap((tracks: Array<Track>) =>
-        forkJoin(
-          tracks.map((track: Track) =>
-            this.artistService.getArtist(track.artist.link).pipe(
-              map((artist: Artist) => {
-                track.artist = artist;
-                return track;
-              })
-            )
-          )
-        )
-      ),
-      map((tracks: Array<Track>) => {
-        this.tracksArtistsCache[tracksLink] = tracks;
-        return tracks;
+      mergeMap((tracksArray: Array<Track>) => {
+        tracks = tracksArray;
+        return this.artistService.getSeveralArtists(tracksArray.map((track) => track.artist.id));
+      }),
+      map((artists: Array<Artist>) => {
+        return tracks.map((track, index) => {
+          if (artists[index]) {
+            let foundArtist = artists.find((artist) => track.artist.id == artist.id);
+            track.artist = foundArtist != undefined ? foundArtist : track.artist;
+          }
+
+          return track;
+        });
       }),
       catchError((error) => {
         throw error;
@@ -105,13 +95,9 @@ export class TrackService {
    * @returns An Observable containing an array of Track objects
    */
   public searchTracks(query: string, type: string): Observable<Array<Track>> {
-    if (this.searchCache[query] != undefined) {
-      return of(this.searchCache[query]);
-    }
-
     return this.spotifyService.getSearchResults(query, type).pipe(
       map((results: ISearchResultsDTO) => {
-        const ret = results.tracks?.items.map((track, index) => {
+        return results.tracks?.items.map((track, index) => {
           return {
             index: index,
             id: track.id,
@@ -125,13 +111,27 @@ export class TrackService {
             },
             album: track.album.name,
             duration: this.convertTime(track.duration_ms),
-            img: track.album.images[2].url,
+            img: track.album.images[0].url,
+            playlists: [],
+            liked: false,
+            checked: false,
           };
         });
-
-        this.searchCache[query] = ret;
-        return ret;
       }),
+      catchError((error) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Checks whether the given track(s) are saved to the user's library.
+   * @param {Array<string>} ids - A list of track ids
+   * @returns A list of booleans
+   */
+  public checkSavedTracks(ids: Array<string>): Observable<Array<boolean>> {
+    return this.spotifyService.checkSavedTracks(ids).pipe(
+      map((response) => response),
       catchError((error) => {
         throw error;
       })
