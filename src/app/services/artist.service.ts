@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { forkJoin, Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { IArtistDTO } from "src/app/models/spotify-response.models";
@@ -16,8 +16,6 @@ export interface Artist {
   providedIn: "root",
 })
 export class ArtistService {
-  private artistsCache: { [key: string]: Artist } = {};
-
   constructor(private spotifyService: SpotifyService) {}
 
   /**
@@ -26,22 +24,15 @@ export class ArtistService {
    * @returns An Observable containing an Artist object
    */
   public getArtist(artistLink: string): Observable<Artist> {
-    if (this.artistsCache[artistLink] != undefined) {
-      return of(this.artistsCache[artistLink]);
-    }
-
     return this.spotifyService.getArtist(artistLink).pipe(
       map((artist: IArtistDTO) => {
-        const ret = {
+        return {
           id: artist.id,
           link: artist.href,
           name: artist.name,
           img: artist.images[0]?.url,
           genres: artist.genres,
         };
-
-        this.artistsCache[artistLink] = ret;
-        return ret;
       }),
       catchError((error) => {
         throw error;
@@ -55,13 +46,7 @@ export class ArtistService {
    * @returns A list of Artist objects
    */
   public getSeveralArtists(ids: Array<string>): Observable<Array<Artist>> {
-    let idStrings: Array<string> = [];
-    for (let i = 0; i < Math.ceil(ids.length / 50); i++) {
-      idStrings.push(ids.slice(i * 50, (i + 1) * 50 - 1).join(","));
-    }
-
-    return forkJoin(idStrings.map((idString) => this.spotifyService.getSeveralArtists(idString))).pipe(
-      map((response) => ([] as IArtistDTO[]).concat(...response)),
+    return this.spotifyService.getSeveralArtists(ids).pipe(
       map((artists: Array<IArtistDTO>) => {
         return artists.map((artist) => {
           return {

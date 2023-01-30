@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { forkJoin, Observable, of } from "rxjs";
-import { catchError, map, mergeMap, reduce } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { catchError, map, mergeMap } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Artist, ArtistService } from "./artist.service";
 import { IPlaylistTracksDTO, ISearchResultsDTO } from "src/app/models/spotify-response.models";
@@ -22,10 +22,6 @@ export interface Track {
   providedIn: "root",
 })
 export class TrackService {
-  private tracksCache: { [key: string]: Array<Track> } = {};
-  private tracksArtistsCache: { [key: string]: Array<Track> } = {};
-  private searchCache: { [key: string]: Array<Track> } = {};
-
   constructor(private spotifyService: SpotifyService, private artistService: ArtistService) {}
 
   /**
@@ -34,13 +30,9 @@ export class TrackService {
    * @returns An Observable containing an array of Track objects
    */
   public getTracks(tracksLink: string): Observable<Array<Track>> {
-    if (this.tracksCache[tracksLink] != undefined) {
-      return of(this.tracksCache[tracksLink]);
-    }
-
     return this.spotifyService.getTracks(tracksLink).pipe(
       map((tracks: Array<IPlaylistTracksDTO>) => {
-        const ret = tracks.map((track, index) => {
+        return tracks.map((track, index) => {
           return {
             index: index,
             id: track.track?.id,
@@ -60,9 +52,6 @@ export class TrackService {
             checked: false,
           };
         });
-
-        this.tracksCache[tracksLink] = ret;
-        return ret;
       }),
       catchError((error) => {
         throw error;
@@ -76,10 +65,6 @@ export class TrackService {
    * @returns An Observable containing an array of Track objects
    */
   public getTracksArtists(tracksLink: string): Observable<Array<Track>> {
-    if (this.tracksArtistsCache[tracksLink] != undefined) {
-      return of(this.tracksArtistsCache[tracksLink]);
-    }
-
     let tracks: Array<Track> = [];
     return this.getTracks(tracksLink).pipe(
       // Get detailed artist info
@@ -88,10 +73,10 @@ export class TrackService {
         return this.artistService.getSeveralArtists(tracksArray.map((track) => track.artist.id));
       }),
       map((artists: Array<Artist>) => {
-        this.tracksArtistsCache[tracksLink] = tracks;
         return tracks.map((track, index) => {
           if (artists[index]) {
-            track.artist = artists[index];
+            let foundArtist = artists.find((artist) => track.artist.id == artist.id);
+            track.artist = foundArtist != undefined ? foundArtist : track.artist;
           }
 
           return track;
@@ -110,13 +95,9 @@ export class TrackService {
    * @returns An Observable containing an array of Track objects
    */
   public searchTracks(query: string, type: string): Observable<Array<Track>> {
-    if (this.searchCache[query] != undefined) {
-      return of(this.searchCache[query]);
-    }
-
     return this.spotifyService.getSearchResults(query, type).pipe(
       map((results: ISearchResultsDTO) => {
-        const ret = results.tracks?.items.map((track, index) => {
+        return results.tracks?.items.map((track, index) => {
           return {
             index: index,
             id: track.id,
@@ -136,9 +117,6 @@ export class TrackService {
             checked: false,
           };
         });
-
-        this.searchCache[query] = ret;
-        return ret;
       }),
       catchError((error) => {
         throw error;
@@ -152,13 +130,8 @@ export class TrackService {
    * @returns A list of booleans
    */
   public checkSavedTracks(ids: Array<string>): Observable<Array<boolean>> {
-    let idStrings: Array<string> = [];
-    for (let i = 0; i < Math.ceil(ids.length / 50); i++) {
-      idStrings.push(ids.slice(i * 50, (i + 1) * 50 - 1).join(","));
-    }
-
-    return forkJoin(idStrings.map((idString) => this.spotifyService.checkSavedTracks(idString))).pipe(
-      map((response) => ([] as boolean[]).concat(...response)),
+    return this.spotifyService.checkSavedTracks(ids).pipe(
+      map((response) => response),
       catchError((error) => {
         throw error;
       })

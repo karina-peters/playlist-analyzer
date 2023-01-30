@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { forkJoin, Observable, of } from "rxjs";
+import { forkJoin, Observable } from "rxjs";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Track, TrackService } from "./track.service";
@@ -22,9 +22,6 @@ export interface Playlist {
   providedIn: "root",
 })
 export class PlaylistService {
-  private playlistCache: Array<Playlist> = [];
-  private playlistTracksCache: Array<Playlist> = [];
-
   constructor(private spotifyService: SpotifyService, private trackService: TrackService) {}
 
   /**
@@ -32,13 +29,9 @@ export class PlaylistService {
    * @returns An Observable containing an Array of Playlist objects
    */
   public getUserPlaylists(): Observable<Array<Playlist>> {
-    if (this.playlistCache.length > 0) {
-      return of(this.playlistCache);
-    }
-
     return this.spotifyService.getPlaylists().pipe(
       map((playlists: Array<IPlaylistsDTO>) => {
-        const ret = playlists.map((playlist, index) => {
+        return playlists.map((playlist, index) => {
           return {
             index: index,
             id: playlist.id,
@@ -52,9 +45,6 @@ export class PlaylistService {
             selected: false,
           };
         });
-
-        this.playlistCache = ret;
-        return ret;
       }),
       catchError((error) => {
         throw error;
@@ -62,16 +52,12 @@ export class PlaylistService {
     );
   }
 
-  public getUserPlaylistsTracks(): Observable<Array<Playlist>> {
-    if (this.playlistTracksCache.length > 0) {
-      return of(this.playlistTracksCache);
-    }
-
+  public getDetailedUserPlaylists(): Observable<Array<Playlist>> {
     return this.getUserPlaylists().pipe(
       mergeMap((playlists: Array<Playlist>) =>
         forkJoin(
           playlists.map((playlist: Playlist) =>
-            this.trackService.getTracks(playlist.tracksLink).pipe(
+            this.trackService.getTracksArtists(playlist.tracksLink).pipe(
               map((tracks: Array<Track>) => {
                 playlist.tracks = tracks;
                 return playlist;
@@ -80,10 +66,6 @@ export class PlaylistService {
           )
         )
       ),
-      map((playlists: Array<Playlist>) => {
-        this.playlistCache = playlists;
-        return playlists;
-      }),
       catchError((error) => {
         throw error;
       })
