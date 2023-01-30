@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { EMPTY, Observable } from "rxjs";
 import { catchError, expand, map, mergeMap, reduce } from "rxjs/operators";
-import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO, IUserDTO } from "../models/spotify-response.models";
+import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO, IUserDTO, ITrack } from "../models/spotify-response.models";
 
 @Injectable({
   providedIn: "root",
@@ -39,9 +39,25 @@ export class SpotifyService {
   }
 
   /**
+   * Retrieves all items for the provided playlist id from Spotify.
+   * @param id - The id of the playlist
+   * @returns An Observable containing the response items from the Spotify playlists/{id}/tracks endpoint
+   */
+  public getPlaylistItems(id: string): Observable<Array<IPlaylistTracksDTO>> {
+    return this.getNext(`https://api.spotify.com/v1/playlists/${id}/tracks`).pipe(
+      expand((response: any) => (response?.next ? this.getNext(response.next) : EMPTY)),
+      map((response: any) => response.items),
+      reduce((accumulator, value) => accumulator.concat(value)),
+      catchError((error: HttpErrorResponse) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
    * Retrieves track data from Spotify.
    * @param uri - The uri of the tracks to retrieve
-   * @returns An Observable containing the response from the Spotify tracks endpoint
+   * @returns An Observable containing the response items from the Spotify tracks endpoint
    */
   public getTracks(uri: string): Observable<Array<IPlaylistTracksDTO>> {
     return this.getNext(uri).pipe(
@@ -57,7 +73,7 @@ export class SpotifyService {
   /**
    * Retrieves the saved status of the given track(s) from Spotify.
    * @param {string} idString - A comma-separated list of track ids
-   * @returns A list of booleans
+   * @returns An Observable containing the response from the Spotify me/tracks/contains endpoint
    */
   public checkSavedTracks(idString: string): Observable<Array<boolean>> {
     return this.http
@@ -91,6 +107,31 @@ export class SpotifyService {
       })
       .pipe(
         map((response: any) => response),
+        catchError((error) => {
+          throw error;
+        })
+      );
+  }
+
+  /**
+   * Retrieves artist data from Spotify.
+   * @param artistString - A comma-separated list of the artists to retrieve
+   * @returns An Observable containing the response from the Spotify artists endpoint
+   */
+  public getSeveralArtists(artistString: string): Observable<IArtistDTO> {
+    return this.http
+      .get("https://api.spotify.com/v1/artists", {
+        headers: {
+          Authorization: "Bearer " + window.localStorage.getItem("access_token"),
+        },
+        params: {
+          ids: artistString,
+        },
+      })
+      .pipe(
+        map((response: any) => {
+          return response.artists;
+        }),
         catchError((error) => {
           throw error;
         })

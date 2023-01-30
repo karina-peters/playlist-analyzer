@@ -80,23 +80,22 @@ export class TrackService {
       return of(this.tracksArtistsCache[tracksLink]);
     }
 
+    let tracks: Array<Track> = [];
     return this.getTracks(tracksLink).pipe(
       // Get detailed artist info
-      mergeMap((tracks: Array<Track>) =>
-        forkJoin(
-          tracks.map((track: Track) =>
-            this.artistService.getArtist(track.artist.link).pipe(
-              map((artist: Artist) => {
-                track.artist = artist;
-                return track;
-              })
-            )
-          )
-        )
-      ),
-      map((tracks: Array<Track>) => {
+      mergeMap((tracksArray: Array<Track>) => {
+        tracks = tracksArray;
+        return this.artistService.getSeveralArtists(tracksArray.map((track) => track.artist.id));
+      }),
+      map((artists: Array<Artist>) => {
         this.tracksArtistsCache[tracksLink] = tracks;
-        return tracks;
+        return tracks.map((track, index) => {
+          if (artists[index]) {
+            track.artist = artists[index];
+          }
+
+          return track;
+        });
       }),
       catchError((error) => {
         throw error;

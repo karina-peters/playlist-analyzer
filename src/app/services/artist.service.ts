@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { forkJoin, Observable, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { IArtistDTO } from "src/app/models/spotify-response.models";
@@ -42,6 +42,36 @@ export class ArtistService {
 
         this.artistsCache[artistLink] = ret;
         return ret;
+      }),
+      catchError((error) => {
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Retrieves the artists with the provided artist ids.
+   * @param {Array<string>} ids - A list of artist ids
+   * @returns A list of Artist objects
+   */
+  public getSeveralArtists(ids: Array<string>): Observable<Array<Artist>> {
+    let idStrings: Array<string> = [];
+    for (let i = 0; i < Math.ceil(ids.length / 50); i++) {
+      idStrings.push(ids.slice(i * 50, (i + 1) * 50 - 1).join(","));
+    }
+
+    return forkJoin(idStrings.map((idString) => this.spotifyService.getSeveralArtists(idString))).pipe(
+      map((response) => ([] as IArtistDTO[]).concat(...response)),
+      map((artists: Array<IArtistDTO>) => {
+        return artists.map((artist) => {
+          return {
+            id: artist.id,
+            link: artist.href,
+            name: artist.name,
+            img: artist.images[0]?.url,
+            genres: artist.genres,
+          };
+        });
       }),
       catchError((error) => {
         throw error;
