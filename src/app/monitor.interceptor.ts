@@ -47,7 +47,7 @@ export class MonitorInterceptor implements HttpInterceptor {
 
     // Rate limit error
     else if (error.status === 429) {
-      console.error("Rate limit reached. Retrying in 30s.");
+      console.error("Rate limit exceeded. Retrying in 30s.");
 
       return timer(30000).pipe(
         switchMap(() => {

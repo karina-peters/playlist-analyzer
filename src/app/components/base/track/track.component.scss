@@ -42,6 +42,14 @@ img {
   margin-right: 5px;
 }
 
+.playlist-unchecked {
+  color: colors.$spotify-green;
+
+  svg {
+    float: right;
+  }
+}
+
 .playlist-check {
   color: colors.$spotify-green;
 

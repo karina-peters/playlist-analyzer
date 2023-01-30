@@ -79,7 +79,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
       if (selected != -1 && !this.clearing) {
         // Ensure search text matches current selection
         let currentSelected = this.options[selected];
-        this.searchModel = currentSelected.name;
+        this.searchModel = currentSelected?.name;
       } else {
         // If an option hasn't been selected, clear search and reset options
         this.searchModel = "";

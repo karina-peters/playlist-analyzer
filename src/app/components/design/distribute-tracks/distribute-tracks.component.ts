@@ -66,7 +66,7 @@ export class TrackDistributeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.playlistService.getUserPlaylists().subscribe((playlists: Array<Playlist>) => {
+    this.playlistService.getDetailedUserPlaylists().subscribe((playlists: Array<Playlist>) => {
       this.allPlaylists = playlists;
       this.selectorOptions$.next(playlists);
     });
@@ -87,15 +87,19 @@ export class TrackDistributeComponent implements OnInit {
       .subscribe((saved: any) => {
         this.playlist.tracks.map((track) => {
           track.liked = saved[track.index];
+          track.checked = this.allPlaylists.some((p) => p.name != this.playlist.name && p.tracks.some((t) => t.id == track.id));
         });
       });
   }
 
   public selectTrack(track: Track) {
     this.track = track;
+
+    // Check all previously selected playlists and playlists the track is already on
     this.allPlaylists.map((playlist) => {
-      // TODO: set selected to true for playlists it's already on
-      playlist.selected = this.tracksToMap[this.track.id]?.includes(playlist.id) ? true : false;
+      let condition =
+        this.tracksToMap[this.track.id]?.includes(playlist.id) || playlist.tracks.findIndex((track) => track.id == this.track.id) != -1;
+      playlist.selected = condition ? true : false;
     });
   }
 

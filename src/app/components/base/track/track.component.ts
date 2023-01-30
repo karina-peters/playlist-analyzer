@@ -26,6 +26,7 @@ export class TrackComponent implements OnInit {
 
   @Output() selectedEvent = new EventEmitter<Track>();
 
+  public showCheck: boolean = false;
   public selected: boolean = false;
 
   constructor() {
@@ -48,6 +49,15 @@ export class TrackComponent implements OnInit {
   public select() {
     if (!this.config.readonly) {
       this.selectedEvent.emit(this.trackData);
+    }
+  }
+
+  public handleCheck($event: Event) {
+    if (!this.config.readonly) {
+      this.trackData.checked = !this.trackData.checked;
+
+      // Don't select track on check
+      $event.stopPropagation();
     }
   }
 

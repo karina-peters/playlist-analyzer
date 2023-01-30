@@ -41,7 +41,7 @@ export class TrackDistributionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.playlistService.getUserPlaylistsTracks().subscribe((playlists: Array<Playlist>) => {
+    this.playlistService.getDetailedUserPlaylists().subscribe((playlists: Array<Playlist>) => {
       this.playlists = playlists;
     });
   }
