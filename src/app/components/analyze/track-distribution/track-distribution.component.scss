@@ -1,7 +1,12 @@
-.track-distribution {
-  padding: 40px 60px;
+.select-component-wrapper {
+  padding: 40px 80px 0px;
+  margin-bottom: 25px;
+
+  .select-wrapper {
+    padding-top: 5px;
+  }
 }
 
-.select-component-wrapper {
-  margin-bottom: 25px;
+.playlist-wrapper {
+  padding: 0px 80px 40px;
 }
