@@ -1,76 +1,89 @@
 @use "src/colors";
 
-.nav-wrapper {
-  background-color: rgb(29, 47, 122) !important;
-  height: 75px;
-}
-
 .navbar {
-  background-color: rgb(29, 47, 122) !important;
-  height: 75px;
-}
+  padding-top: 40px;
+  margin-bottom: 20px;
+  height: 80px;
 
-.navbar-brand {
-  margin-left: 10px;
-  margin-right: 100px;
-}
+  .navbar-brand {
+    margin: auto 100px auto 60px;
 
-.brand-name {
-  margin-left: 8px;
-  font-size: 1.5rem;
-}
+    .brand-name {
+      margin-left: 8px;
+      font-size: 1.5rem;
+    }
+  }
 
-.nav-item {
-  margin-right: 30px;
-}
+  .dropdown {
+    .dropdown-menu {
+      display: block;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.5s;
+      transform: translateY(5px);
 
-.nav-link {
-  font-weight: normal;
-  color: rgba(255, 255, 255, 0.85) !important;
-}
+      border-radius: 20px;
+      font-size: 14px;
+      padding: 20px;
+      width: 400px;
+      height: 340px;
+      border: none;
 
-.dropdown-menu {
-  border-radius: 0px 0px 10px 10px;
-  background-color: rgb(29, 47, 122);
-  font-size: 14px;
-  margin-top: 18px;
-  padding: 5px 0px;
-  width: 300px;
-  border-top: 3px solid colors.$spotify-green;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
-}
+      .dropdown-menu-item {
+        margin: auto 0px 5px 0px;
+        border-radius: 10px;
+        padding: 5px 10px;
 
-.dropdown-menu-item {
-  padding: 5px 5px 5px 15px;
-  border-radius: 5px;
-}
+        .nav-option {
+          color: colors.$background-indigo;
 
-.dropdown-menu-item:hover {
-  background-color: rgb(25, 42, 107);
-}
+          svg {
+            margin: 5px;
+          }
 
-.nav-option.active {
-  color: white !important;
-}
+          p {
+            color: colors.$text-grey;
+            margin: 0px;
 
-.nav-option.disabled {
-  color: rgba(255, 255, 255, 0.35) !important;
-}
+            small {
+              color: colors.$text-grey-2;
+            }
+          }
+        }
 
-.user {
-  margin-right: 10px;
+        .nav-option.disabled {
+          color: colors.$text-grey-1;
 
-  .image-wrapper {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
+          p {
+            color: colors.$text-grey-2;
 
-    img {
-      width: 50px;
-      height: 50px;
+            small {
+              color: colors.$text-grey-1;
+            }
+          }
+        }
+      }
+
+      .dropdown-menu-item.disabled {
+        background-color: white !important;
+      }
+
+      .dropdown-menu-item:hover,
+      .dropdown-menu-item.active {
+        background-color: colors.$highlight-white;
+      }
+    }
+  }
+
+  .dropdown:hover {
+    .nav-option-title {
+      opacity: 0.75 !important;
+    }
+
+    .dropdown-menu {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0px);
     }
   }
 }

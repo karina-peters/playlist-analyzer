@@ -1,13 +1,18 @@
 @use "src/colors";
 
 .select-component-wrapper {
-  padding: 0px 40px;
+  padding: 40px 80px 0px;
+  margin-bottom: 25px;
+
+  .select-wrapper {
+    padding-top: 5px;
+  }
 }
 
 .tracks-wrapper {
-  padding: 40px;
+  padding: 0px 40px 40px 80px;
 }
 
 .mapping-wrapper {
-  padding: 40px;
+  padding-right: 80px;
 }

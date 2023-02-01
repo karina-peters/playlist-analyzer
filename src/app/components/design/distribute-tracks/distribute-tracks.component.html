@@ -1,6 +1,6 @@
-<div class="container-fluid fill-height page">
+<div class="fill-height distribute-tracks">
   <div class="row select-component-wrapper">
-    <div class="col-5">
+    <div class="col-5 select-wrapper">
       <app-selector
         class="row"
         [options$]="selectorOptions$"
@@ -8,7 +8,7 @@
         (selectedEvent)="selectPlaylist($event)"></app-selector>
     </div>
   </div>
-  <div class="row">
+  <div class="row g-4">
     <div class="col-7 tracks-wrapper">
       <div class="row">
         <app-track-list
