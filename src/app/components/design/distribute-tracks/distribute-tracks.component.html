@@ -1,4 +1,4 @@
-<div class="fill-height distribute-tracks">
+<div class="container-fluid fill-height distribute-tracks">
   <div class="row select-component-wrapper">
     <div class="col-5 select-wrapper">
       <app-selector
@@ -26,7 +26,7 @@
           [image]="track.img"
           [title]="track.name"
           [description]="''"
-          [footer]="(track.playlists?.length?.toString() ? track.playlists.length.toString() : '0') + ' playlists'"
+          [footer]="playlistCount > 1 ? playlistCount + ' playlists' : 'Only on this playlist'"
           @slideInOut></app-card>
       </div>
       <div class="row">

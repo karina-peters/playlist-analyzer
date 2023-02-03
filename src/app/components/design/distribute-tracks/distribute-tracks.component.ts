@@ -36,6 +36,7 @@ export class TrackDistributeComponent implements OnInit {
 
   public playlist: Playlist;
   public track: Track;
+  public playlistCount: number = 0;
 
   constructor(private playlistService: PlaylistService, private trackService: TrackService) {
     this.playlist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0, owner: "" };
@@ -93,6 +94,7 @@ export class TrackDistributeComponent implements OnInit {
   }
 
   public selectTrack(track: Track) {
+    let count = 0;
     this.track = track;
 
     // Check all previously selected playlists and playlists the track is already on
@@ -100,7 +102,10 @@ export class TrackDistributeComponent implements OnInit {
       let condition =
         this.tracksToMap[this.track.id]?.includes(playlist.id) || playlist.tracks.findIndex((track) => track.id == this.track.id) != -1;
       playlist.selected = condition ? true : false;
+      if (condition) ++count;
     });
+
+    this.playlistCount = count;
   }
 
   public setMappedPlaylists(id: string) {

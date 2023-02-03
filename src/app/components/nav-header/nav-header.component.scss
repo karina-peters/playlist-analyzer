@@ -4,6 +4,7 @@
   padding-top: 40px;
   margin-bottom: 20px;
   height: 80px;
+  color: white;
 
   .navbar-brand {
     margin: auto 100px auto 60px;
@@ -85,5 +86,9 @@
       opacity: 1;
       transform: translateY(0px);
     }
+  }
+
+  .right-items {
+    margin-right: 60px;
   }
 }

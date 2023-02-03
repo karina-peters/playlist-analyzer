@@ -8,6 +8,7 @@ export interface User {
   id: string;
   name: string;
   img: string;
+  email: string;
 }
 
 @Injectable({
@@ -27,6 +28,7 @@ export class UserService {
           id: user.id,
           name: user.display_name,
           img: user.images[0].url,
+          email: user.email,
         };
 
         return ret;
