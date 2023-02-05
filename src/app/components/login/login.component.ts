@@ -7,11 +7,7 @@ import { AuthenticationService } from "src/app/services/authentication.service";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
-  constructor(private authService: AuthenticationService) {}
+  constructor() {}
 
   ngOnInit(): void {}
-
-  login(): void {
-    this.authService.requestAccess(true);
-  }
 }

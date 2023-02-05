@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { trigger, transition, style, animate } from "@angular/animations";
 import { Router, NavigationStart } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -8,6 +9,14 @@ import { Alert, AlertType, AlertService } from "src/app/services/alert.service";
   selector: "app-alert",
   templateUrl: "alert.component.html",
   styleUrls: ["./alert.component.scss"],
+  animations: [
+    trigger("slideIn", [
+      transition(":enter", [
+        style({ opacity: 0, transform: "translateY(-100px)" }),
+        animate("400ms", style({ opacity: 1, transform: "translateY(0)" })),
+      ]),
+    ]),
+  ],
 })
 export class AlertComponent implements OnInit, OnDestroy {
   @Input() id = "default-alert";

@@ -3,6 +3,7 @@
     <div class="col-5 select-wrapper">
       <app-selector
         class="row"
+        [loading$]="selectorLoading$"
         [options$]="selectorOptions$"
         [config]="selectorConfig"
         (selectedEvent)="selectPlaylist($event)"></app-selector>

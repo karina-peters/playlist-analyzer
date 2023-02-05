@@ -8,13 +8,18 @@
       <div class="col-9 selector-text" (click)="!config.allowSearch && toggleShowOptions()">
         <input
           type="text"
-          [readonly]="!config.allowSearch"
+          [readonly]="!config.allowSearch || loading"
           [placeholder]="config.placeholder"
           [(ngModel)]="searchModel"
           (keyup)="onInput($event)"
           (focus)="onInputFocus($event)"
           (blur)="onInputBlur($event)"
           (click)="onInputClick($event)" />
+      </div>
+      <div class="col spinner" *ngIf="loading">
+        <div class="spinner-border spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
       <div class="col clear-x" *ngIf="searching && searchModel.length > 0" (mousedown)="clearSearch()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
@@ -41,8 +46,8 @@
         <li
           class="option"
           *ngFor="let option of filteredOptions; let i = index"
-          [id]="option.index"
-          [ngClass]="{ 'highlighted': searching && i == 0, 'selected': selectedIndex == option.index }"
+          [attr.id]="getOptionId(option.index)"
+          [ngClass]="{ 'highlighted': searching && highlightedIndex == option.index, 'selected': selectedIndex == option.index }"
           (mousedown)="selectOption(option.index)">
           <div class="highlight" style="float: left"></div>
           <div class="option-title">

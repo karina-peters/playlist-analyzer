@@ -16,10 +16,12 @@
 }
 
 .all-button {
-  background-color: colors.$background-grey-4;
+  padding: 10px;
+  color: white;
   cursor: pointer;
 }
 
 .all-button:hover {
-  background-color: colors.$highlight-grey-4;
+  padding: 10px;
+  color: colors.$highlight-white;
 }

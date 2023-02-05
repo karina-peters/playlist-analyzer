@@ -24,6 +24,7 @@ export enum DataType {
   styleUrls: ["./selector.component.scss"],
 })
 export class SelectorComponent implements OnInit, OnDestroy {
+  @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   @Input() options$: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>([]);
   @Input() config: SelectorConfig = {
     type: DataType.Other,
@@ -39,7 +40,9 @@ export class SelectorComponent implements OnInit, OnDestroy {
   public searching: boolean = false;
   public showOptions: boolean = false;
   public clearing: boolean = false;
+  public loading: boolean = false;
 
+  public highlightedIndex: number = -1;
   public selectedIndex: number = -1;
   public selected$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   @Output() selectedEvent = new EventEmitter<any>();
@@ -59,6 +62,10 @@ export class SelectorComponent implements OnInit, OnDestroy {
         this.config.placeholder = "Select";
       }
     }
+
+    this.loading$.subscribe((loading) => {
+      this.loading = loading;
+    });
 
     this.options$.subscribe((opts) => {
       // If we're getting search results from the API, replace, else append
@@ -98,6 +105,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
   public onInputFocus(_$event: FocusEvent): void {
     if (this.config.allowSearch) {
       this.searching = true;
+      this.highlightedIndex = 0;
 
       if (this.config.searchFirst) {
         // Re-populate options with search results from the API
@@ -115,10 +123,12 @@ export class SelectorComponent implements OnInit, OnDestroy {
 
       if (this.config.searchFirst) {
         // Clear API search results on blur
-        this.options = [];
+        setTimeout(() => {
+          this.options = [];
+        });
       }
 
-      this.removeHightlight();
+      this.highlightedIndex = -1;
     }
   }
 
@@ -134,7 +144,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
       this.hightlightNextOption($event.key);
     } else if ($event.key == "Enter") {
       // Select current option if available, clear search and hide options otherwise
-      let index = this.getSelectedId();
+      let index = this.highlightedIndex;
       if (index != -1) {
         this.options[index] && this.selectOption(this.options[index].index);
       } else {
@@ -159,6 +169,7 @@ export class SelectorComponent implements OnInit, OnDestroy {
         // Filter options list
         this.showOptions = true;
         this.filteredOptions = this.options.filter((opt) => this.match(this.searchModel, opt.name));
+        this.highlightedIndex = this.filteredOptions.length > 0 ? this.filteredOptions[0].index : -1;
 
         this.adjustSelectorHeight();
       }
@@ -166,6 +177,8 @@ export class SelectorComponent implements OnInit, OnDestroy {
   }
 
   public toggleShowOptions(override?: boolean) {
+    if (this.loading) return;
+
     if (override != undefined) {
       this.showOptions = override;
     } else {
@@ -184,6 +197,10 @@ export class SelectorComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       search.focus();
     });
+  }
+
+  public getOptionId(index: number): string {
+    return `option-${index}`;
   }
 
   private apiSearch() {
@@ -221,31 +238,9 @@ export class SelectorComponent implements OnInit, OnDestroy {
     return optionName.toLowerCase().includes(substr.toLowerCase());
   }
 
-  private getSelectedId(): number {
-    let highlightedOption: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} .option.highlighted`)[0];
-    return highlightedOption?.id ? parseInt(highlightedOption.id) : -1;
-  }
-
-  private getHighlightedIndex(): number {
-    let highlightedOption: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} .option.highlighted`)[0];
-    return this.filteredOptions.findIndex((opt) => opt.index == parseInt(highlightedOption?.id));
-  }
-
-  private removeHightlight() {
-    let highlightedOption: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} .option.highlighted`)[0];
-    highlightedOption && highlightedOption.classList.remove("highlighted");
-  }
-
-  private setHightlight(index: number) {
-    this.removeHightlight();
-
-    let option: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} .option`)[index];
-    option && option.classList.add("highlighted");
-  }
-
   private hightlightNextOption(key: string): void {
     let numOptions = this.filteredOptions.length;
-    let currentIndex = this.getHighlightedIndex();
+    let currentIndex = this.filteredOptions.findIndex((i) => i.index == this.highlightedIndex);
     let lastIndex = numOptions - 1;
     let nextIndex = -1;
 
@@ -259,10 +254,10 @@ export class SelectorComponent implements OnInit, OnDestroy {
       nextIndex = currentIndex - 5 < 0 ? lastIndex : currentIndex - 5;
     }
 
-    this.setHightlight(nextIndex);
+    this.highlightedIndex = this.filteredOptions[nextIndex].index;
 
     // Adjust scroll position if needed
-    let currentOption = document.querySelectorAll(`#${this.selectorId} .option.highlighted`)[0];
+    let currentOption = document.querySelector(`[id=${this.selectorId}] [id=option-${this.highlightedIndex}]`);
     currentOption && currentOption.scrollIntoView({ block: "nearest", inline: "nearest" });
   }
 

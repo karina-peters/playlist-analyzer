@@ -23,6 +23,7 @@ import { Size, TrackListConfig } from "../../base/track-list/track-list.componen
   ],
 })
 export class TrackDistributeComponent implements OnInit {
+  public selectorLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   public selectorConfig: SelectorConfig;
   public selectorOptions$: BehaviorSubject<Array<Playlist>> = new BehaviorSubject<Array<Playlist>>([]);
 
@@ -69,6 +70,7 @@ export class TrackDistributeComponent implements OnInit {
   ngOnInit(): void {
     this.playlistService.getDetailedUserPlaylists().subscribe((playlists: Array<Playlist>) => {
       this.allPlaylists = playlists;
+      this.selectorLoading$.next(false);
       this.selectorOptions$.next(playlists);
     });
   }

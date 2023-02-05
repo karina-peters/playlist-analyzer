@@ -27,8 +27,8 @@
         <li class="nav-item dropdown">
           <a class="nav-link hstack gap-3" [ngClass]="{ 'active': selectedIndex > 0 }" role="button" data-bs-toggle="dropdown">
             <div>Tools</div>
-            <div *ngIf="selectedIndex != 0" class="vr"></div>
-            <div *ngIf="selectedIndex != 0" class="nav-option-title" style="opacity: 0.25">
+            <div *ngIf="selectedIndex > 0" class="vr"></div>
+            <div *ngIf="selectedIndex > 0" class="nav-option-title" style="opacity: 0.25">
               {{ dropdownOptions[selectedIndex - 1].title }}
             </div>
           </a>
@@ -63,7 +63,7 @@
     </div>
     <div class="right-items" style="padding: 10px">
       <ul class="navbar-nav">
-        <li class="nav-item hstack gap-2">
+        <li *ngIf="signedIn" class="nav-item hstack gap-2">
           <a class="nav-link hstack gap-3" aria-current="page" role="button" (click)="logout()">
             <div>Sign out</div>
             <div class="vr"></div>
@@ -71,6 +71,11 @@
           <div class="nav-option-title">
             {{ user.name }}
           </div>
+        </li>
+        <li *ngIf="!signedIn">
+          <a class="nav-link" aria-current="page" role="button" (click)="login()">
+            <div>Sign in</div>
+          </a>
         </li>
       </ul>
     </div>

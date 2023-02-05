@@ -10,6 +10,7 @@ import { Playlist, PlaylistService } from "src/app/services/playlist.service";
   styleUrls: ["./track-distribution.component.scss"],
 })
 export class TrackDistributionComponent implements OnInit {
+  public selectorLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   public selectorConfig: SelectorConfig;
   public selectorOptions$: BehaviorSubject<Array<Track>> = new BehaviorSubject<Array<Track>>([]);
 
@@ -42,6 +43,7 @@ export class TrackDistributionComponent implements OnInit {
 
   ngOnInit(): void {
     this.playlistService.getDetailedUserPlaylists().subscribe((playlists: Array<Playlist>) => {
+      this.selectorLoading$.next(false);
       this.playlists = playlists;
     });
   }

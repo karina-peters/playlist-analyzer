@@ -40,6 +40,11 @@ input:read-only {
 .select-trigger {
   height: 50px;
 
+  .spinner-border {
+    margin-top: 5px;
+    color: colors.$spotify-green;
+  }
+
   .clear-x {
     > svg {
       float: right;

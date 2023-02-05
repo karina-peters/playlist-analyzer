@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { Router } from "@angular/router";
+import { AuthenticationService } from "src/app/services/authentication.service";
 import { UserService, User } from "src/app/services/user.service";
 
 export interface DropdownOption {
@@ -40,7 +41,7 @@ export class NavHeaderComponent implements OnInit {
   public dropdownOptions: Array<DropdownOption> = [];
   public signedIn: boolean = false;
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private authService: AuthenticationService, private router: Router, private userService: UserService) {
     this.dropdownOptions = [
       {
         index: 1,
@@ -88,10 +89,11 @@ export class NavHeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signedIn = true;
     this.selectedIndex = this.routes.indexOf(window.location.pathname);
-    this.userService.getCurrentUser().subscribe((user) => {
+    this.userService.signIn();
+    this.userService.user$.subscribe((user) => {
       this.user = user;
+      this.signedIn = true;
     });
   }
 
@@ -110,8 +112,16 @@ export class NavHeaderComponent implements OnInit {
     this.selectedIndex = index;
   }
 
+  public login() {
+    this.authService.requestAccess(true);
+  }
+
   public logout() {
-    this.router.navigateByUrl("");
     this.signedIn = false;
+    this.selectedIndex = -1;
+
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    this.router.navigateByUrl("");
   }
 }

@@ -28,6 +28,7 @@ export interface Page {
   ],
 })
 export class PlaylistSimilarityComponent implements OnInit {
+  public selectorLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   public selectorConfig: SelectorConfig;
   public selectorOptions$: BehaviorSubject<Array<Playlist>> = new BehaviorSubject<Array<Playlist>>([]);
 
@@ -59,6 +60,7 @@ export class PlaylistSimilarityComponent implements OnInit {
 
   ngOnInit(): void {
     this.playlistService.getUserPlaylists().subscribe((playlists: Array<Playlist>) => {
+      this.selectorLoading$.next(false);
       this.selectorOptions$.next(playlists);
     });
   }

@@ -33,7 +33,6 @@ export class MonitorInterceptor implements HttpInterceptor {
             return next.handle(request);
           }
 
-          this.logout();
           return of();
         })
       );
@@ -42,7 +41,6 @@ export class MonitorInterceptor implements HttpInterceptor {
     // Access denied error
     else if (error.status === 403) {
       // Show message
-      this.logout();
     }
 
     // Rate limit error
@@ -82,9 +80,5 @@ export class MonitorInterceptor implements HttpInterceptor {
         "Authorization": "Bearer " + token,
       },
     });
-  }
-
-  private logout() {
-    this.router.navigateByUrl("");
   }
 }

@@ -1,7 +1,12 @@
 <div class="container-fluid fill-height track-distribution">
   <div class="row gx-4 select-component-wrapper">
     <div class="col-5 select-wrapper">
-      <app-selector class="row" [options$]="selectorOptions$" [config]="selectorConfig" (selectedEvent)="select($event)"></app-selector>
+      <app-selector
+        class="row"
+        [loading$]="selectorLoading$"
+        [options$]="selectorOptions$"
+        [config]="selectorConfig"
+        (selectedEvent)="select($event)"></app-selector>
     </div>
   </div>
   <div class="row gx-4 playlist-wrapper">

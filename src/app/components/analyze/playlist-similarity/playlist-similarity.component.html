@@ -1,7 +1,12 @@
 <div class="container fill-height playlist-similarity">
   <div class="row gx-5 select-component-wrapper">
     <div class="col select-wrapper" id="select-wrapper-left">
-      <app-selector class="row" [options$]="selectorOptions$" [config]="selectorConfig" (selectedEvent)="selectLeft($event)"></app-selector>
+      <app-selector
+        class="row"
+        [loading$]="selectorLoading$"
+        [options$]="selectorOptions$"
+        [config]="selectorConfig"
+        (selectedEvent)="selectLeft($event)"></app-selector>
       <app-card
         *ngIf="leftPlaylist.id"
         [image]="leftPlaylist.img"
