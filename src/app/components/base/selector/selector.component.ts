@@ -1,12 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { TrackService } from "src/app/services/track.service";
 import { UniqueIdService } from "src/app/services/unique-id.service";
 
 export interface SelectorConfig {
   type: DataType;
   allowSearch: boolean;
-  searchFirst?: boolean;
+  externalSearch?: boolean;
   placeholder?: string;
 }
 
@@ -24,11 +23,12 @@ export enum DataType {
   styleUrls: ["./selector.component.scss"],
 })
 export class SelectorComponent implements OnInit, OnDestroy {
+  @ViewChild("input") input!: ElementRef;
+
   @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   @Input() options$: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>([]);
   @Input() config: SelectorConfig = {
     type: DataType.Other,
-    placeholder: "Select",
     allowSearch: false,
   };
 
@@ -45,9 +45,11 @@ export class SelectorComponent implements OnInit, OnDestroy {
   public highlightedIndex: number = -1;
   public selectedIndex: number = -1;
   public selected$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
-  @Output() selectedEvent = new EventEmitter<any>();
 
-  constructor(private idService: UniqueIdService, private trackService: TrackService) {}
+  @Output() selectedEvent = new EventEmitter<any>();
+  @Output() searchEvent = new EventEmitter<string>();
+
+  constructor(private idService: UniqueIdService) {}
 
   ngOnInit(): void {
     this.selectorId = this.idService.getUniqueId("selector-");
@@ -68,9 +70,11 @@ export class SelectorComponent implements OnInit, OnDestroy {
     });
 
     this.options$.subscribe((opts) => {
-      // If we're getting search results from the API, replace, else append
-      if (this.config.searchFirst) {
+      // If getting search results from an external search, replace, else append
+      if (this.config.externalSearch) {
         this.options = opts;
+        this.selectedIndex = -1;
+        this.toggleShowOptions(true);
       } else {
         this.options.push(...opts);
       }
@@ -82,18 +86,17 @@ export class SelectorComponent implements OnInit, OnDestroy {
   }
 
   public onSelectFocusout(_$event: FocusEvent): void {
-    this.selected$.subscribe((selected) => {
-      if (selected != -1 && !this.clearing) {
-        // Ensure search text matches current selection
-        let currentSelected = this.options[selected];
-        this.searchModel = currentSelected?.name;
-      } else {
-        // If an option hasn't been selected, clear search and reset options
-        this.searchModel = "";
-        this.clearing = false;
-        this.resetOptions();
-      }
-    });
+    if (this.clearing) {
+      this.clearing = false;
+      return;
+    }
+
+    let selectedText = this.selectedIndex != -1 ? this.options[this.selectedIndex]?.name : "";
+    if ((selectedText || this.selectedIndex == -1) && selectedText != this.searchModel) {
+      // If search text doesn't match the current selection, reset it
+      this.searchModel = selectedText;
+      this.resetOptions();
+    }
 
     this.toggleShowOptions(false);
   }
@@ -107,10 +110,11 @@ export class SelectorComponent implements OnInit, OnDestroy {
       this.searching = true;
       this.highlightedIndex = 0;
 
-      if (this.config.searchFirst) {
-        // Re-populate options with search results from the API
-        if (this.searchModel.length == 0) return;
-        this.apiSearch();
+      if (this.config.externalSearch) {
+        // Re-populate options with external search results
+        if (this.searchModel.length != 0) {
+          this.externalSearch();
+        }
       } else {
         this.toggleShowOptions(true);
       }
@@ -120,28 +124,19 @@ export class SelectorComponent implements OnInit, OnDestroy {
   public onInputBlur(_$event: FocusEvent): void {
     if (this.config.allowSearch) {
       this.searching = false;
-
-      if (this.config.searchFirst) {
-        // Clear API search results on blur
-        setTimeout(() => {
-          this.options = [];
-        });
-      }
-
       this.highlightedIndex = -1;
+
+      if (this.config.externalSearch) {
+        // Clear external search results on blur
+        this.resetOptions();
+      }
     }
   }
 
-  public onInputClick(_$event: FocusEvent): void {
-    if (this.config.allowSearch && !this.config.searchFirst) {
-      this.toggleShowOptions(true);
-    }
-  }
-
-  public onInput($event: KeyboardEvent): void {
+  public onInputKeyDown($event: KeyboardEvent): void {
     if ($event.key == "ArrowDown" || $event.key == "ArrowUp" || $event.key == "PageDown" || $event.key == "PageUp") {
-      // Set hightlight to next option
-      this.hightlightNextOption($event.key);
+      // Set highlight to next option
+      this.highlightNextOption($event.key);
     } else if ($event.key == "Enter") {
       // Select current option if available, clear search and hide options otherwise
       let index = this.highlightedIndex;
@@ -155,47 +150,51 @@ export class SelectorComponent implements OnInit, OnDestroy {
       if ($event.target instanceof HTMLElement) {
         $event.target.blur();
       }
-    } else if (this.isAcceptedKey($event.key)) {
-      if (this.config.searchFirst) {
-        if (this.searchModel == "") {
-          // Hide options when the user clears the search
-          this.toggleShowOptions(false);
-          return;
-        }
+    }
+  }
 
-        // Populate options with search results from the API
-        this.apiSearch();
+  public onInput($event: string) {
+    this.searchModel = $event;
+
+    if (this.config.externalSearch) {
+      if (this.searchModel == "") {
+        // Hide options when the user clears the search
+        this.toggleShowOptions(false);
       } else {
-        // Filter options list
-        this.showOptions = true;
-        this.filteredOptions = this.options.filter((opt) => this.match(this.searchModel, opt.name));
-        this.highlightedIndex = this.filteredOptions.length > 0 ? this.filteredOptions[0].index : -1;
-
-        this.adjustSelectorHeight();
+        // Request new search results from parent
+        this.externalSearch();
       }
+    } else {
+      // Filter options list
+      this.showOptions = true;
+      this.filteredOptions = this.options.filter((opt) => this.match(this.searchModel, opt.name));
+      this.highlightedIndex = this.filteredOptions.length > 0 ? this.filteredOptions[0].index : -1;
+
+      this.adjustSelectorHeight();
     }
   }
 
   public toggleShowOptions(override?: boolean) {
-    if (this.loading) return;
-
-    if (override != undefined) {
-      this.showOptions = override;
-    } else {
-      this.showOptions = !this.showOptions;
+    if (this.loading) {
+      return;
     }
 
+    this.showOptions = override != undefined ? override : !this.showOptions;
     this.adjustSelectorHeight();
   }
 
   public clearSearch() {
     this.clearing = true;
     this.searchModel = "";
-    let search: HTMLElement = <HTMLElement>document.querySelectorAll(`#${this.selectorId} input`)[0];
+    this.resetOptions();
+
+    if (this.config.externalSearch) {
+      this.toggleShowOptions(false);
+    }
 
     // Call setTimeout to trigger onFocus event
     setTimeout(() => {
-      search.focus();
+      this.input.nativeElement.focus();
     });
   }
 
@@ -203,14 +202,8 @@ export class SelectorComponent implements OnInit, OnDestroy {
     return `option-${index}`;
   }
 
-  private apiSearch() {
-    let type = this.config.type == DataType.Track ? "track" : "";
-    this.trackService.searchTracks(this.searchModel, type).subscribe((results) => {
-      this.options$.next(results);
-      this.selectedIndex = -1; // Reset selected index on new search
-
-      this.toggleShowOptions(true);
-    });
+  private externalSearch() {
+    this.searchEvent.emit(this.searchModel);
   }
 
   private setSelected(index: number) {
@@ -226,19 +219,14 @@ export class SelectorComponent implements OnInit, OnDestroy {
   }
 
   private resetOptions(): void {
-    this.filteredOptions = this.options;
-  }
-
-  private isAcceptedKey(key: string) {
-    // TODO
-    return true;
+    this.filteredOptions = !this.config.externalSearch ? this.options : [];
   }
 
   private match(substr: string, optionName: string): boolean {
     return optionName.toLowerCase().includes(substr.toLowerCase());
   }
 
-  private hightlightNextOption(key: string): void {
+  private highlightNextOption(key: string): void {
     let numOptions = this.filteredOptions.length;
     let currentIndex = this.filteredOptions.findIndex((i) => i.index == this.highlightedIndex);
     let lastIndex = numOptions - 1;
@@ -264,9 +252,10 @@ export class SelectorComponent implements OnInit, OnDestroy {
   private adjustSelectorHeight() {
     let height = 0;
     let numOptions = 0;
+    let options = this.config.externalSearch ? this.options : this.filteredOptions;
 
     if (this.showOptions) {
-      numOptions = this.filteredOptions.length == 0 ? 1 : this.filteredOptions.length;
+      numOptions = options.length == 0 ? 1 : options.length;
       height = 75 + 50 * numOptions;
     } else {
       height = 50;

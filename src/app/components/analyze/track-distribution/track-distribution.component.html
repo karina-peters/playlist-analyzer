@@ -6,7 +6,8 @@
         [loading$]="selectorLoading$"
         [options$]="selectorOptions$"
         [config]="selectorConfig"
-        (selectedEvent)="select($event)"></app-selector>
+        (selectedEvent)="select($event)"
+        (searchEvent)="search($event)"></app-selector>
     </div>
   </div>
   <div class="row gx-4 playlist-wrapper">

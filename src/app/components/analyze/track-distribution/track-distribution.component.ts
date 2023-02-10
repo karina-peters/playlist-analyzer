@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Track } from "src/app/services/track.service";
+import { Track, TrackService } from "src/app/services/track.service";
 import { DataType, SelectorConfig } from "src/app/components/base/selector/selector.component";
 import { Playlist, PlaylistService } from "src/app/services/playlist.service";
 
@@ -19,7 +19,7 @@ export class TrackDistributionComponent implements OnInit {
   private playlists: Array<Playlist> = [];
   private track: Track;
 
-  constructor(private playlistService: PlaylistService) {
+  constructor(private playlistService: PlaylistService, private trackService: TrackService) {
     this.track = {
       index: -1,
       id: "",
@@ -37,7 +37,7 @@ export class TrackDistributionComponent implements OnInit {
       placeholder: "Search for a Track",
       type: DataType.Track,
       allowSearch: true,
-      searchFirst: true,
+      externalSearch: true,
     };
   }
 
@@ -51,5 +51,11 @@ export class TrackDistributionComponent implements OnInit {
   public select(track: Track) {
     this.track = track;
     this.trackPlaylists = this.playlists.filter((playlist) => this.playlistService.containsTrack(playlist, this.track));
+  }
+
+  public search(search: string) {
+    this.trackService.searchTracks(search, "track").subscribe((results) => {
+      this.selectorOptions$.next(results);
+    });
   }
 }
