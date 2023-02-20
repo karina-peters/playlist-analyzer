@@ -15,7 +15,7 @@ export interface IPlaylistsDTO {
   type: string;
 }
 
-export interface IPlaylistTracksDTO {
+export interface IPlaylistTrackDTO {
   added_at: string;
   external_urls: Object;
   primary_color: any;

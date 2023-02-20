@@ -1,16 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { of } from "rxjs";
+import { PlaylistService } from "src/app/services/playlist.service";
+import { TrackService } from "src/app/services/track.service";
 
-import { TrackDistributionComponent } from './track-distribution.component';
+import { TrackDistributionComponent } from "./track-distribution.component";
 
-describe('TrackDistributionComponent', () => {
+describe("TrackDistributionComponent", () => {
   let component: TrackDistributionComponent;
   let fixture: ComponentFixture<TrackDistributionComponent>;
 
+  const playlistServiceSpy = jasmine.createSpyObj("PlaylistService", ["getDetailedUserPlaylists"]);
+  const trackServiceSpy = jasmine.createSpyObj("TrackService", ["searchTracks"]);
+
   beforeEach(async () => {
+    playlistServiceSpy.getDetailedUserPlaylists.and.returnValue(of([]));
+    trackServiceSpy.searchTracks.and.returnValue(of([]));
+
     await TestBed.configureTestingModule({
-      declarations: [ TrackDistributionComponent ]
-    })
-    .compileComponents();
+      declarations: [TrackDistributionComponent],
+      providers: [
+        { provide: PlaylistService, useValue: playlistServiceSpy },
+        { provide: TrackService, useValue: trackServiceSpy },
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +31,7 @@ describe('TrackDistributionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -80,7 +80,7 @@ export class TrackDistributeComponent implements OnInit {
     this.resetTrack();
 
     this.trackService
-      .getTracks(playlist.tracksLink)
+      .getPlaylistTracks(playlist.id)
       .pipe(
         mergeMap((tracks) => {
           this.playlist.tracks = tracks;
