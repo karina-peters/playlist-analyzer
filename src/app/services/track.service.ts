@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { Artist, ArtistService } from "./artist.service";
-import { IPlaylistTracksDTO, ISearchResultsDTO } from "src/app/models/spotify-response.models";
+import { IPlaylistTrackDTO, ISearchResultsDTO } from "src/app/models/spotify-response.models";
 
 export interface Track {
   index: number;
@@ -26,12 +26,12 @@ export class TrackService {
 
   /**
    * Retrieves a list of tracks for the provided tracks uri.
-   * @param {string} tracksLink - The uri of the tracks to retrieve
+   * @param {string} id - The id of the playlist tracks to retrieve
    * @returns An Observable containing an array of Track objects
    */
-  public getTracks(tracksLink: string): Observable<Array<Track>> {
-    return this.spotifyService.getTracks(tracksLink).pipe(
-      map((tracks: Array<IPlaylistTracksDTO>) => {
+  public getPlaylistTracks(id: string): Observable<Array<Track>> {
+    return this.spotifyService.getPlaylistItems(id).pipe(
+      map((tracks: Array<IPlaylistTrackDTO>) => {
         return tracks.map((track, index) => {
           return {
             index: index,
@@ -61,12 +61,12 @@ export class TrackService {
 
   /**
    * Retrieves a list of tracks and their artist details for the provided tracks uri.
-   * @param {string} tracksLink - The uri of the tracks to retrieve
+   * @param {string} id - The id of the playlist tracks to retrieve
    * @returns An Observable containing an array of Track objects
    */
-  public getTracksArtists(tracksLink: string): Observable<Array<Track>> {
+  public getPlaylistTracksDetailed(id: string): Observable<Array<Track>> {
     let tracks: Array<Track> = [];
-    return this.getTracks(tracksLink).pipe(
+    return this.getPlaylistTracks(id).pipe(
       // Get detailed artist info
       mergeMap((tracksArray: Array<Track>) => {
         tracks = tracksArray;
@@ -103,15 +103,15 @@ export class TrackService {
             id: track.id,
             name: track.name,
             artist: {
-              id: track.artists[0].id,
-              link: track.artists[0].href,
-              name: track.artists[0].name,
+              id: track.artists[0]?.id,
+              link: track.artists[0]?.href,
+              name: track.artists[0]?.name,
               img: "",
               genres: [],
             },
-            album: track.album.name,
+            album: track.album?.name,
             duration: this.convertTime(track.duration_ms),
-            img: track.album.images[0].url,
+            img: track.album?.images[0]?.url,
             playlists: [],
             liked: false,
             checked: false,
@@ -144,7 +144,9 @@ export class TrackService {
    * @param {Track} track2 - The second track to compare
    */
   public equal(track1: Track, track2: Track): boolean {
-    return track1.name == track2.name && track1.album == track2.album && this.artistService.equal(track1.artist, track2.artist);
+    return track1 && track2
+      ? track1.name == track2.name && track1.album == track2.album && this.artistService.equal(track1.artist, track2.artist)
+      : false;
   }
 
   /**

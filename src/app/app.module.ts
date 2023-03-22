@@ -14,7 +14,6 @@ import { HomeComponent } from "./components/home/home.component";
 import { TrackDistributeComponent } from "./components/design/distribute-tracks/distribute-tracks.component";
 import { TrackDistributionComponent } from "./components/analyze/track-distribution/track-distribution.component";
 import { TrackListComponent } from "./components/base/track-list/track-list.component";
-import { TrackTableComponent } from "./components/base/track-table/track-table.component";
 import { MonitorInterceptor } from "./monitor.interceptor";
 import { AlertComponent } from "./components/base/alert/alert.component";
 import { SelectorComponent } from "./components/base/selector/selector.component";
@@ -22,7 +21,7 @@ import { ImageScrollComponent } from "./components/base/image-scroll/image-scrol
 import { CardComponent } from "./components/base/card/card.component";
 import { TagCloudComponent } from "./components/base/tag-cloud/tag-cloud.component";
 import { CardGroupComponent } from "./components/base/card-group/card-group.component";
-import { PlaylistListComponent } from './components/base/playlist-list/playlist-list.component';
+import { PlaylistListComponent } from "./components/base/playlist-list/playlist-list.component";
 
 @NgModule({
   declarations: [
@@ -36,7 +35,6 @@ import { PlaylistListComponent } from './components/base/playlist-list/playlist-
     TrackDistributeComponent,
     TrackDistributionComponent,
     TrackListComponent,
-    TrackTableComponent,
     AlertComponent,
     SelectorComponent,
     ImageScrollComponent,

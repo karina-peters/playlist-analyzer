@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { EMPTY, forkJoin, Observable, of } from "rxjs";
 import { catchError, expand, map, reduce } from "rxjs/operators";
-import { IPlaylistsDTO, IPlaylistTracksDTO, IArtistDTO, ISearchResultsDTO, IUserDTO, ITrack } from "../models/spotify-response.models";
+import { IPlaylistsDTO, IPlaylistTrackDTO, IArtistDTO, ISearchResultsDTO, IUserDTO } from "../models/spotify-response.models";
 
 @Injectable({
   providedIn: "root",
@@ -16,7 +16,7 @@ export class SpotifyService {
    * @returns An Observable containing user data the Spotify me endpoint
    */
   public getCurrentUser(): Observable<IUserDTO> {
-    return this.getNext("https://api.spotify.com/v1/me").pipe(
+    return this.getOne("https://api.spotify.com/v1/me").pipe(
       map((response: any) => response),
       catchError((error: HttpErrorResponse) => {
         throw error;
@@ -44,24 +44,8 @@ export class SpotifyService {
    * @param id - The id of the playlist
    * @returns An Observable containing the response items from the Spotify playlists/{id}/tracks endpoint
    */
-  public getPlaylistItems(id: string): Observable<Array<IPlaylistTracksDTO>> {
+  public getPlaylistItems(id: string): Observable<Array<IPlaylistTrackDTO>> {
     return this.getNext(`https://api.spotify.com/v1/playlists/${id}/tracks`).pipe(
-      expand((response: any) => (response?.next ? this.getNext(response.next) : EMPTY)),
-      map((response: any) => response.items),
-      reduce((accumulator, value) => accumulator.concat(value)),
-      catchError((error: HttpErrorResponse) => {
-        throw error;
-      })
-    );
-  }
-
-  /**
-   * Retrieves track data from Spotify.
-   * @param uri - The uri of the tracks to retrieve
-   * @returns An Observable containing the response items from the Spotify tracks endpoint
-   */
-  public getTracks(uri: string): Observable<Array<IPlaylistTracksDTO>> {
-    return this.getNext(uri).pipe(
       expand((response: any) => (response?.next ? this.getNext(response.next) : EMPTY)),
       map((response: any) => response.items),
       reduce((accumulator, value) => accumulator.concat(value)),
@@ -87,25 +71,11 @@ export class SpotifyService {
 
   /**
    * Retrieves artist data from Spotify.
-   * @param uri - The uri of the artist to retrieve
-   * @returns An Observable containing the response from the Spotify artists endpoint
-   */
-  public getArtist(uri: string): Observable<IArtistDTO> {
-    return this.getOne(uri).pipe(
-      map((response: any) => response),
-      catchError((error) => {
-        throw error;
-      })
-    );
-  }
-
-  /**
-   * Retrieves artist data from Spotify.
    * @param ids - A list of artist ids
    * @returns An Observable containing the response from the Spotify artists endpoint
    */
-  public getSeveralArtists(ids: Array<string>): Observable<Array<IArtistDTO>> {
-    return this.getSeveral("https://api.spotify.com/v1/artists", ids).pipe(
+  public getSeveralArtists(ids: Array<string>, limit?: number): Observable<Array<IArtistDTO>> {
+    return this.getSeveral("https://api.spotify.com/v1/artists", ids, limit).pipe(
       map((response: any) => response),
       catchError((error) => {
         throw error;
@@ -172,13 +142,13 @@ export class SpotifyService {
       .pipe(map((response: any) => this.cacheRequest(key, response)));
   }
 
-  private getSeveral(url: string, ids: Array<string>): Observable<any> {
+  private getSeveral(url: string, ids: Array<string>, limit?: number): Observable<any> {
     let key = this.hash(url + ids.join(""));
     if (this.cache.hasOwnProperty(key)) {
       return of(this.cache[key]);
     }
 
-    let idStrings = this.arrayToCSV(ids);
+    let idStrings = this.arrayToCSV(ids, limit);
     return forkJoin(
       idStrings.map((idString) =>
         this.http.get(url, {

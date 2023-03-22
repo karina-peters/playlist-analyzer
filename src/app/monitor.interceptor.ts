@@ -1,6 +1,5 @@
 import { HttpRequest, HttpHandler, HttpInterceptor, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
 import { Observable, of, throwError, timer } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { AlertService } from "./services/alert.service";
@@ -8,7 +7,7 @@ import { AuthenticationService } from "./services/authentication.service";
 
 @Injectable()
 export class MonitorInterceptor implements HttpInterceptor {
-  constructor(private alertService: AlertService, private authService: AuthenticationService, private router: Router) {}
+  constructor(private alertService: AlertService, private authService: AuthenticationService) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     return next.handle(request).pipe(

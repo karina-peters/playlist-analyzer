@@ -38,10 +38,10 @@ export class PlaylistService {
             name: playlist.name,
             description: playlist.description,
             tracks: [],
-            tracksLink: playlist.tracks.href,
-            tracksCount: playlist.tracks.total,
+            tracksLink: playlist.tracks?.href,
+            tracksCount: playlist.tracks?.total,
             img: playlist.images[0]?.url,
-            owner: playlist.owner.id,
+            owner: playlist.owner?.id,
             selected: false,
           };
         });
@@ -57,7 +57,7 @@ export class PlaylistService {
       mergeMap((playlists: Array<Playlist>) =>
         forkJoin(
           playlists.map((playlist: Playlist) =>
-            this.trackService.getTracksArtists(playlist.tracksLink).pipe(
+            this.trackService.getPlaylistTracksDetailed(playlist.id).pipe(
               map((tracks: Array<Track>) => {
                 playlist.tracks = tracks;
                 return playlist;
@@ -78,10 +78,6 @@ export class PlaylistService {
    * @param {Track} trackFind - The track to find
    */
   public containsTrack(playlist: Playlist, trackFind: Track): boolean {
-    if (!playlist || !trackFind) {
-      return false;
-    }
-
-    return playlist.tracks.filter((track: Track) => this.trackService.equal(track, trackFind)).length > 0;
+    return playlist && trackFind ? playlist.tracks.some((track: Track) => this.trackService.equal(track, trackFind)) : false;
   }
 }

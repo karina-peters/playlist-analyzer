@@ -129,7 +129,7 @@ export class PlaylistSimilarityComponent implements OnInit {
 
   public selectLeft(playlist: Playlist) {
     this.leftPlaylist = playlist;
-    this.trackService.getTracksArtists(playlist.tracksLink).subscribe((tracks) => {
+    this.trackService.getPlaylistTracksDetailed(playlist.id).subscribe((tracks) => {
       this.leftPlaylist.tracks = tracks;
     });
 
@@ -138,7 +138,7 @@ export class PlaylistSimilarityComponent implements OnInit {
 
   public selectRight(playlist: Playlist) {
     this.rightPlaylist = playlist;
-    this.trackService.getTracksArtists(playlist.tracksLink).subscribe((tracks) => {
+    this.trackService.getPlaylistTracksDetailed(playlist.id).subscribe((tracks) => {
       this.rightPlaylist.tracks = tracks;
     });
 

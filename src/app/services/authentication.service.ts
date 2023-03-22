@@ -19,10 +19,11 @@ export class AuthenticationService {
       "user-read-private%20user-read-email%20user-library-read%20playlist-read-private%20playlist-modify-public%20playlist-modify-private";
     const SHOW_DIALOG = showDialog ? showDialog : false;
 
-    document.location.href =
+    this.redirect(
       `https://accounts.spotify.com/authorize?` +
-      `client_id=${environment.CLIENT_ID}&redirect_uri=${environment.REDIRECT_URI}` +
-      `&scope=${SCOPES}&show_dialog=${SHOW_DIALOG}&response_type=code&state=123`;
+        `client_id=${environment.CLIENT_ID}&redirect_uri=${environment.REDIRECT_URI}` +
+        `&scope=${SCOPES}&show_dialog=${SHOW_DIALOG}&response_type=code&state=123`
+    );
   }
 
   /**
@@ -81,6 +82,10 @@ export class AuthenticationService {
         return of(false);
       })
     );
+  }
+
+  public redirect(path: string): void {
+    document.location.href = path;
   }
 
   private getHeaders(): { [header: string]: string } {

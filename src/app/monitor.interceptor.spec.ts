@@ -1,11 +1,14 @@
+import { HttpClient } from "@angular/common/http";
 import { TestBed } from "@angular/core/testing";
 
 import { MonitorInterceptor } from "./monitor.interceptor";
 
 describe("MonitorInterceptor", () => {
+  const httpClientSpy = jasmine.createSpyObj("HttpClient", ["get"]);
+
   beforeEach(() =>
     TestBed.configureTestingModule({
-      providers: [MonitorInterceptor],
+      providers: [MonitorInterceptor, { provide: HttpClient, useValue: httpClientSpy }],
     })
   );
 

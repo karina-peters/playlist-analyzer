@@ -19,28 +19,6 @@ export class ArtistService {
   constructor(private spotifyService: SpotifyService) {}
 
   /**
-   * Retrieves the artist with the provided artist uri.
-   * @param {string} artistLink - The uri of the artist to retrieve
-   * @returns An Observable containing an Artist object
-   */
-  public getArtist(artistLink: string): Observable<Artist> {
-    return this.spotifyService.getArtist(artistLink).pipe(
-      map((artist: IArtistDTO) => {
-        return {
-          id: artist.id,
-          link: artist.href,
-          name: artist.name,
-          img: artist.images[0]?.url,
-          genres: artist.genres,
-        };
-      }),
-      catchError((error) => {
-        throw error;
-      })
-    );
-  }
-
-  /**
    * Retrieves the artists with the provided artist ids.
    * @param {Array<string>} ids - A list of artist ids
    * @returns A list of Artist objects
@@ -70,7 +48,7 @@ export class ArtistService {
    * @param {Artist} artist2 - The second artist to compare
    */
   public equal(artist1: Artist, artist2: Artist) {
-    return artist1 && artist2 ? artist1.name == artist2.name : false;
+    return artist1 && artist2 ? artist1.id == artist2.id : false;
   }
 
   /**

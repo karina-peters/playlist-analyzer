@@ -23,14 +23,14 @@ export class AlertComponent implements OnInit, OnDestroy {
 
   public alerts: Alert[] = [];
   public AlertType = AlertType;
-  private alertSubscription: Subscription = new Subscription();
-  private routeSubscription: Subscription = new Subscription();
+  private alert$: Subscription = new Subscription();
+  private route$: Subscription = new Subscription();
 
   constructor(private router: Router, private alertService: AlertService) {}
 
   ngOnInit() {
     // Subscribe to new alert notifications
-    this.alertSubscription = this.alertService.onAlert(this.id).subscribe((alert) => {
+    this.alert$ = this.alertService.onAlert(this.id).subscribe((alert) => {
       if (!alert.message) {
         this.alerts = this.alerts.filter((x) => x.keepAfterRouteChange);
         this.alerts.forEach((x) => delete x.keepAfterRouteChange);
@@ -45,7 +45,7 @@ export class AlertComponent implements OnInit, OnDestroy {
     });
 
     // Clear alerts on location change
-    this.routeSubscription = this.router.events.subscribe((event) => {
+    this.route$ = this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.alertService.clear(this.id);
       }
@@ -80,7 +80,7 @@ export class AlertComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.alertSubscription.unsubscribe();
-    this.routeSubscription.unsubscribe();
+    this.alert$.unsubscribe();
+    this.route$.unsubscribe();
   }
 }

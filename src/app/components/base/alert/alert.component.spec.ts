@@ -1,16 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { Router } from "@angular/router";
+import { Observable, of } from "rxjs";
 
-import { AlertComponent } from './alert.component';
+import { AlertComponent } from "./alert.component";
 
-describe('AlertComponent', () => {
+describe("AlertComponent", () => {
   let component: AlertComponent;
   let fixture: ComponentFixture<AlertComponent>;
 
+  const alertServiceSpy = jasmine.createSpyObj("AlertService", ["onAlert", "clear"]);
+  const routerSpy = {
+    navigateByUrl: () => {},
+    events: new Observable(),
+  };
+
   beforeEach(async () => {
+    alertServiceSpy.onAlert.and.returnValue(of());
+
     await TestBed.configureTestingModule({
-      declarations: [ AlertComponent ]
-    })
-    .compileComponents();
+      declarations: [AlertComponent],
+      providers: [{ provide: Router, useValue: routerSpy }],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +29,7 @@ describe('AlertComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
