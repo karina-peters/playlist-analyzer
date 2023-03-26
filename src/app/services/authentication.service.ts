@@ -63,6 +63,10 @@ export class AuthenticationService {
   public refreshToken(): Observable<boolean> {
     const refresh_token = localStorage.getItem("refresh_token");
 
+    if (!refresh_token) {
+      return of(false);
+    }
+
     const body = `grant_type=refresh_token&refresh_token=${refresh_token}&client_id=${environment.CLIENT_ID}`;
     const headers = this.getHeaders();
 

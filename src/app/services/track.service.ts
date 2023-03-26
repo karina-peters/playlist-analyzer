@@ -5,17 +5,21 @@ import { SpotifyService } from "./spotify.service";
 import { Artist, ArtistService } from "./artist.service";
 import { IPlaylistTrackDTO, ISearchResultsDTO } from "src/app/models/spotify-response.models";
 
-export interface Track {
-  index: number;
-  id: string;
-  name: string;
-  artist: Artist;
-  album: string;
-  duration: string;
-  img: string;
-  playlists: Array<string>;
-  liked: boolean;
-  checked: boolean;
+export class Track {
+  index: number = -1;
+  id: string = "default-id";
+  name: string = "";
+  artist: Artist = new Artist();
+  album: string = "";
+  duration: string = "";
+  img: string = "";
+  playlists: Array<string> = [];
+  liked: boolean = false;
+  checked: boolean = false;
+
+  constructor(init?: Partial<Track>) {
+    Object.assign(this, init);
+  }
 }
 
 @Injectable({

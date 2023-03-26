@@ -4,12 +4,16 @@ import { catchError, map } from "rxjs/operators";
 import { SpotifyService } from "./spotify.service";
 import { IArtistDTO } from "src/app/models/spotify-response.models";
 
-export interface Artist {
-  id: string;
-  link: string;
-  name: string;
-  img: string;
-  genres: Array<string>;
+export class Artist {
+  id: string = "default-id";
+  link: string = "";
+  name: string = "";
+  img: string = "";
+  genres: Array<string> = [];
+
+  constructor(init?: Partial<Artist>) {
+    Object.assign(this, init);
+  }
 }
 
 @Injectable({

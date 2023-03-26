@@ -25,16 +25,20 @@ export class MonitorInterceptor implements HttpInterceptor {
 
     // Invalid token error
     else if (error.status === 401) {
-      return this.authService.refreshToken().pipe(
-        switchMap((success: boolean) => {
-          if (success) {
-            request = this.updateAuthHeader(request);
-            return next.handle(request);
-          }
+      if (localStorage.getItem("refresh_token")) {
+        return this.authService.refreshToken().pipe(
+          switchMap((success: boolean) => {
+            if (success) {
+              request = this.updateAuthHeader(request);
+              return next.handle(request);
+            }
 
-          return of();
-        })
-      );
+            return of();
+          })
+        );
+      } else {
+        this.authService.requestAccess(true);
+      }
     }
 
     // Access denied error

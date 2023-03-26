@@ -5,17 +5,21 @@ import { SpotifyService } from "./spotify.service";
 import { Track, TrackService } from "./track.service";
 import { IPlaylistsDTO } from "src/app/models/spotify-response.models";
 
-export interface Playlist {
-  index: number;
-  id: string;
-  name: string;
-  tracksLink: string;
-  tracks: Array<Track>;
-  tracksCount: number;
-  owner: string;
-  description?: string;
-  img?: string;
-  selected?: boolean;
+export class Playlist {
+  index: number = -1;
+  id: string = "default-id";
+  name: string = "";
+  tracksLink: string = "";
+  tracks: Array<Track> = [];
+  tracksCount: number = 0;
+  owner: string = "";
+  description: string = "";
+  img: string = "";
+  selected: boolean = false;
+
+  constructor(init?: Partial<Playlist>) {
+    Object.assign(this, init);
+  }
 }
 
 @Injectable({

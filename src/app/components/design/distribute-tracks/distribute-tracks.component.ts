@@ -40,19 +40,8 @@ export class TrackDistributeComponent implements OnInit {
   public playlistCount: number = 0;
 
   constructor(private playlistService: PlaylistService, private trackService: TrackService) {
-    this.playlist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0, owner: "" };
-    this.track = {
-      index: -1,
-      id: "",
-      name: "",
-      artist: { id: "", link: "", name: "", img: "", genres: [] },
-      album: "",
-      duration: "",
-      img: "",
-      playlists: [],
-      liked: false,
-      checked: false,
-    };
+    this.playlist = new Playlist();
+    this.track = new Track();
 
     this.selectorConfig = {
       type: DataType.Playlist,
@@ -137,17 +126,6 @@ export class TrackDistributeComponent implements OnInit {
   }
 
   private resetTrack(): void {
-    this.track = {
-      index: -1,
-      id: "",
-      name: "",
-      artist: { id: "", link: "", name: "", img: "", genres: [] },
-      album: "",
-      duration: "",
-      img: "",
-      playlists: [],
-      liked: false,
-      checked: false,
-    };
+    this.track = new Track();
   }
 }

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { of } from "rxjs";
 import { PlaylistService } from "src/app/services/playlist.service";
 import { TrackService } from "src/app/services/track.service";
@@ -20,6 +21,7 @@ describe("PlaylistCompareComponent", () => {
 
     await TestBed.configureTestingModule({
       declarations: [PlaylistSimilarityComponent],
+      imports: [BrowserAnimationsModule],
       providers: [
         { provide: PlaylistService, useValue: playlistServiceSpy },
         { provide: TrackService, useValue: trackServiceSpy },

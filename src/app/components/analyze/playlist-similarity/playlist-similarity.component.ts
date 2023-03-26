@@ -1,10 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { BehaviorSubject } from "rxjs";
-import { Playlist } from "src/app/services/playlist.service";
 import { Track, TrackService } from "src/app/services/track.service";
 import { Artist } from "src/app/services/artist.service";
-import { PlaylistService } from "src/app/services/playlist.service";
+import { Playlist, PlaylistService } from "src/app/services/playlist.service";
 import { AlertService } from "src/app/services/alert.service";
 import { DataType, SelectorConfig } from "src/app/components/base/selector/selector.component";
 
@@ -49,8 +48,8 @@ export class PlaylistSimilarityComponent implements OnInit {
   private artistMap: { [key: string]: Artist } = {};
 
   constructor(private alertService: AlertService, private playlistService: PlaylistService, private trackService: TrackService) {
-    this.leftPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0, owner: "" };
-    this.rightPlaylist = { index: -1, id: "", name: "", tracksLink: "", tracks: [], tracksCount: 0, owner: "" };
+    this.leftPlaylist = new Playlist();
+    this.rightPlaylist = new Playlist();
 
     this.selectorConfig = {
       type: DataType.Playlist,
@@ -67,8 +66,8 @@ export class PlaylistSimilarityComponent implements OnInit {
 
   public comparePlaylists(_event: Event) {
     if (!this.leftPlaylist?.tracks || !this.rightPlaylist?.tracks) {
-      // TODO: maybe subscribe to alert and close it when a new playlist is selected?
-      this.alertService.error("Error: one or more of the selected playlists has no tracks!");
+      // TODO: clear alert when a new playlist is selected
+      this.alertService.error("Error: one or more of the selected playlists has no tracks!", { id: "no-tracks" });
       return;
     }
 

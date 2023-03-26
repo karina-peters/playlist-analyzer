@@ -86,6 +86,17 @@ describe("AuthenticationService", () => {
       httpMock.verify();
     }));
 
+    it("should return false when refresh_token null", fakeAsync(() => {
+      spyOn(localStorage, "getItem").and.returnValue(null);
+
+      service.refreshToken().subscribe((value) => {
+        expect(value).toEqual(false);
+      });
+
+      httpMock.expectNone({ method: "POST", url: "https://accounts.spotify.com/api/token" });
+      httpMock.verify();
+    }));
+
     it("should return false when response undefined", fakeAsync(() => {
       service.refreshToken().subscribe((value) => {
         expect(value).toEqual(false);

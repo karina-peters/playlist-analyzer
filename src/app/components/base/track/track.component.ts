@@ -9,18 +9,7 @@ import { Size, TrackListConfig } from "../track-list/track-list.component";
   styleUrls: ["./track.component.scss"],
 })
 export class TrackComponent implements OnInit {
-  @Input() trackData = {
-    index: -1,
-    id: "",
-    name: "",
-    artist: { id: "", link: "", name: "", img: "", genres: [] as Array<string> },
-    album: "",
-    duration: "",
-    img: "",
-    playlists: [] as Array<string>,
-    liked: false,
-    checked: false,
-  };
+  @Input() trackData = new Track();
   @Input() selectedIndex$: BehaviorSubject<number> = new BehaviorSubject(-1);
   @Input() config: TrackListConfig;
 

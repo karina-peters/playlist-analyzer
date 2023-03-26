@@ -8,7 +8,7 @@
         [config]="selectorConfig"
         (selectedEvent)="selectLeft($event)"></app-selector>
       <app-card
-        *ngIf="leftPlaylist.id"
+        *ngIf="leftPlaylist.id != 'default-id'"
         [image]="leftPlaylist.img"
         [title]="leftPlaylist.name"
         [description]="leftPlaylist.description ? leftPlaylist.description : ''"
@@ -35,7 +35,7 @@
         [config]="selectorConfig"
         (selectedEvent)="selectRight($event)"></app-selector>
       <app-card
-        *ngIf="rightPlaylist.id"
+        *ngIf="rightPlaylist.id != 'default-id'"
         [image]="rightPlaylist.img"
         [title]="rightPlaylist.name"
         [description]="rightPlaylist.description ? rightPlaylist.description : ''"
